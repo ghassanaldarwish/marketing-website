@@ -29,8 +29,12 @@ export default function RootLayout({
       )}
     >
       <body>
-        <ThemeProvider>
-          <div className="grid grid-rows-[56px_1fr_auto] gap-4 min-h-screen">
+        <ThemeProvider
+           attribute="class"
+           defaultTheme="system"
+           enableSystem
+           disableTransitionOnChange>
+          <div className="grid grid-rows-[var(--navbar-height)_1fr_auto]  min-h-screen">
           <Navbar />
           {children}
           <Footer />
