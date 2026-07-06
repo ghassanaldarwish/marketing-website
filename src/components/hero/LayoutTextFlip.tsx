@@ -73,7 +73,6 @@ export const FlipWords = ({
               delay: wordIndex * 0.3,
               duration: 0.3,
             }}
-       
             className="inline-block whitespace-nowrap"
           >
             {word.split("").map((letter, letterIndex) => (
@@ -85,7 +84,6 @@ export const FlipWords = ({
                   delay: wordIndex * 0.3 + letterIndex * 0.05,
                   duration: 0.2,
                 }}
-           
                 className="inline-block"
               >
                 {letter}
