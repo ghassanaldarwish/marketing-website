@@ -16,9 +16,10 @@ export default function Logo() {
   if (!mounted) {
     return (
       <Image
-        src="/light_logo.png"
-        width={56}
-        height={30}
+      className="w-20"
+        src="/light_logo_500_180.png"
+        width={153}
+        height={55}
         loading="eager"
         alt="Ghassan Logo"
       />
@@ -27,15 +28,16 @@ export default function Logo() {
 
   return (
     <Image
+    className="w-20"
       src={
         resolvedTheme === "dark"
-          ? "/dark_logo.png"
-          : "/light_logo.png"
+          ? "/dark_logo_500_180.png"
+          : "/light_logo_500_180.png"
       }
       loading="eager"
       objectFit=""
-      width={56}
-      height={32}
+      width={153}
+      height={55}
       alt="Ghassan Logo"
     />
   )

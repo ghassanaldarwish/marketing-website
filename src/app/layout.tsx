@@ -34,7 +34,7 @@ export default function RootLayout({
            defaultTheme="system"
            enableSystem
            disableTransitionOnChange>
-          <div className="grid grid-rows-[var(--navbar-height)_1fr_auto]  min-h-screen">
+          <div className="  min-h-screen">
           <Navbar />
           {children}
           <Footer />
