@@ -12,6 +12,7 @@ export default function Page() {
       <Benefits/>
 
       </div>
+      
     
       {/* <Technologies /> */}
     

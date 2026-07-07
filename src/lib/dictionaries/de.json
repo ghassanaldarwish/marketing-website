@@ -1,0 +1,11 @@
+{
+  "navbar": {
+    "pages": [
+      {
+        "title": "home-DE",
+        "url": "/",
+        "disabled": false
+      }
+    ]
+  }
+}

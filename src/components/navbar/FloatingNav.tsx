@@ -1,39 +1,39 @@
-"use client";
-import React, { useState } from "react";
+"use client"
+import React, { useState } from "react"
 import {
   motion,
   AnimatePresence,
   useScroll,
   useMotionValueEvent,
-} from "motion/react";
-import { cn } from "@/lib/utils";
+} from "motion/react"
+import { cn } from "@/lib/utils"
 
 export const FloatingNav = ({
-    children,
+  children,
   className,
 }: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    children:any;
-  className?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  children: any
+  className?: string
 }) => {
-  const { scrollYProgress } = useScroll();
-  const [visible, setVisible] = useState(true);
+  const { scrollYProgress } = useScroll()
+  const [visible, setVisible] = useState(true)
 
   useMotionValueEvent(scrollYProgress, "change", (current) => {
     if (typeof current === "number") {
-      const direction = current - scrollYProgress.getPrevious()!;
+      const direction = current - scrollYProgress.getPrevious()!
 
-      if (scrollYProgress.get() < 0.000001) {
-        setVisible(true);
+      if (scrollYProgress.get() < 0.05) {
+        setVisible(true)
       } else {
         if (direction < 0) {
-          setVisible(true);
+          setVisible(true)
         } else {
-          setVisible(false);
+          setVisible(false)
         }
       }
     }
-  });
+  })
 
   return (
     <AnimatePresence mode="wait">
@@ -49,12 +49,10 @@ export const FloatingNav = ({
         transition={{
           duration: 0.2,
         }}
-        className={cn(
-          className
-        )}
+        className={cn(className)}
       >
-   {children}
+        {children}
       </motion.div>
     </AnimatePresence>
-  );
-};
+  )
+}

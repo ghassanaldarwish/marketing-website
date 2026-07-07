@@ -1,0 +1,11 @@
+{
+  "navbar": {
+    "pages": [
+      {
+        "title": "التمويل",
+        "url": "/",
+        "disabled": false
+      }
+    ]
+  }
+}

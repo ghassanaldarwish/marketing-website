@@ -22,7 +22,7 @@ export default function Hero() {
   return  <div className="relative ">
 
   <div className="max-w-6xl  m-auto h-full flex relative">
-      <div className="self-center flex flex-col gap-8 w-1/2">
+      <div className="self-center flex flex-col gap-8 w-[70%]">
 
 
 
