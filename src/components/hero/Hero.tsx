@@ -36,7 +36,7 @@ export default function Hero() {
             <div>Berlin, Germany</div>
           </div>
         </div>
-        <div>
+        <div className="relative">
           <Image
             src="/hero.png"
             width={794}
@@ -47,6 +47,12 @@ export default function Hero() {
           />
         </div>
       </div>
+      <h2 className="bottom-2 w-full bg-background/30 font-semibold backdrop-blur-xs lg:absolute lg:left-1/2 lg:-translate-x-1/2 lg:py-4 lg:text-center lg:text-4xl">
+        7+ Years Building with technologies trusted <br />
+        <span className="mt-1 text-4xl leading-none font-bold lg:text-[6rem]">
+          in production
+        </span>
+      </h2>
     </div>
   )
 }
