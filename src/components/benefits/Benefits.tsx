@@ -1,34 +1,19 @@
 /* eslint-disable @next/next/no-img-element */
-import React from 'react'
-import { ContainerScroll } from './ContainerScroll'
-import { Terminal } from './Terminal'
+import React from "react"
+import { ContainerScroll } from "./ContainerScroll"
+import { Terminal } from "./Terminal"
 
 export default function Benefits() {
   return (
-<section className="flex flex-col relative">
-
-      <ContainerScroll
-        titleComponent={
-          <>
-            <h1 className="text-4xl  font-semibold  w-full  absolute bg-background/50 backdrop-blur-sm -top-26 left-1/2 -translate-x-1/2">
-              Unleash the power of <br />
-              <span className="text-4xl md:text-[6rem] font-bold mt-1 leading-none">
-                Scroll Animations 
-              </span>
-            </h1>
-          </>
-        }
-      >
-        {/* <img
-          src={`/hero.png`}
-          alt="hero"
-          height={720}
-          width={1400}
-          className="mx-auto rounded-2xl object-cover h-full object-left-top"
-          draggable={false}
-        /> */}
-   <Terminal
-   className='w-full'
+    <section className="relative m-auto flex w-full max-w-6xl flex-col">
+      <h1 className="w-full bg-background/50 font-semibold backdrop-blur-sm lg:absolute lg:-top-44 lg:left-1/2 lg:-translate-x-1/2 lg:pt-8 lg:text-center lg:text-4xl">
+        7+ Years Building with technologies trusted <br />
+        <span className="mt-1 text-4xl leading-none font-bold lg:text-[6rem]">
+          in production
+        </span>
+      </h1>
+      <Terminal
+        className="w-full"
         commands={[
           "npx shadcn@latest init",
           "npm install motion",
@@ -47,7 +32,6 @@ export default function Benefits() {
         typingSpeed={45}
         delayBetweenCommands={1000}
       />
-      </ContainerScroll>
     </section>
   )
 }

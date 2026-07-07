@@ -2,8 +2,28 @@
   "navbar": {
     "pages": [
       {
-        "title": "التمويل",
-        "url": "/",
+        "title": "projects",
+        "url": "/projects",
+        "disabled": false
+      },
+      {
+        "title": "engineering",
+        "url": "/engineering",
+        "disabled": false
+      },
+      {
+        "title": "articles",
+        "url": "/articles",
+        "disabled": false
+      },
+      {
+        "title": "about",
+        "url": "/about",
+        "disabled": false
+      },
+      {
+        "title": "contact",
+        "url": "/contact",
         "disabled": false
       }
     ]

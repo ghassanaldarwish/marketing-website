@@ -7,16 +7,12 @@ export default function Page() {
   return (
     <div className="">
       <div className="relative">
-      <GridBackground/>
-      <Hero />
-      <Benefits/>
-
+        <GridBackground />
+        <Hero />
+        <Benefits />
       </div>
-      
-    
-      {/* <Technologies /> */}
-    
 
+      {/* <Technologies /> */}
     </div>
   )
 }

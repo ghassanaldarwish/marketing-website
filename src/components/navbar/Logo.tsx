@@ -16,7 +16,7 @@ export default function Logo() {
   if (!mounted) {
     return (
       <Image
-      className="w-20"
+        className="w-16 lg:w-20"
         src="/light_logo_500_180.png"
         width={153}
         height={55}
@@ -28,7 +28,7 @@ export default function Logo() {
 
   return (
     <Image
-    className="w-20"
+      className="w-16 lg:w-20"
       src={
         resolvedTheme === "dark"
           ? "/dark_logo_500_180.png"

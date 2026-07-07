@@ -2,10 +2,38 @@
   "navbar": {
     "pages": [
       {
-        "title": "home",
-        "url": "/",
+        "title": "projects",
+        "url": "/projects",
+        "disabled": false
+      },
+      {
+        "title": "engineering",
+        "url": "/engineering",
+        "disabled": false
+      },
+      {
+        "title": "articles",
+        "url": "/articles",
+        "disabled": false
+      },
+      {
+        "title": "about",
+        "url": "/about",
+        "disabled": false
+      },
+      {
+        "title": "contact",
+        "url": "/contact",
         "disabled": false
       }
     ]
+  },
+  "hero": {
+    "badge": ["AI Engineer", "DevOps", "Backend"],
+    "title": "Building AI",
+    "secondaryTitle": "That Scale.",
+    "titleColourful": "Systems",
+    "description": "I design and build production-ready AI systems, scalable backend platforms, and cloud infrastructure.",
+    "contact": "Contact Me"
   }
 }
