@@ -17,7 +17,7 @@ export default function Navbar() {
           <Logo />
         </Link>
 
-        <div className="hidden w-1/2 justify-center gap-6 lg:flex">
+        <div className="hidden w-1/2 justify-center gap-6 capitalize lg:flex">
           {navItems.map((i, idx) => (
             <Link key={idx} className="text-center" href={i.url}>
               {i.title}
