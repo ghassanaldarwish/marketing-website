@@ -39,11 +39,12 @@ export default async function RootLayout({
     <html
       suppressHydrationWarning
       className={cn(
-        "scroll-smooth antialiased",
+        "antialiased",
         fontMono.variable,
         "font-sans",
         inter.variable
       )}
+      data-scroll-behavior="smooth"
 
       lang={locale}
       dir={direction}

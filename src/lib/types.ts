@@ -9,10 +9,3 @@ export type NavbarPagesType = {
   url: string
   disabled: boolean
 }
-
-export type HeroType = {
-  title: string
-  description: string
-  badge: string[]
-  contact: string
-}

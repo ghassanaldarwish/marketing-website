@@ -2,18 +2,13 @@
   "navbar": {
     "pages": [
       {
-        "title": "projects",
-        "url": "/projects",
+        "title": "Approach-DE",
+        "url": "/approach",
         "disabled": false
       },
       {
-        "title": "engineering",
-        "url": "/engineering",
-        "disabled": false
-      },
-      {
-        "title": "articles",
-        "url": "/articles",
+        "title": "Writing",
+        "url": "/writing",
         "disabled": false
       },
       {
@@ -27,5 +22,12 @@
         "disabled": false
       }
     ]
+  },
+  "hero": {
+    "badge": ["AI Engineer", "DevOps", "Backend"],
+    "title": "Building AI Systems",
+    "secondaryTitle": "That Scale.",
+    "description": "I design and build production-ready AI systems, scalable backend platforms, and cloud infrastructure.",
+    "contact": "Contact Me"
   }
 }

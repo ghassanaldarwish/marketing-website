@@ -12,6 +12,8 @@ import {
 } from "next/navigation"
 import useTextDirection from "@/hooks/useTextDirection"
 import { LOCALE } from "@/lib/types"
+import Image from "next/image"
+import { cn } from "@/lib/utils"
 
 interface Language {
   name: string
@@ -55,21 +57,53 @@ export default function LanguageToggle() {
       router.replace(url, { scroll: false })
     })
   }
-  return locale === LOCALE.de ? (
-    <Button
-      onClick={() => selectorHandler(LOCALE.en)}
-      variant="outline"
-      size="icon"
-    >
-      {LOCALE.de}
-    </Button>
-  ) : (
-    <Button
-      onClick={() => selectorHandler(LOCALE.de)}
-      variant="outline"
-      size="icon"
-    >
-      {LOCALE.en}
-    </Button>
+
+  return (
+    <div className="flex gap-2">
+      <Image
+        onClick={() => selectorHandler(LOCALE.de)}
+        src="/de.svg"
+        width={80}
+        height={30}
+        className={cn(
+          "w-6 cursor-pointer",
+          locale === LOCALE.en ? "opacity-100" : "cursor-not-allowed opacity-50"
+        )}
+        alt="Ghassan Hero"
+        loading="eager"
+      />
+
+      <Image
+        onClick={() => selectorHandler(LOCALE.en)}
+        src="/gb.svg"
+        width={80}
+        height={30}
+        className={cn(
+          "w-6 cursor-pointer",
+          locale === LOCALE.en ? "cursor-not-allowed opacity-50" : "opacity-100"
+        )}
+        alt="Ghassan Hero"
+        loading="eager"
+      />
+    </div>
   )
+
+  // return locale === LOCALE.de ? (
+
+  //   <Button
+  //     onClick={() => selectorHandler(LOCALE.en)}
+  //     variant="outline"
+  //     size="icon"
+  //   >
+  //     {LOCALE.de}
+  //   </Button>
+  // ) : (
+  //   <Button
+  //     onClick={() => selectorHandler(LOCALE.de)}
+  //     variant="outline"
+  //     size="icon"
+  //   >
+  //     {LOCALE.en}
+  //   </Button>
+  // )
 }

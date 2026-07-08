@@ -11,7 +11,7 @@ export function TechBadge() {
   const t = useTranslations("hero")
   const badge = t.raw("badge") as string[]
   return (
-    <div className="flex w-full flex-wrap justify-center gap-2 lg:justify-start">
+    <div className="flex w-full flex-wrap gap-2">
       {badge.map((item, index) => (
         <Badge key={index}>{item}</Badge>
       ))}
