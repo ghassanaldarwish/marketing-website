@@ -67,7 +67,9 @@ export default function LanguageToggle() {
         height={30}
         className={cn(
           "w-6 cursor-pointer",
-          locale === LOCALE.en ? "opacity-100" : "cursor-not-allowed opacity-50"
+          locale === LOCALE.en
+            ? "opacity-100"
+            : "scale-80 cursor-not-allowed opacity-50"
         )}
         alt="Ghassan Hero"
         loading="eager"
@@ -80,7 +82,9 @@ export default function LanguageToggle() {
         height={30}
         className={cn(
           "w-6 cursor-pointer",
-          locale === LOCALE.en ? "cursor-not-allowed opacity-50" : "opacity-100"
+          locale === LOCALE.en
+            ? "scale-80 cursor-not-allowed opacity-50"
+            : "opacity-100"
         )}
         alt="Ghassan Hero"
         loading="eager"
