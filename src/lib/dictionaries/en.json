@@ -26,7 +26,7 @@
   "hero": {
     "badge": ["AI Engineer", "DevOps", "Backend"],
     "title": "Building AI Systems",
-    "secondaryTitle": "That Scale.",
+    "secondaryTitle": "That Scale",
     "description": "I design and build production-ready AI systems, scalable backend platforms, and cloud infrastructure.",
     "contact": "Contact Me"
   }

@@ -1,12 +1,12 @@
-import React from "react";
-import { cn } from "@/lib/utils";
+import React from "react"
+import { cn } from "@/lib/utils"
 export default function Docker({ className }: { className?: string }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       x="0px"
       y="0px"
-      className={cn("w-14 h-14 md:w-24 md:h-24", className)}
+      className={cn("h-10 w-10 md:h-14 md:w-14", className)}
       viewBox="0 0 48 48"
     >
       <path
@@ -50,5 +50,5 @@ export default function Docker({ className }: { className?: string }) {
         d="M32,22h-3c-0.552,0-1-0.448-1-1v-3c0-0.552,0.448-1,1-1h3c0.552,0,1,0.448,1,1v3 C33,21.552,32.552,22,32,22z"
       ></path>
     </svg>
-  );
+  )
 }

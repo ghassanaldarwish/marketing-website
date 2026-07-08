@@ -1,5 +1,5 @@
-import React from "react";
-import { cn } from "@/lib/utils";
+import React from "react"
+import { cn } from "@/lib/utils"
 
 export default function Gitlab({ className }: { className?: string }) {
   return (
@@ -7,7 +7,7 @@ export default function Gitlab({ className }: { className?: string }) {
       xmlns="http://www.w3.org/2000/svg"
       x="0px"
       y="0px"
-      className={cn("w-14 h-14 md:w-24 md:h-24", className)}
+      className={cn("h-10 w-10 md:h-14 md:w-14", className)}
       viewBox="0 0 48 48"
     >
       <path fill="#e53935" d="M24 43L16 20 32 20z"></path>
@@ -18,5 +18,5 @@ export default function Gitlab({ className }: { className?: string }) {
       <path fill="#e53935" d="M11 5L6 20 16 20z"></path>
       <path fill="#ffa726" d="M24 43L6 20 3 28z"></path>
     </svg>
-  );
+  )
 }

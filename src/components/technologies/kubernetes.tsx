@@ -1,5 +1,5 @@
-import React from "react";
-import { cn } from "@/lib/utils";
+import React from "react"
+import { cn } from "@/lib/utils"
 
 export default function Kubernetes({ className }: { className?: string }) {
   return (
@@ -7,7 +7,7 @@ export default function Kubernetes({ className }: { className?: string }) {
       xmlns="http://www.w3.org/2000/svg"
       x="0px"
       y="0px"
-      className={cn("w-14 h-14 md:w-24 md:h-24", className)}
+      className={cn("h-10 w-10 md:h-14 md:w-14 dark:invert-20", className)}
       viewBox="0 0 48 48"
     >
       <path
@@ -35,5 +35,5 @@ export default function Kubernetes({ className }: { className?: string }) {
         d="M39.646,28.846c-0.288,0.067-0.575,0-0.805-0.144c-0.47-0.317-0.968-0.49-1.467-0.634	c-0.249-0.067-0.508-0.125-0.757-0.163c-0.249-0.077-0.537,0-0.825,0.134c-0.288,0.163-0.547,0.135-0.815,0.115h-0.029	c0.221-0.72,0.364-1.47,0.441-2.238h0.01c0.249,0.077,0.499,0.144,0.719,0.403c0.221,0.231,0.451,0.403,0.71,0.423	c0.259,0.058,0.508,0.096,0.767,0.125c0.527,0.048,1.045,0.067,1.601-0.058c0.566-0.125,1.122,0.231,1.246,0.797	C40.566,28.164,40.211,28.721,39.646,28.846z"
       ></path>
     </svg>
-  );
+  )
 }

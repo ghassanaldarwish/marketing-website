@@ -1,5 +1,5 @@
-import React from "react";
-import { cn } from "@/lib/utils";
+import React from "react"
+import { cn } from "@/lib/utils"
 
 export default function Ansible({ className }: { className?: string }) {
   return (
@@ -8,7 +8,7 @@ export default function Ansible({ className }: { className?: string }) {
       x="0px"
       y="0px"
       viewBox="0 0 48 48"
-      className={cn("w-14 h-14 md:w-24 md:h-24", className)}
+      className={cn("h-10 w-10 md:h-14 md:w-14", className)}
     >
       <path
         fill="#424242"
@@ -19,5 +19,5 @@ export default function Ansible({ className }: { className?: string }) {
         d="M24.848,12.125c-0.765-0.327-1.651,0.022-1.976,0.784L14.031,33.5c-0.102,0.236,0.072,0.5,0.329,0.5	h2.226c0.3,0,0.571-0.179,0.689-0.454l3.69-8.595l10.581,8.707C31.823,33.886,32.161,34,32.5,34c0.317,0,0.635-0.101,0.903-0.302	c0.553-0.418,0.749-1.16,0.473-1.796l-8.25-19C25.469,12.539,25.185,12.271,24.848,12.125z M22.198,22.08l2.059-4.796l4.385,10.1	L22.198,22.08z"
       ></path>
     </svg>
-  );
+  )
 }

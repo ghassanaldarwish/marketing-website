@@ -1,5 +1,5 @@
-import React from "react";
-import { cn } from "@/lib/utils";
+import React from "react"
+import { cn } from "@/lib/utils"
 
 export default function Mongodb({ className }: { className?: string }) {
   return (
@@ -7,7 +7,7 @@ export default function Mongodb({ className }: { className?: string }) {
       xmlns="http://www.w3.org/2000/svg"
       x="0px"
       y="0px"
-      className={cn("w-14 h-14 md:w-24 md:h-24", className)}
+      className={cn("h-10 w-10 md:h-14 md:w-14", className)}
       viewBox="0 0 48 48"
     >
       <path
@@ -28,5 +28,5 @@ export default function Mongodb({ className }: { className?: string }) {
         d="M24,10c0,0-6,5-6,13c0,5.2,3.3,8.5,5,10l1-3V10z"
       ></path>
     </svg>
-  );
+  )
 }

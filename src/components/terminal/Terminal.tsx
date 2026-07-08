@@ -120,7 +120,7 @@ const tokenColors: Record<TokenType, string> = {
   path: "text-cyan-300",
   variable: "text-pink-400",
   comment: "text-neutral-500",
-  default: "text-neutral-300",
+  default: "dark:text-neutral-300 text-muted-foreground/90",
 }
 
 function SyntaxHighlightedText({ text }: { text: string }) {
@@ -286,16 +286,16 @@ export function Terminal({
       ref={containerRef}
       className={cn("h-full w-full font-mono text-xs", className)}
     >
-      <div className="h-full overflow-hidden rounded-lg border border-neutral-800 bg-neutral-900 shadow-2xl">
+      <div className="h-full overflow-hidden rounded-lg border bg-background/60 shadow-2xl dark:border-neutral-800 dark:bg-neutral-900">
         {/* Title Bar */}
-        <div className="flex items-center gap-2 bg-neutral-800 px-4 py-3">
+        <div className="flex items-center gap-2 border-b bg-background px-4 py-3 dark:bg-neutral-800">
           <div className="flex items-center gap-1.5">
             <div className="h-3 w-3 rounded-full bg-red-500 transition-colors hover:bg-red-600" />
             <div className="h-3 w-3 rounded-full bg-yellow-500 transition-colors hover:bg-yellow-600" />
             <div className="h-3 w-3 rounded-full bg-green-500 transition-colors hover:bg-green-600" />
           </div>
           <div className="flex-1 text-center">
-            <span className="truncate text-xs text-neutral-400">
+            <span className="truncate text-xs text-foreground/80 dark:text-neutral-400">
               {username} — bash
             </span>
           </div>
@@ -315,7 +315,9 @@ export function Terminal({
                   <SyntaxHighlightedText text={line.content} />
                 </span>
               ) : (
-                <span className="text-neutral-400">{line.content}</span>
+                <span className="text-secondary-foreground/60 dark:text-neutral-400">
+                  {line.content}
+                </span>
               )}
             </div>
           ))}
