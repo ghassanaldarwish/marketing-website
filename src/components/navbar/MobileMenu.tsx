@@ -1,7 +1,7 @@
 "use client"
 // import { Link } from "@/navigation"
 // import navbarData from "./data"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Menu } from "lucide-react"
 import { useState } from "react"
@@ -11,6 +11,7 @@ import LanguageToggle from "./LanguageToggle"
 import ModeToggle from "./ModeToggle"
 import Link from "next/link"
 import Logo from "./Logo"
+import { cn } from "@/lib/utils"
 // type NavItem = {
 //   name: string
 //   href: string
@@ -36,17 +37,40 @@ const MobileMenu = () => {
               </Link>
             </div>
             <div className="flex flex-col items-center gap-4">
-              {navItems.map((item, idx) => (
-                <Link
-                  onClick={() => setIsOpen(false)}
-                  className="hover:underline"
+              {navItems.map((i, idx) =>
+                i.disabled ? (
+                  <div
+                    key={idx}
 
-                  key={idx}
-                  href={item.url}
-                >
-                  {item.title}
-                </Link>
-              ))}
+                    style={{
+                      textDecoration: "none",
+                    }}
+
+                    className={cn(
+                      "hover cursor-not-allowed text-center opacity-30",
+                      buttonVariants({
+                        variant: "link",
+                      })
+                    )}
+                  >
+                    {i.title}
+                  </div>
+                ) : (
+                  <Link
+                    key={idx}
+                    onClick={() => setIsOpen(false)}
+                    className={cn(
+                      "text-center",
+                      buttonVariants({
+                        variant: "link",
+                      })
+                    )}
+                    href={i.url}
+                  >
+                    {i.title}
+                  </Link>
+                )
+              )}
             </div>
 
             <div className="flex h-14 w-full items-center justify-between gap-2">

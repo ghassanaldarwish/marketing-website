@@ -4,17 +4,17 @@
       {
         "title": "Approach",
         "url": "/approach",
-        "disabled": false
+        "disabled": true
       },
       {
         "title": "Writing",
         "url": "/writing",
-        "disabled": false
+        "disabled": true
       },
       {
         "title": "about",
         "url": "/about",
-        "disabled": false
+        "disabled": true
       },
       {
         "title": "contact",

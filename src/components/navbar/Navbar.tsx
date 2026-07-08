@@ -7,6 +7,8 @@ import LanguageToggle from "./LanguageToggle"
 import MobileMenu from "./MobileMenu"
 import { Link } from "@/i18n/routing"
 import { useTranslations } from "next-intl"
+import { cn } from "@/lib/utils"
+import { buttonVariants } from "../ui/button"
 export default function Navbar() {
   const t = useTranslations("navbar")
   const navItems = t.raw("pages") as NavbarPagesType[]
@@ -18,11 +20,40 @@ export default function Navbar() {
         </Link>
 
         <div className="hidden w-1/2 justify-center gap-6 capitalize lg:flex">
-          {navItems.map((i, idx) => (
-            <Link key={idx} className="text-center" href={i.url}>
-              {i.title}
-            </Link>
-          ))}
+          {navItems.map((i, idx) =>
+            i.disabled ? (
+              <div
+                key={idx}
+
+                style={{
+                  textDecoration: "none",
+                }}
+
+                className={cn(
+                  "hover cursor-not-allowed text-center opacity-30",
+                  buttonVariants({
+                    variant: "link",
+                  })
+                )}
+              >
+                {i.title}
+              </div>
+            ) : (
+              <Link
+                key={idx}
+
+                className={cn(
+                  "text-center",
+                  buttonVariants({
+                    variant: "link",
+                  })
+                )}
+                href={i.url}
+              >
+                {i.title}
+              </Link>
+            )
+          )}
         </div>
         <div className="hidden items-center gap-2 lg:flex">
           <ModeToggle />
