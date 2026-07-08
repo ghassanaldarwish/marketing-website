@@ -326,7 +326,7 @@ export function Terminal({
             <div className="leading-relaxed whitespace-pre-wrap">
               {prompt}
               <SyntaxHighlightedText text={currentText} />
-              <span className="ml-0.5 inline-block h-4 w-2 bg-neutral-300 align-middle" />
+              <span className="ml-0.5 inline-block h-4 w-2 bg-accent-foreground/70 align-middle dark:bg-neutral-300" />
             </div>
           )}
 
@@ -337,7 +337,7 @@ export function Terminal({
               {prompt}
               <span
                 className={cn(
-                  "inline-block h-4 w-2 bg-neutral-300 align-middle transition-opacity duration-100",
+                  "inline-block h-4 w-2 bg-accent-foreground/80 align-middle transition-opacity duration-100 dark:bg-neutral-300",
                   !cursorVisible && "opacity-0"
                 )}
               />

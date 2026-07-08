@@ -10,6 +10,7 @@ import { useTranslations } from "next-intl"
 import LanguageToggle from "./LanguageToggle"
 import ModeToggle from "./ModeToggle"
 import Link from "next/link"
+import Logo from "./Logo"
 // type NavItem = {
 //   name: string
 //   href: string
@@ -28,17 +29,30 @@ const MobileMenu = () => {
           </Button>
         </SheetTrigger>
         <SheetContent>
-          <div className="flex flex-col gap-4">
-            {navItems.map((item, idx) => (
-              <Link
-                onClick={() => setIsOpen(false)}
-                className="hover:underline"
-                key={idx}
-                href={item.url}
-              >
-                {item.title}
+          <div className="flex h-full flex-col justify-between gap-4 px-4">
+            <div className="flex h-14 w-full items-center">
+              <Link href="/" className="">
+                <Logo />
               </Link>
-            ))}
+            </div>
+            <div className="flex flex-col items-center gap-4">
+              {navItems.map((item, idx) => (
+                <Link
+                  onClick={() => setIsOpen(false)}
+                  className="hover:underline"
+
+                  key={idx}
+                  href={item.url}
+                >
+                  {item.title}
+                </Link>
+              ))}
+            </div>
+
+            <div className="flex h-14 w-full items-center justify-between gap-2">
+              <ModeToggle isMobile={true} />
+              <LanguageToggle />
+            </div>
           </div>
         </SheetContent>
       </Sheet>

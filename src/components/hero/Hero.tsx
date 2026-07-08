@@ -15,7 +15,7 @@ export default function Hero() {
   return (
     <div className="relative px-2 lg:px-0">
       <GridBackground />
-      <div className="relative m-auto flex h-full max-w-6xl flex-col lg:flex-row">
+      <div className="relative m-auto mt-16 flex h-full max-w-6xl flex-col md:mt-0 lg:flex-row">
         <div className="flex w-full flex-col justify-end gap-4 lg:gap-10 lg:pt-0">
           <TechBadge />
 
@@ -23,7 +23,7 @@ export default function Hero() {
             {title} <br /> {secondaryTitle}
           </h1>
 
-          <p className="text-xl">
+          <p className="min-h-30 text-xl md:min-h-10">
             <EncryptedText
               text={description}
               encryptedClassName="text-neutral-500"
@@ -50,7 +50,7 @@ export default function Hero() {
           />
         </div>
       </div>
-      <div className="relative m-auto flex max-w-6xl justify-between">
+      <div className="relative m-auto hidden max-w-6xl justify-between md:flex">
         <div></div>
         <Terminal
           initialDelay={6000}
