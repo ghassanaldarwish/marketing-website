@@ -1,30 +1,30 @@
 // src/actions/register-child.ts
 "use server"
-import { contactMessageSchema } from "@/lib/validation"
+import { contactFormSchema } from "@/lib/validation"
 import { sendTelegramMessage } from "@/lib/telegram"
 
-export async function submitChildRegistration(formData: FormData) {
+export async function submitContactForm(formData: FormData) {
   try {
     const values = Object.fromEntries(formData.entries())
 
-    const parsed = contactMessageSchema.safeParse({
+    const parsed = contactFormSchema.safeParse({
       ...values,
     })
 
     if (!parsed.success) {
       console.error("Validation error", parsed.error.flatten().fieldErrors)
-      return { error: "بيانات غير صالحة" }
+      return { error:"Validation error"}
     }
 
-    //     const message = `🧒 *طفل جديد تم تسجيله!*
-    // 👶 *اسم الطفل:* ${parsed.data.childName}
-    // 👨‍👧 *رقم والد الطفل:* ${parsed.data.fatherPhone}
-    // ✅ *مواليد الطفل:* ${parsed.data.childBirthdate}`;
+        const message = `✅ *New Message From Website*
+     *Name:* ${parsed.data.name}
+     *Email:* ${parsed.data.email}
+     *Message* ${parsed.data.message}`;
 
-    //     await sendTelegramMessage(message);
+    await sendTelegramMessage(message);
     return { success: true }
   } catch (e) {
     console.error("Upload failed:", e)
-    return { error: "حدث خطأ أثناء حفظ الملف" }
+    return { error: "Error" }
   }
 }

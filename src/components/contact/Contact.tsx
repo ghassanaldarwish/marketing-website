@@ -32,18 +32,10 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from "../ui/button"
+import { ContactForm, contactFormSchema } from "@/lib/validation"
+import { submitContactForm } from "@/actions/contact"
 
-const contactFormSchema = z.object({
-  name: z.string().trim().min(2, "Name must be at least 2 characters"),
-  email: z.string().trim().email("Please enter a valid email address"),
-  message: z
-    .string()
-    .trim()
-    .min(10, "Message must be at least 10 characters")
-    .max(5000, "Message must be less than 5000 characters"),
-})
 
-type ContactForm = z.infer<typeof contactFormSchema>
 
 export function ContactModel() {
   const [isOpen, setIsOpen] = React.useState(false)
@@ -59,13 +51,27 @@ export function ContactModel() {
     },
   })
 
-  function onSubmit(data: ContactForm) {
+  async function onSubmit(data: ContactForm) {
     console.log(data)
+    const formData = new FormData();
+    Object.entries(data).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
 
+   const result = await submitContactForm(formData);
+
+    if ("success" in result) {
     toast.success("Message sent successfully!")
 
     form.reset()
     setIsOpen(false)
+
+    } else {
+      toast.error("فشل الإرسال: " + result.error);
+    }
+
+
+
   }
 
   return (

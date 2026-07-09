@@ -1,27 +1,16 @@
 import { z } from "zod"
-import { t } from "@/lib/utils" // your translation utility
+// import { t } from "@/lib/utils" // your translation utility
 
-const maxWords = (value: string | undefined) =>
-  !value || value.trim().split(/\s+/).length <= 1000
 
-const wordLimitMessage = "الحد الأقصى هو ١٠٠٠ كلمة."
 
-export const contactMessageSchema = z.object({
-  childName: z
+export const contactFormSchema = z.object({
+  name: z.string().trim().min(2, "Name must be at least 2 characters"),
+  email: z.string().trim().email("Please enter a valid email address"),
+  message: z
     .string()
-    .nonempty(t("validation.required"))
-    .min(2, "اكتب الاسم الكامل للطفل")
-    .max(1000, "الحد الأقصى هو ١٠٠٠ حرف"),
-
-  childBirthdate: z
-    .string()
-    .nonempty(t("validation.required"))
-    .min(4, "أدخل تاريخ الميلاد")
-    .max(1000, "الحد الأقصى هو ١٠٠٠ حرف"),
-  fatherJob: z
-    .string()
-    .optional()
-    .refine(maxWords, { message: wordLimitMessage }),
+    .trim()
+    .min(10, "Message must be at least 10 characters")
+    .max(5000, "Message must be less than 5000 characters"),
 })
 
-export type contactMessageForm = z.infer<typeof contactMessageSchema> // 👈 ADD THIS LINE
+export type ContactForm = z.infer<typeof contactFormSchema>
