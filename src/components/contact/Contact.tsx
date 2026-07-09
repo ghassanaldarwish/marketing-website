@@ -2,10 +2,10 @@
 
 import * as React from "react"
 import { Controller, useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "sonner"
-
+import * as z from "zod"
 import { useTranslations } from "next-intl"
-
 
 import {
   Field,
@@ -13,7 +13,6 @@ import {
   FieldError,
   FieldGroup,
   FieldLabel,
-  
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import {
@@ -22,9 +21,6 @@ import {
   InputGroupText,
   InputGroupTextarea,
 } from "@/components/ui/input-group"
-
-
-
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -36,167 +32,158 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from "../ui/button"
-type ContactForm = {
-  name: string
-  email: string
-  message: string
-}
 
-export function ContactModel() {
-  const[isOpen,setIsOpen] = React.useState(false)
-    const t = useTranslations("hero")
-  
-  const contact = t("contact")
-const form = useForm<ContactForm>({
-  defaultValues: {
-    name: "",
-    email: "",
-    message: "",
-  },
+const contactFormSchema = z.object({
+  name: z.string().trim().min(2, "Name must be at least 2 characters"),
+  email: z.string().trim().email("Please enter a valid email address"),
+  message: z
+    .string()
+    .trim()
+    .min(10, "Message must be at least 10 characters")
+    .max(5000, "Message must be less than 5000 characters"),
 })
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+type ContactForm = z.infer<typeof contactFormSchema>
+
+export function ContactModel() {
+  const [isOpen, setIsOpen] = React.useState(false)
+  const t = useTranslations("hero")
+  const contact = t("contact")
+
+  const form = useForm<ContactForm>({
+    resolver: zodResolver(contactFormSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      message: "",
+    },
+  })
+
   function onSubmit(data: ContactForm) {
-   console.log(data)
+    console.log(data)
 
-  toast.success("Message sent successfully!")
+    toast.success("Message sent successfully!")
 
-  form.reset()
-  setIsOpen(false)
+    form.reset()
+    setIsOpen(false)
   }
-  return (
-    <AlertDialog open={isOpen}>
-      <AlertDialogTrigger asChild>
 
-           <Button size="lg" className="text-lg" onClick={()=>setIsOpen(true)}>
-                {contact}
-              </Button>
+  return (
+    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+      <AlertDialogTrigger asChild>
+        <Button size="lg" className="text-lg">
+          {contact}
+        </Button>
       </AlertDialogTrigger>
+
       <AlertDialogContent className="data-[size=default]:max-w-[calc(100%-2rem)] data-[size=default]:sm:max-w-[calc(100%-2rem)] data-[size=default]:md:max-w-3xl">
         <AlertDialogHeader>
-         <AlertDialogTitle>Get in Touch</AlertDialogTitle>
+          <AlertDialogTitle>Get in Touch</AlertDialogTitle>
 
-<AlertDialogDescription>
-  Have a project, job opportunity, or technical question? Send me a message.
-</AlertDialogDescription>
+          <AlertDialogDescription>
+            Have a project, job opportunity, or technical question? Send me a
+            message.
+          </AlertDialogDescription>
+
           <div className="w-full">
-                <form id="contact-form" onSubmit={form.handleSubmit(onSubmit)}>
-  <FieldGroup>
+            <form id="contact-form" onSubmit={form.handleSubmit(onSubmit)}>
+              <FieldGroup>
+                <Controller
+                  name="name"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="contact-name">
+                        Full Name
+                      </FieldLabel>
 
-    {/* Name */}
-    <Controller
-      name="name"
-      control={form.control}
-      rules={{
-        required: "Your name is required",
-      }}
-      render={({ field, fieldState }) => (
-        <Field data-invalid={fieldState.invalid}>
-          <FieldLabel htmlFor="contact-name">
-            Full Name
-          </FieldLabel>
+                      <Input
+                        {...field}
+                        id="contact-name"
+                        placeholder="John Doe"
+                        autoComplete="name"
+                        aria-invalid={fieldState.invalid}
+                      />
 
-          <Input
-            {...field}
-            id="contact-name"
-            placeholder="John Doe"
-            autoComplete="name"
-            aria-invalid={fieldState.invalid}
-          />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
 
-          {fieldState.invalid && (
-            <FieldError errors={[fieldState.error]} />
-          )}
-        </Field>
-      )}
-    />
+                <Controller
+                  name="email"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="contact-email">
+                        Email Address
+                      </FieldLabel>
 
-    {/* Email */}
-    <Controller
-      name="email"
-      control={form.control}
-      rules={{
-        required: "Email is required",
-        pattern: {
-          value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-          message: "Please enter a valid email address",
-        },
-      }}
-      render={({ field, fieldState }) => (
-        <Field data-invalid={fieldState.invalid}>
-          <FieldLabel htmlFor="contact-email">
-            Email Address
-          </FieldLabel>
+                      <Input
+                        {...field}
+                        id="contact-email"
+                        type="email"
+                        placeholder="john@example.com"
+                        autoComplete="email"
+                        aria-invalid={fieldState.invalid}
+                      />
 
-          <Input
-            {...field}
-            id="contact-email"
-            type="email"
-            placeholder="john@example.com"
-            autoComplete="email"
-            aria-invalid={fieldState.invalid}
-          />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
 
-          {fieldState.invalid && (
-            <FieldError errors={[fieldState.error]} />
-          )}
-        </Field>
-      )}
-    />
+                <Controller
+                  name="message"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="contact-message">Message</FieldLabel>
 
-    {/* Message */}
-    <Controller
-      name="message"
-      control={form.control}
-      rules={{
-        required: "Message is required",
-        maxLength: {
-          value: 5000,
-          message: "Maximum 5000 characters",
-        },
-      }}
-      render={({ field, fieldState }) => (
-        <Field data-invalid={fieldState.invalid}>
-          <FieldLabel htmlFor="contact-message">
-            Message
-          </FieldLabel>
+                      <InputGroup>
+                        <InputGroupTextarea
+                          {...field}
+                          id="contact-message"
+                          rows={8}
+                          maxLength={5000}
+                          className="min-h-40 resize-none"
+                          placeholder="Tell me about your project, idea, or opportunity..."
+                          aria-invalid={fieldState.invalid}
+                        />
 
-          <InputGroup>
-            <InputGroupTextarea
-              {...field}
-              id="contact-message"
-              rows={8}
-              className="min-h-40 resize-none"
-              placeholder="Tell me about your project, idea, or opportunity..."
-              aria-invalid={fieldState.invalid}
-            />
+                        <InputGroupAddon align="block-end">
+                          <InputGroupText className="tabular-nums">
+                            {field.value.length}/5000
+                          </InputGroupText>
+                        </InputGroupAddon>
+                      </InputGroup>
 
-            <InputGroupAddon align="block-end">
-              <InputGroupText className="tabular-nums">
-                {field.value.length}/5000
-              </InputGroupText>
-            </InputGroupAddon>
-          </InputGroup>
+                      <FieldDescription>
+                        Briefly describe your project or how I can help.
+                      </FieldDescription>
 
-          <FieldDescription>
-            Briefly describe your project or how I can help.
-          </FieldDescription>
-
-          {fieldState.invalid && (
-            <FieldError errors={[fieldState.error]} />
-          )}
-        </Field>
-      )}
-    />
-
-  </FieldGroup>
-</form></div>
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+              </FieldGroup>
+            </form>
+          </div>
         </AlertDialogHeader>
+
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={()=>setIsOpen(false)}>Cancel</AlertDialogCancel>
-              <Button type="submit" form="contact-form">
-            Send
-          </Button>        </AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+
+          <Button type="submit" form="contact-form">
+            Send Message
+          </Button>
+        </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
   )
