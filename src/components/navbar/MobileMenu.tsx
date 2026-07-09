@@ -5,7 +5,7 @@ import { Button, buttonVariants } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Menu } from "lucide-react"
 import { useState } from "react"
-import { NavbarPagesType } from "@/lib/types"
+import { LinkType } from "@/lib/types"
 import { useTranslations } from "next-intl"
 import LanguageToggle from "./LanguageToggle"
 import ModeToggle from "./ModeToggle"
@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils"
 const MobileMenu = () => {
   const [isOpen, setIsOpen] = useState(false)
   const t = useTranslations("navbar")
-  const navItems = t.raw("pages") as NavbarPagesType[]
+  const navItems = t.raw("pages") as LinkType[]
   return (
     <div className="lg:hidden">
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -74,7 +74,7 @@ const MobileMenu = () => {
             </div>
 
             <div className="flex h-14 w-full items-center justify-between gap-2">
-              <ModeToggle isMobile={true} />
+              <ModeToggle />
               <LanguageToggle />
             </div>
           </div>

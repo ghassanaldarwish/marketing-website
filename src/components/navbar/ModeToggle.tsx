@@ -5,7 +5,7 @@ import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 
-export default function ModeToggle({ isMobile = false }) {
+export default function ModeToggle() {
   const { theme, setTheme } = useTheme()
 
   const toggleTheme = () => {
@@ -15,7 +15,7 @@ export default function ModeToggle({ isMobile = false }) {
   return (
     <Button
       // variant="outline"
-      variant={isMobile ? "ghost" : "outline"}
+      variant={"ghost"}
 
       size="icon"
       onClick={toggleTheme}

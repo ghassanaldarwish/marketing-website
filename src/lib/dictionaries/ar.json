@@ -1,25 +1,21 @@
 {
+  "name": "ghassan",
   "navbar": {
     "pages": [
       {
-        "title": "projects",
-        "url": "/projects",
-        "disabled": false
+        "title": "Approach",
+        "url": "/approach",
+        "disabled": true
       },
       {
-        "title": "engineering",
-        "url": "/engineering",
-        "disabled": false
-      },
-      {
-        "title": "articles",
-        "url": "/articles",
-        "disabled": false
+        "title": "Writing",
+        "url": "/writing",
+        "disabled": true
       },
       {
         "title": "about",
         "url": "/about",
-        "disabled": false
+        "disabled": true
       },
       {
         "title": "contact",
@@ -27,5 +23,28 @@
         "disabled": false
       }
     ]
+  },
+  "hero": {
+    "badge": ["AI Engineer", "DevOps", "Backend"],
+    "title": "Building AI Systems",
+    "secondaryTitle": "That Scale",
+    "description": "I design and build production-ready AI systems, scalable backend platforms, and cloud infrastructure.",
+    "contact": "Contact Me"
+  },
+  "footer": {
+    "copyright": "© Ghassan Aldarwish 2026",
+    "social": {
+      "title": "Social media",
+      "links": [
+        {
+          "title": "twitter",
+          "url": "/"
+        },
+        {
+          "title": "linkedin",
+          "url": "/"
+        }
+      ]
+    }
   }
 }

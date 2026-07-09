@@ -1,7 +1,7 @@
 import Logo from "./Logo"
 import ModeToggle from "./ModeToggle"
 import { FloatingNav } from "./FloatingNav"
-import { NavbarPagesType } from "@/lib/types"
+import { LinkType } from "@/lib/types"
 
 import LanguageToggle from "./LanguageToggle"
 import MobileMenu from "./MobileMenu"
@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils"
 import { buttonVariants } from "../ui/button"
 export default function Navbar() {
   const t = useTranslations("navbar")
-  const navItems = t.raw("pages") as NavbarPagesType[]
+  const navItems = t.raw("pages") as LinkType[]
   return (
     <nav className="w-screen">
       <FloatingNav className="fixed top-0 z-50 flex h-10 w-full max-w-6xl items-center justify-between bg-background/50 px-2 backdrop-blur-md lg:top-2 lg:left-1/2 lg:m-auto lg:h-12 lg:-translate-x-1/2 lg:rounded-xl">

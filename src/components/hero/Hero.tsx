@@ -15,7 +15,7 @@ export default function Hero() {
   return (
     <div className="relative px-2 lg:px-0">
       <GridBackground />
-      <div className="relative m-auto mt-16 flex h-full max-w-6xl flex-col md:mt-0 lg:flex-row">
+      <div className="relative m-auto mt-12 flex h-full max-w-6xl flex-col md:mt-0 lg:flex-row">
         <div className="flex w-full flex-col justify-end gap-4 lg:gap-10 lg:pt-0">
           <TechBadge />
 

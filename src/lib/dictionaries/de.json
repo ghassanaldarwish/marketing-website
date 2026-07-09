@@ -1,20 +1,21 @@
 {
+  "name": "ghassan",
   "navbar": {
     "pages": [
       {
-        "title": "Approach-DE",
+        "title": "Approach",
         "url": "/approach",
-        "disabled": false
+        "disabled": true
       },
       {
         "title": "Writing",
         "url": "/writing",
-        "disabled": false
+        "disabled": true
       },
       {
         "title": "about",
         "url": "/about",
-        "disabled": false
+        "disabled": true
       },
       {
         "title": "contact",
@@ -26,8 +27,24 @@
   "hero": {
     "badge": ["AI Engineer", "DevOps", "Backend"],
     "title": "Building AI Systems",
-    "secondaryTitle": "That Scale.",
+    "secondaryTitle": "That Scale",
     "description": "I design and build production-ready AI systems, scalable backend platforms, and cloud infrastructure.",
     "contact": "Contact Me"
+  },
+  "footer": {
+    "copyright": "© Ghassan Aldarwish 2026",
+    "social": {
+      "title": "Social media",
+      "links": [
+        {
+          "title": "twitter",
+          "url": "/"
+        },
+        {
+          "title": "linkedin",
+          "url": "/"
+        }
+      ]
+    }
   }
 }

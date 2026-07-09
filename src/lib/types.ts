@@ -4,8 +4,8 @@ export enum LOCALE {
   de = "de",
 }
 
-export type NavbarPagesType = {
+export type LinkType = {
   title: string
   url: string
-  disabled: boolean
+  disabled?: boolean
 }
