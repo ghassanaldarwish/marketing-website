@@ -33,7 +33,7 @@ export default function Hero() {
             />
           </p>
           <div className="flex items-center justify-center gap-6 lg:justify-start">
-            {/* <ContactModel /> */}
+            {/* <ContactModel / > */}
             <div>Berlin, Germany</div>
           </div>
         </div>
