@@ -4,7 +4,7 @@ import * as React from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner"
-import * as z from "zod"
+import { z } from "zod"
 import { useTranslations } from "next-intl"
 
 
@@ -97,7 +97,7 @@ export function ContactModel() {
             account from our servers.
           </AlertDialogDescription>
           <div className="w-full">
-                 <form id="contact-form " onSubmit={form.handleSubmit(onSubmit)}>
+                 <form id="contact-form" onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup>
             <Controller
               name="title"
