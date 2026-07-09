@@ -1,6 +1,6 @@
 import Logo from "./Logo"
 import ModeToggle from "./ModeToggle"
-import { FloatingNav } from "./FloatingNav"
+import { FloatingNav } from "../ui/FloatingNav"
 import { LinkType } from "@/lib/types"
 
 import LanguageToggle from "./LanguageToggle"

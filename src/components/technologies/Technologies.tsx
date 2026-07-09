@@ -27,36 +27,54 @@ import Gitlab from "./gitlab"
 
 export default function Technologies() {
   return (
-    <div className="">
-      <div className="relative m-auto grid h-full max-w-6xl grid-cols-6 gap-4 md:grid-cols-12">
-        <Docker />
-        <Kubernetes />
-        <Ansible />
-        <Nodejs />
-        <Typescript className="fill-primary" />
-        <Python />
-        <Mongodb />
-        <Traefik />
-        <Hermes />
+    <section className="relative lg:px-0">
+      <div className="m-auto flex h-full max-w-6xl flex-col gap-4 px-2 py-8 lg:gap-8 lg:px-0 lg:py-16">
+        <div className="flex flex-col gap-2 text-center lg:gap-4">
+          <h1 className="text-2xl lg:text-6xl">Trusted Technologies</h1>
 
-        <Cloudflare />
-        <Gitlab />
-        <Bash />
+          <p className="text-md md:min-h-10 lg:text-xl">
+            Technologies I&apos;ve used to build scalable software and AI
+            solutions in production.
+          </p>
+        </div>
+        <div className="grid grid-cols-6 gap-4 md:grid-cols-12">
+          <Docker />
+          <Kubernetes />
+          <Ansible />
+          <Nodejs />
+          <Typescript className="fill-primary" />
+          <Python />
+          <Mongodb />
+          <Traefik />
+          <Hermes />
 
-        <PostgreSQL />
-        <Terraform />
-        <Jenkins />
-        <Kafka />
-        <Nginx />
+          <Cloudflare />
+          <Gitlab />
+          <Bash />
 
-        <Qdrant />
-        <OpenAI />
-        <GitHubActions />
-        <Numpy />
-        <Mistral />
-        <GoogleCloud />
-        <Jest />
+          <PostgreSQL />
+          <Terraform />
+          <Jenkins />
+          <Kafka />
+          <Nginx />
+
+          <Qdrant />
+          <OpenAI />
+          <GitHubActions />
+          <Numpy />
+          <Mistral />
+          <GoogleCloud />
+          <Jest />
+        </div>
       </div>
-    </div>
+    </section>
   )
 }
+
+//  <section className="relative m-auto flex h-40 w-full max-w-6xl flex-col">
+//         <div className="-top-10 hidden w-full lg:absolute lg:left-1/2 lg:block lg:-translate-x-1/2">
+//           <div className="m-auto max-w-6xl bg-background/10 px-2 backdrop-blur-xs lg:py-2 lg:text-left lg:text-lg">
+//             <Technologies />
+//           </div>
+//         </div>
+//       </section>

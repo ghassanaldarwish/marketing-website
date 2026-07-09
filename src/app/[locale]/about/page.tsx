@@ -1,4 +1,4 @@
-import GridBackground from "@/components/gridBackground/GridBackground"
+import GridBackground from "@/components/ui/GridBackground"
 
 export default function Page() {
   return (

@@ -2,9 +2,9 @@ import Image from "next/image"
 import { useTranslations } from "next-intl"
 import { Button } from "../ui/button"
 import { TechBadge } from "./TechBadge"
-import { EncryptedText } from "./EncryptedText"
-import GridBackground from "../gridBackground/GridBackground"
-import { Terminal } from "../terminal/Terminal"
+import { EncryptedText } from "../ui/EncryptedText"
+import GridBackground from "../ui/GridBackground"
+import { Terminal } from "../ui/Terminal"
 import InfiniteMovingCards from "../ui/InfiniteMovingCards"
 
 export default function Hero() {
