@@ -4,7 +4,7 @@ import * as React from "react"
 import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "sonner"
-import * as z from "zod"
+import * as z from "zod/v4"
 import { useTranslations } from "next-intl"
 
 import {
