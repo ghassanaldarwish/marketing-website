@@ -9,6 +9,7 @@ import { routing } from "@/i18n/routing"
 import { hasLocale, NextIntlClientProvider } from "next-intl"
 import { getMessages } from "next-intl/server"
 import { isRtlLang } from "rtl-detect"
+import { Toaster } from "@/components/ui/sonner";
 
 import { notFound } from "next/navigation"
 
@@ -62,6 +63,8 @@ export default async function RootLayout({
               {children}
               <Footer />
             </div>
+                      <Toaster expand={true} position="top-center" offset={{ top: 70 }} />
+
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

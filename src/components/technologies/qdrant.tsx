@@ -54,8 +54,8 @@ export default function Qdrant({ className }: { className?: string }) {
           y2="1106.56"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#ff3364"></stop>
-          <stop offset="1" stop-color="#c91540" stop-opacity="0"></stop>
+          <stop stopColor="#ff3364"></stop>
+          <stop offset="1" stopColor="#c91540" stopOpacity="0"></stop>
         </linearGradient>
       </defs>
     </svg>

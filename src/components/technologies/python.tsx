@@ -27,8 +27,8 @@ export default function Python({ className }: { className?: string }) {
           y2="5454.17"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#387eb8"></stop>
-          <stop offset="1" stop-color="#366994"></stop>
+          <stop stopColor="#387eb8"></stop>
+          <stop offset="1" stopColor="#366994"></stop>
         </linearGradient>
         <linearGradient
           id="b"
@@ -38,8 +38,8 @@ export default function Python({ className }: { className?: string }) {
           y2="6191.63"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#ffe052"></stop>
-          <stop offset="1" stop-color="#ffc331"></stop>
+          <stop stopColor="#ffe052"></stop>
+          <stop offset="1" stopColor="#ffc331"></stop>
         </linearGradient>
       </defs>
     </svg>

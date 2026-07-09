@@ -1,17 +1,17 @@
 import Image from "next/image"
 import { useTranslations } from "next-intl"
-import { Button } from "../ui/button"
 import { TechBadge } from "./TechBadge"
 import { EncryptedText } from "../ui/EncryptedText"
 import GridBackground from "../ui/GridBackground"
 import { Terminal } from "../ui/Terminal"
 import InfiniteMovingCards from "../ui/InfiniteMovingCards"
+import { ContactModel } from "../contact/Contact"
 
 export default function Hero() {
   const t = useTranslations("hero")
   const title = t("title")
   const description = t("description")
-  const contact = t("contact")
+
   const secondaryTitle = t("secondaryTitle")
   return (
     <div className="relative px-2 lg:px-0">
@@ -33,10 +33,7 @@ export default function Hero() {
             />
           </p>
           <div className="flex items-center justify-center gap-6 lg:justify-start">
-            <Button size="lg" className="text-lg">
-              {contact}
-            </Button>
-
+            <ContactModel />
             <div>Berlin, Germany</div>
           </div>
         </div>
