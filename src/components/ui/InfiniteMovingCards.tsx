@@ -4,7 +4,7 @@ import useTextDirection from "@/hooks/useTextDirection"
 import { cn } from "@/lib/utils"
 import React, { useEffect, useState } from "react"
 
-export const InfiniteMovingCards = ({
+export default function InfiniteMovingCards({
   children,
   direction = "left",
   speed = "normal",
@@ -16,7 +16,7 @@ export const InfiniteMovingCards = ({
   speed?: "fast" | "normal" | "slow"
   pauseOnHover?: boolean
   className?: string
-}) => {
+}) {
   const directionLang = useTextDirection()
   const containerRef = React.useRef<HTMLDivElement>(null)
   const scrollerRef = React.useRef<HTMLUListElement>(null)

@@ -5,6 +5,7 @@ import { TechBadge } from "./TechBadge"
 import { EncryptedText } from "./EncryptedText"
 import GridBackground from "../gridBackground/GridBackground"
 import { Terminal } from "../terminal/Terminal"
+import InfiniteMovingCards from "../ui/InfiniteMovingCards"
 
 export default function Hero() {
   const t = useTranslations("hero")
@@ -51,7 +52,14 @@ export default function Hero() {
         </div>
       </div>
       <div className="relative m-auto hidden max-w-6xl justify-between md:flex">
-        <div></div>
+        <div className="flex items-center lg:w-[62%]">
+          <InfiniteMovingCards className="w-full text-foreground/80">
+            <p>7+ Years Experience</p>
+            <p>AI Engineering</p>
+            <p>Production Backend Systems</p>
+            <p>Cloud & DevOps</p>
+          </InfiniteMovingCards>
+        </div>
         <Terminal
           initialDelay={6000}
           className="h-62 sm:w-full lg:w-[38%]"
