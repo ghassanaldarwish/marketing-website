@@ -13,4 +13,4 @@ export const contactFormSchema = z.object({
     .max(5000, "Message must be less than 5000 characters"),
 })
 
-export type ContactForm = z.infer<typeof contactFormSchema>
+export type ContactFormType = z.infer<typeof contactFormSchema>
