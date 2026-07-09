@@ -4,12 +4,12 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts")
 const nextConfig: NextConfig = {
   /* config options here */
 
-  compiler: {
-    removeConsole:
-      process.env.NODE_ENV === "production"
-        ? { exclude: ["error", "warn"] }
-        : false,
-  },
+  // compiler: {
+  //   removeConsole:
+  //     process.env.NODE_ENV === "production"
+  //       ? { exclude: ["error", "warn"] }
+  //       : false,
+  // },
 }
 
 export default withNextIntl(nextConfig)
