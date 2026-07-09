@@ -71,7 +71,7 @@ export function ContactForm({ setIsOpen }: ContactFormProps) {
   return (
    
 
-          <div className="w-full ">
+          <div className="w-full">
             <form id="contact-form" onSubmit={form.handleSubmit(onSubmit)}>
               <FieldGroup>
                 <Controller

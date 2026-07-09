@@ -28,16 +28,16 @@ import Gitlab from "./gitlab"
 export default function Technologies() {
   return (
     <section className="relative lg:px-0">
-      <div className="m-auto flex h-full max-w-6xl flex-col gap-4 px-2 py-8 lg:gap-8 lg:px-0 lg:py-16">
-        <div className="flex flex-col gap-2 text-center lg:gap-4">
-          <h1 className="text-2xl lg:text-6xl">Trusted Technologies</h1>
+      <div className="m-auto flex h-full max-w-6xl flex-col gap-8 px-2 py-8 lg:gap-16 lg:px-0 lg:py-24">
+        <div className="flex flex-col gap-2  lg:gap-4">
+          <h2 className="text-4xl font-semibold tracking-tight sm:text-5xl">Trusted Technologies</h2>
 
-          <p className="text-md md:min-h-10 lg:text-xl">
+          <p className="mt-6 text-lg leading-8 text-muted-foreground">
             Technologies I&apos;ve used to build scalable software and AI
             solutions in production.
           </p>
         </div>
-        <div className="grid grid-cols-6 gap-4 md:grid-cols-12">
+        <div className="grid grid-cols-5 gap-6 md:gap-16 md:grid-cols-12">
           <Docker />
           <Kubernetes />
           <Ansible />
@@ -71,10 +71,3 @@ export default function Technologies() {
   )
 }
 
-//  <section className="relative m-auto flex h-40 w-full max-w-6xl flex-col">
-//         <div className="-top-10 hidden w-full lg:absolute lg:left-1/2 lg:block lg:-translate-x-1/2">
-//           <div className="m-auto max-w-6xl bg-background/10 px-2 backdrop-blur-xs lg:py-2 lg:text-left lg:text-lg">
-//             <Technologies />
-//           </div>
-//         </div>
-//       </section>

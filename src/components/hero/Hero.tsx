@@ -6,6 +6,8 @@ import GridBackground from "../ui/GridBackground"
 import { Terminal } from "../ui/Terminal"
 import InfiniteMovingCards from "../ui/InfiniteMovingCards"
 import { ContactModel } from "../contact/Contact"
+import { Icons } from "../ui/icons"
+
 
 export default function Hero() {
   const t = useTranslations("hero")
@@ -14,27 +16,33 @@ export default function Hero() {
 
   const secondaryTitle = t("secondaryTitle")
   return (
-    <div className="relative px-2 lg:px-0">
+    <div className="relative px-2 lg:px-0 lg:mb-24 ">
       <GridBackground />
       <div className="relative m-auto mt-12 flex h-full max-w-6xl flex-col md:mt-0 lg:flex-row">
-        <div className="flex w-full flex-col justify-end gap-4 lg:gap-10 lg:pt-0">
+        <div className="flex w-full flex-col justify-end gap-8 lh:gap-4 lg:gap-10 lg:pt-0">
           <TechBadge />
 
           <h1 className="text-3xl lg:text-6xl">
             {title} <br /> {secondaryTitle}
           </h1>
 
-          <p className="min-h-30 text-xl md:min-h-10">
+          <p className="min-h-30 text-xl md:min-h-10 ">
             <EncryptedText
               text={description}
               encryptedClassName="text-neutral-500"
-              revealedClassName="dark:text-white text-black"
+              revealedClassName="leading-8 text-muted-foreground"
               revealDelayMs={50}
             />
           </p>
-          <div className="flex items-center justify-center gap-6 lg:justify-start">
+          <div className="flex items-center justify-center gap-8 lg:justify-start">
             <ContactModel />
-            <div>Berlin, Germany</div>
+      
+            <div className="flex gap-4 items-center">
+              <Icons.twitter/>
+              <Icons.linkedin/>
+
+
+            </div>
           </div>
         </div>
         <div className="relative">
@@ -50,8 +58,9 @@ export default function Hero() {
       </div>
       <div className="relative m-auto hidden max-w-6xl items-end justify-between md:flex">
         <div className="flex lg:w-[62%]">
-          <InfiniteMovingCards className="bg-background/10 text-foreground/80 backdrop-blur-xs">
+          <InfiniteMovingCards className="bg-background/10 leading-8 text-muted-foreground text-lg backdrop-blur-xs">
             <p>7+ Years Experience</p>
+            <p>Berlin, Germany</p>
             <p>AI Engineering</p>
             <p>Production Backend Systems</p>
             <p>Cloud & DevOps</p>
