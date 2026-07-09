@@ -51,9 +51,9 @@ export default function Hero() {
           />
         </div>
       </div>
-      <div className="relative m-auto hidden max-w-6xl justify-between md:flex">
-        <div className="flex items-center lg:w-[62%]">
-          <InfiniteMovingCards className="w-full text-foreground/80">
+      <div className="relative m-auto hidden max-w-6xl items-end justify-between md:flex">
+        <div className="flex lg:w-[62%]">
+          <InfiniteMovingCards className="bg-background/10 text-foreground/80 backdrop-blur-xs">
             <p>7+ Years Experience</p>
             <p>AI Engineering</p>
             <p>Production Backend Systems</p>
