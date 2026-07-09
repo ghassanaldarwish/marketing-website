@@ -5,7 +5,7 @@ import { EncryptedText } from "../ui/EncryptedText"
 import GridBackground from "../ui/GridBackground"
 import { Terminal } from "../ui/Terminal"
 import InfiniteMovingCards from "../ui/InfiniteMovingCards"
-// import { ContactModel } from "../contact/Contact"
+import { ContactModel } from "../contact/Contact"
 
 export default function Hero() {
   const t = useTranslations("hero")
@@ -33,7 +33,7 @@ export default function Hero() {
             />
           </p>
           <div className="flex items-center justify-center gap-6 lg:justify-start">
-            {/* <ContactModel / > */}
+            <ContactModel />
             <div>Berlin, Germany</div>
           </div>
         </div>
