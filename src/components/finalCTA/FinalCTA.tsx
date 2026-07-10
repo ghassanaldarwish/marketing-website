@@ -1,10 +1,10 @@
-import { ContactModel } from '../contact/Contact'
-
+import { ContactModel } from "../contact/Contact"
+import { Alert } from "../ui/alert"
 
 export default function FinalCTA() {
   return (
-       <section className="px-6 py-24">
-      <div className="mx-auto max-w-5xl rounded-3xl border border-white/10 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.22),transparent_35%),rgba(255,255,255,0.03)] p-8 text-center sm:p-12">
+    <section className="py-12 lg:py-24">
+      <Alert className="mx-auto max-w-5xl bg-muted-foreground/1 p-8 px-2 text-center sm:p-12 lg:px-0">
         <h2 className="text-4xl font-semibold tracking-tight sm:text-5xl">
           Let&apos;s build something exceptional.
         </h2>
@@ -17,10 +17,8 @@ export default function FinalCTA() {
 
         <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
           <ContactModel />
-
-      
         </div>
-      </div>
+      </Alert>
     </section>
   )
 }

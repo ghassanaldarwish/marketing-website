@@ -44,6 +44,7 @@ const MobileMenu = () => {
 
                     style={{
                       textDecoration: "none",
+                      fontSize: 20,
                     }}
 
                     className={cn(
@@ -57,6 +58,10 @@ const MobileMenu = () => {
                   </div>
                 ) : (
                   <Link
+                    style={{
+                      textDecoration: "none",
+                      fontSize: 20,
+                    }}
                     key={idx}
                     onClick={() => setIsOpen(false)}
                     className={cn(

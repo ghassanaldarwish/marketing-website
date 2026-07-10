@@ -6,7 +6,7 @@ export default function EngineeringBeyondCode() {
     <section className="relative py-12 lg:py-24">
       <div className="mx-auto grid max-w-6xl gap-12 px-2 lg:grid-cols-2 lg:items-center lg:px-0">
         <div>
-          <p className="mb-3 text-sm font-medium tracking-widest uppercase accent-foreground">
+          <p className="mb-3 text-sm font-medium tracking-widest text-accent-foreground uppercase">
             Engineering Beyond Code
           </p>
 

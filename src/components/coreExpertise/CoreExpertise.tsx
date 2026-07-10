@@ -37,7 +37,7 @@ export default function CoreExpertise() {
     <section className="border border-y bg-foreground/2 py-12 lg:py-24">
       <div className="mx-auto max-w-6xl px-2 lg:px-0">
         <div className="max-w-3xl">
-          <p className="mb-3 text-sm font-medium tracking-widest text-blue-400 uppercase">
+          <p className="mb-3 text-sm font-medium tracking-widest text-accent-foreground uppercase">
             Core Expertise
           </p>
           <h2 className="text-4xl font-semibold tracking-tight sm:text-5xl">
@@ -56,9 +56,9 @@ export default function CoreExpertise() {
             return (
               <Card
                 key={item.title}
-                className="group border p-6 transition hover:-translate-y-1 hover:bg-foreground/5"
+                className="group p-6 transition hover:-translate-y-1 hover:bg-foreground/5"
               >
-                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-blue-500/10 text-blue-400">
+                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl border bg-accent-foreground/10 accent-foreground">
                   <Icon className="h-6 w-6" />
                 </div>
 

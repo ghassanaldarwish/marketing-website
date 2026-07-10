@@ -31,7 +31,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="flex flex-col items-center gap-8 lg:flex-row lg:items-start">
-          <div className="flex flex-col justify-center md:items-start ">
+          <div className="flex flex-col justify-center md:items-start">
             {navItems.map((i, idx) =>
               i.disabled ? (
                 <div
@@ -39,10 +39,11 @@ export default function Footer() {
 
                   style={{
                     textDecoration: "none",
+                    fontSize: 20,
                   }}
 
                   className={cn(
-                    "hover cursor-not-allowed text-center opacity-30 ",
+                    "cursor-not-allowed text-center opacity-30",
                     buttonVariants({
                       variant: "link",
                     })
@@ -53,9 +54,12 @@ export default function Footer() {
               ) : (
                 <Link
                   key={idx}
-
+                  style={{
+                    textDecoration: "none",
+                    fontSize: 20,
+                  }}
                   className={cn(
-                    "text-center ",
+                    "text-center",
                     buttonVariants({
                       variant: "link",
                     })
@@ -71,7 +75,7 @@ export default function Footer() {
             <h5 className="text-center font-bold capitalize transition-colors">
               {socialTitle}
             </h5>
-            <div className="flex items-center  gap-2">
+            <div className="flex items-center gap-2">
               {socialLinks.map((item, idx) => {
                 const IconComponent = Icons[item.title as keyof typeof Icons]
 
