@@ -20,21 +20,6 @@ interface Language {
   icon: string
 }
 
-interface Languages {
-  [key: string]: Language
-}
-
-const languages: Languages = {
-  en: {
-    name: "English",
-    icon: "/united-kingdom-icon.png",
-  },
-  ar: {
-    name: "العربية",
-    icon: "/united-arab-emirates-icon.png",
-  },
-}
-
 export default function LanguageToggle() {
   const { locale } = useParams<{ locale: string }>()
   const pathname = usePathname()
@@ -91,23 +76,4 @@ export default function LanguageToggle() {
       />
     </div>
   )
-
-  // return locale === LOCALE.de ? (
-
-  //   <Button
-  //     onClick={() => selectorHandler(LOCALE.en)}
-  //     variant="outline"
-  //     size="icon"
-  //   >
-  //     {LOCALE.de}
-  //   </Button>
-  // ) : (
-  //   <Button
-  //     onClick={() => selectorHandler(LOCALE.de)}
-  //     variant="outline"
-  //     size="icon"
-  //   >
-  //     {LOCALE.en}
-  //   </Button>
-  // )
 }

@@ -8,7 +8,7 @@ export default function Ansible({ className }: { className?: string }) {
       x="0px"
       y="0px"
       viewBox="0 0 48 48"
-      className={cn("h-10 w-10 md:h-14 md:w-14", className)}
+      className={cn("h-10 w-10 md:h-14 md:w-14 dark:invert", className)}
     >
       <path
         fill="#424242"

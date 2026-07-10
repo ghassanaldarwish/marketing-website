@@ -15,7 +15,7 @@ export default function Hero() {
   const secondaryTitle = t("secondaryTitle")
   return (
     <div className="relative px-2 lg:mb-24 lg:px-0">
-      <div className="relative m-auto mt-12 flex h-full max-w-6xl flex-col md:mt-0 lg:flex-row">
+      <div className="relative m-auto flex h-full max-w-6xl flex-col pt-12 md:mt-0 lg:flex-row">
         <div className="lh:gap-4 flex w-full flex-col justify-end gap-8 lg:gap-10 lg:pt-0">
           <TechBadge />
 

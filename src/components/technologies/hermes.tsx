@@ -9,7 +9,7 @@ export default function Hermes({ className }: { className?: string }) {
       width={50}
       height={50}
       className={cn(
-        "h-10 w-10 object-cover md:h-14 md:w-14 dark:invert",
+        "h-10 w-10 scale-100 object-contain md:h-14 md:w-14 md:scale-150 dark:invert",
         className
       )}
       alt="hermes"

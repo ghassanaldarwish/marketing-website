@@ -5,6 +5,7 @@ import { LinkType } from "@/lib/types"
 import { buttonVariants } from "../ui/button"
 import { cn } from "@/lib/utils"
 import { Icons } from "../ui/icons"
+import GridBackground from "../ui/GridBackground"
 
 export default function Footer() {
   const tFooter = useTranslations("footer")
@@ -17,8 +18,9 @@ export default function Footer() {
   const socialLinks = tFooter.raw("social.links") as LinkType[]
 
   return (
-    <div className="border-t bg-background px-2 py-8">
-      <div className="mx-auto flex max-w-6xl flex-col-reverse items-center justify-between gap-8 lg:flex-row">
+    <div className="relative border-t bg-background px-2 py-8">
+      <GridBackground />
+      <div className="relative mx-auto flex max-w-6xl flex-col-reverse items-center justify-between gap-8 lg:flex-row">
         <div>
           <div className="md:flex">
             <Link className="flex gap-4 text-2xl font-bold" href="/">

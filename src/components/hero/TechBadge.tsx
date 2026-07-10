@@ -10,7 +10,11 @@ export function TechBadge() {
   return (
     <div className="flex w-full flex-wrap gap-2">
       {badge.map((item, index) => (
-        <Badge variant="secondary" key={index}>
+        <Badge
+          className="bg-background p-2 lg:p-4 lg:text-lg"
+          variant="outline"
+          key={index}
+        >
           {item}
         </Badge>
       ))}

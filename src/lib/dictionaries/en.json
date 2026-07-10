@@ -5,12 +5,12 @@
       {
         "title": "Engineering",
         "url": "/engineering",
-        "disabled": true
+        "disabled": false
       },
       {
         "title": "about",
         "url": "/about",
-        "disabled": true
+        "disabled": false
       },
       {
         "title": "contact",

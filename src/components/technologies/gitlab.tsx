@@ -10,13 +10,13 @@ export default function Gitlab({ className }: { className?: string }) {
       className={cn("h-10 w-10 md:h-14 md:w-14", className)}
       viewBox="0 0 48 48"
     >
-      <path fill="#e53935" d="M24 43L16 20 32 20z"></path>
-      <path fill="#ff7043" d="M24 43L42 20 32 20z"></path>
-      <path fill="#e53935" d="M37 5L42 20 32 20z"></path>
-      <path fill="#ffa726" d="M24 43L42 20 45 28z"></path>
-      <path fill="#ff7043" d="M24 43L6 20 16 20z"></path>
-      <path fill="#e53935" d="M11 5L6 20 16 20z"></path>
-      <path fill="#ffa726" d="M24 43L6 20 3 28z"></path>
+      <path className="dark:invert" d="M24 43L16 20 32 20z"></path>
+      <path className="fill-foreground/70" d="M24 43L42 20 32 20z"></path>
+      <path className="dark:invert" d="M37 5L42 20 32 20z"></path>
+      <path className="fill-foreground/50" d="M24 43L42 20 45 28z"></path>
+      <path className="fill-foreground/70" d="M24 43L6 20 16 20z"></path>
+      <path className="dark:invert" d="M11 5L6 20 16 20z"></path>
+      <path className="fill-foreground/50" d="M24 43L6 20 3 28z"></path>
     </svg>
   )
 }
