@@ -1,9 +1,12 @@
+import { Alert } from "../ui/alert"
+import { Card } from "../ui/card"
+
 export default function EngineeringBeyondCode() {
   return (
-    <section className="py-24">
-      <div className="mx-auto grid max-w-7xl gap-12 px-6 lg:grid-cols-2 lg:items-center">
+    <section className="relative py-12 lg:py-24">
+      <div className="mx-auto grid max-w-6xl gap-12 px-2 lg:grid-cols-2 lg:items-center lg:px-0">
         <div>
-          <p className="mb-3 text-sm font-medium uppercase tracking-widest text-blue-400">
+          <p className="mb-3 text-sm font-medium tracking-widest uppercase accent-foreground">
             Engineering Beyond Code
           </p>
 
@@ -18,13 +21,13 @@ export default function EngineeringBeyondCode() {
           </p>
 
           <p className="mt-4 text-lg leading-8 text-muted-foreground">
-            That is the mindset I bring to every project: combining AI,
-            backend engineering, cloud infrastructure, and frontend
-            craftsmanship to create software that works in the real world.
+            That is the mindset I bring to every project: combining AI, backend
+            engineering, cloud infrastructure, and frontend craftsmanship to
+            create software that works in the real world.
           </p>
         </div>
-
-        <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
+        <Card className="p-6">
+          {/* <div className="rounded-3xl border border-white/10 bg-white/3 p-6"> */}
           <div className="space-y-4">
             {[
               ["Users", "Product experience and user value"],
@@ -35,17 +38,18 @@ export default function EngineeringBeyondCode() {
               ["Observability", "Logs, metrics, monitoring, and alerts"],
             ].map(([title, desc], index) => (
               <div key={title}>
-                <div className="rounded-2xl border border-white/10 bg-background/60 p-4">
+                <Alert className="">
                   <h3 className="font-medium">{title}</h3>
                   <p className="mt-1 text-sm text-muted-foreground">{desc}</p>
-                </div>
+                </Alert>
                 {index !== 5 && (
                   <div className="mx-auto h-5 w-px bg-white/10" />
                 )}
               </div>
             ))}
           </div>
-        </div>
+        </Card>
+        {/* </div> */}
       </div>
     </section>
   )

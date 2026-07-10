@@ -3,13 +3,8 @@
   "navbar": {
     "pages": [
       {
-        "title": "Approach",
-        "url": "/approach",
-        "disabled": true
-      },
-      {
-        "title": "Writing",
-        "url": "/writing",
+        "title": "Engineering",
+        "url": "/engineering",
         "disabled": true
       },
       {

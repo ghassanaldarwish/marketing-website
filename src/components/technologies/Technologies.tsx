@@ -28,16 +28,18 @@ import Gitlab from "./gitlab"
 export default function Technologies() {
   return (
     <section className="relative lg:px-0">
-      <div className="m-auto flex h-full max-w-6xl flex-col gap-8 px-2 py-8 lg:gap-16 lg:px-0 lg:py-24">
-        <div className="flex flex-col gap-2  lg:gap-4">
-          <h2 className="text-4xl font-semibold tracking-tight sm:text-5xl">Trusted Technologies</h2>
+      <div className="relative m-auto flex h-full max-w-6xl flex-col gap-8 px-2 py-8 lg:gap-16 lg:px-0 lg:py-24">
+        <div className="flex flex-col gap-2 lg:gap-4">
+          <h2 className="text-4xl font-semibold tracking-tight sm:text-5xl">
+            Trusted Technologies
+          </h2>
 
           <p className="mt-6 text-lg leading-8 text-muted-foreground">
             Technologies I&apos;ve used to build scalable software and AI
             solutions in production.
           </p>
         </div>
-        <div className="grid grid-cols-5 gap-6 md:gap-16 md:grid-cols-12">
+        <div className="grid grid-cols-5 gap-6 md:grid-cols-12 md:gap-16">
           <Docker />
           <Kubernetes />
           <Ansible />
@@ -70,4 +72,3 @@ export default function Technologies() {
     </section>
   )
 }
-

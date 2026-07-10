@@ -1,13 +1,6 @@
-
-import {
-
-  Brain,
-  Cloud,
-  Code2,
-
-  Server,
-
-} from "lucide-react"
+import { Brain, Cloud, Code2, Server } from "lucide-react"
+import { Card } from "../ui/card"
+import { Badge } from "../ui/badge"
 const expertise = [
   {
     title: "AI Engineering",
@@ -41,10 +34,10 @@ const expertise = [
 
 export default function CoreExpertise() {
   return (
-    <section className="border-y border-white/10 bg-white/[0.02] py-24">
-      <div className="mx-auto max-w-7xl px-6">
+    <section className="border border-y bg-foreground/2 py-12 lg:py-24">
+      <div className="mx-auto max-w-6xl px-2 lg:px-0">
         <div className="max-w-3xl">
-          <p className="mb-3 text-sm font-medium uppercase tracking-widest text-blue-400">
+          <p className="mb-3 text-sm font-medium tracking-widest text-blue-400 uppercase">
             Core Expertise
           </p>
           <h2 className="text-4xl font-semibold tracking-tight sm:text-5xl">
@@ -61,9 +54,9 @@ export default function CoreExpertise() {
             const Icon = item.icon
 
             return (
-              <div
+              <Card
                 key={item.title}
-                className="group rounded-3xl border border-white/10 bg-background/60 p-6 transition hover:-translate-y-1 hover:bg-white/[0.04]"
+                className="group border p-6 transition hover:-translate-y-1 hover:bg-foreground/5"
               >
                 <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-blue-500/10 text-blue-400">
                   <Icon className="h-6 w-6" />
@@ -76,15 +69,16 @@ export default function CoreExpertise() {
 
                 <div className="mt-6 flex flex-wrap gap-2">
                   {item.points.map((point) => (
-                    <span
+                    <Badge
                       key={point}
-                      className="rounded-full border border-white/10 px-3 py-1 text-xs text-muted-foreground"
+                      variant="outline"
+                      className="px-3 py-1 text-xs text-muted-foreground"
                     >
                       {point}
-                    </span>
+                    </Badge>
                   ))}
                 </div>
-              </div>
+              </Card>
             )
           })}
         </div>
