@@ -12,6 +12,8 @@
 
   --font-heading: var(--font-inter);
   --font-sans: var(--font-inter);
+  --font-mono: var(--font-geist-mono);
+
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -20,11 +22,13 @@
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
+
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
   --color-chart-2: var(--chart-2);
   --color-chart-1: var(--chart-1);
+
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
@@ -43,6 +47,7 @@
   --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
+
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -50,6 +55,7 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
   @keyframes scroll {
     to {
       transform: translate(calc(-50% - 0.5rem));
@@ -60,28 +66,39 @@
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
+
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
+
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
+
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
+
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
+
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
+
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
+
   --destructive: oklch(0.577 0.245 27.325);
+
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
+
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
+
   --radius: 0.325rem;
+
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -95,27 +112,37 @@
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
+
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
+
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
+
   --primary: oklch(0.922 0 0);
   --primary-foreground: oklch(0.205 0 0);
+
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
+
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
+
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
+
   --destructive: oklch(0.704 0.191 22.216);
+
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
+
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
+
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.488 0.243 264.376);
@@ -130,17 +157,80 @@
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
+
   html {
     @apply font-sans;
-    font-size: 18px;
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+  }
+
+  body {
+    @apply min-h-screen bg-background text-foreground;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--primary) 22%, transparent);
+    color: var(--foreground);
+  }
+
+  button,
+  a,
+  input,
+  textarea,
+  select {
+    @apply outline-none;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
   }
 }
 
+/*
+ * Optional:
+ *
+ * Setting the root to 18px makes every rem-based Tailwind value
+ * approximately 12.5% larger, including padding, gaps, radii and headings.
+ *
+ * Prefer leaving the browser default at 16px and applying text-lg where
+ * larger body copy is needed.
+ */
+/*
+html {
+  font-size: 18px;
+}
+*/
+
+/* -------------------------------------------
+   MDX: rehype-pretty-code
+-------------------------------------------- */
+
 [data-rehype-pretty-code-figure] {
   margin-block: 1.75rem;
+}
+
+/*
+ * Remove typography-plugin pseudo-quotes from code.
+ */
+.prose :where(code):not(:where([class~="not-prose"] *))::before,
+.prose :where(code):not(:where([class~="not-prose"] *))::after {
+  content: none;
+}
+
+/*
+ * Inline code only—not code inside pre.
+ */
+.prose :where(:not(pre) > code):not(:where([class~="not-prose"] *)) {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--muted);
+  padding: 0.15em 0.4em;
+  color: var(--foreground);
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  font-weight: 500;
 }
 
 [data-rehype-pretty-code-figure] pre {
@@ -149,35 +239,64 @@
   border-radius: var(--radius-xl);
   background: var(--muted);
   padding-block: 1rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+[data-rehype-pretty-code-figure] pre:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
 }
 
 [data-rehype-pretty-code-figure] code {
   display: grid;
   min-width: 100%;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font-family: var(--font-mono);
   font-size: 0.875rem;
+  font-weight: 400;
   line-height: 1.7;
 }
 
 [data-rehype-pretty-code-figure] [data-line] {
+  min-height: 1.7em;
   padding-inline: 1rem;
 }
 
 [data-rehype-pretty-code-figure] [data-highlighted-line] {
+  border-inline-start: 2px solid var(--primary);
   background: color-mix(in oklab, var(--primary) 12%, transparent);
-  border-left: 2px solid var(--primary);
 }
 
+/*
+ * Highlighted words/tokens.
+ */
+[data-rehype-pretty-code-figure] [data-highlighted-chars] {
+  border-radius: 0.25rem;
+  background: color-mix(in oklab, var(--primary) 18%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--primary) 18%, transparent);
+}
+
+/*
+ * Shiki dual-theme variables.
+ */
 code[data-theme*=" "],
 code[data-theme*=" "] span {
   color: var(--shiki-light);
-  background-color: var(--shiki-light-bg);
+  background-color: transparent;
 }
 
 .dark code[data-theme*=" "],
 .dark code[data-theme*=" "] span {
   color: var(--shiki-dark);
-  background-color: var(--shiki-dark-bg);
+  background-color: transparent;
 }
+
+/* -------------------------------------------
+   Code block title
+-------------------------------------------- */
 
 [data-rehype-pretty-code-title] {
   border: 1px solid var(--border);
@@ -185,43 +304,58 @@ code[data-theme*=" "] span {
   border-radius: var(--radius-xl) var(--radius-xl) 0 0;
   background: var(--muted);
   padding: 0.65rem 1rem;
+  color: var(--muted-foreground);
   font-family: var(--font-mono);
   font-size: 0.8rem;
   font-weight: 500;
 }
 
 [data-rehype-pretty-code-title] + pre {
+  margin-top: 0;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+
+/* -------------------------------------------
+   Code line numbers
+-------------------------------------------- */
 
 code[data-line-numbers] {
   counter-reset: line;
 }
 
 code[data-line-numbers] > [data-line]::before {
-  counter-increment: line;
-  content: counter(line);
-
   display: inline-block;
   width: 1.5rem;
-  margin-right: 1.5rem;
-  text-align: right;
+  margin-inline-end: 1.5rem;
   color: var(--muted-foreground);
+  text-align: end;
+  content: counter(line);
+  counter-increment: line;
+  user-select: none;
 }
+
+/* -------------------------------------------
+   Heading anchors
+-------------------------------------------- */
 
 .heading-anchor {
   margin-inline-start: 0.5rem;
+  border-radius: 0.125rem;
   color: var(--muted-foreground);
+  font-weight: 400;
   text-decoration: none;
   opacity: 0;
-  transition: opacity 150ms ease;
+  transition:
+    color 150ms ease,
+    opacity 150ms ease;
 }
 
 h1:hover > .heading-anchor,
 h2:hover > .heading-anchor,
 h3:hover > .heading-anchor,
-h4:hover > .heading-anchor {
+h4:hover > .heading-anchor,
+.heading-anchor:focus-visible {
   opacity: 1;
 }
 
@@ -231,8 +365,34 @@ h4:hover > .heading-anchor {
 }
 
 .heading-anchor:focus-visible {
-  opacity: 1;
   outline: 2px solid var(--ring);
   outline-offset: 4px;
-  border-radius: 0.125rem;
+}
+
+/*
+ * Touch devices have no reliable hover state, so keep anchors visible.
+ */
+@media (hover: none) {
+  .heading-anchor {
+    opacity: 0.65;
+  }
+}
+
+/* -------------------------------------------
+   Accessibility
+-------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
