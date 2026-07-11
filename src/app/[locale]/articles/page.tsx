@@ -1,23 +1,19 @@
 import type { Metadata } from "next"
-import type { LucideIcon } from "lucide-react"
 
-import {
-  ArrowRight,
-  Brain,
-  Cloud,
-  Code2,
-  Layers3,
-  Server,
-  Workflow,
-} from "lucide-react"
+import { ArrowRight } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
+
 import { hasLocale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
 
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
+
 import { routing } from "@/i18n/routing"
+import { getArticles, type AppLocale } from "@/lib/mdx/get-article"
+import type { ArticleSummary } from "@/lib/mdx/article-schema"
 import {
   absoluteUrl,
   getOpenGraphLocale,
@@ -31,161 +27,12 @@ type EngineeringPageProps = {
   }>
 }
 
-type Project = {
-  title: string
-  slug: string
-  category: string
-  status: string
-  icon: LucideIcon
-  description: string
-  challenge: string
-  solution: string
-  outcome: string
-  stack: string[]
-  layers: string[]
-  featured?: boolean
-  githubHref?: string
-  liveHref?: string
-}
-
 const pageMetadata = {
   title: "Engineering",
+
   description:
     "Explore software systems, AI platforms, backend architectures, automation workflows and cloud infrastructure designed by Ghassan Aldarwish.",
 }
-
-const projects: Project[] = [
-  {
-    title: "AI Trading Assistant",
-    slug: "ai-trading-assistant",
-    category: "AI Engineering / Backend",
-    status: "Case Study",
-    icon: Brain,
-    featured: true,
-    description:
-      "An AI-powered analysis platform that combines language models, structured workflows, backend APIs, and data processing to support intelligent decision-making.",
-    challenge:
-      "The main challenge was connecting AI reasoning with reliable backend services while keeping the system explainable, maintainable, and production-ready.",
-    solution:
-      "Designed a layered architecture with AI orchestration, backend APIs, data persistence, workflow execution, and clear boundaries between reasoning and business logic.",
-    outcome:
-      "A system architecture that can support AI-assisted analysis, tool usage, structured outputs, and future integration with real-time data sources.",
-    stack: [
-      "Python",
-      "TypeScript",
-      "OpenAI",
-      "LangChain",
-      "PostgreSQL",
-      "Docker",
-    ],
-    layers: [
-      "AI Layer",
-      "Workflow Engine",
-      "Backend API",
-      "Data Layer",
-      "Deployment",
-    ],
-  },
-  {
-    title: "Scalable Backend Platform",
-    slug: "scalable-backend-platform",
-    category: "Backend Architecture",
-    status: "System Design",
-    icon: Server,
-    featured: true,
-    description:
-      "A distributed backend platform designed around microservices, authentication, API boundaries, background jobs, service communication, and deployment workflows.",
-    challenge:
-      "The goal was to keep services maintainable while supporting independent deployments, predictable scaling, and clean communication between domains.",
-    solution:
-      "Built the architecture around clear service ownership, typed APIs, reusable infrastructure patterns, Docker-based environments, and CI/CD automation.",
-    outcome:
-      "A backend foundation that supports growth, separation of concerns, better deployment control, and easier long-term maintenance.",
-    stack: ["Node.js", "TypeScript", "GraphQL", "Redis", "Docker", "CI/CD"],
-    layers: [
-      "API Gateway",
-      "Auth Service",
-      "Domain Services",
-      "Cache",
-      "CI/CD",
-    ],
-  },
-  {
-    title: "AI Workflow Automation",
-    slug: "ai-workflow-automation",
-    category: "AI Agents / Automation",
-    status: "Architecture",
-    icon: Workflow,
-    featured: true,
-    description:
-      "Automation pipelines that connect APIs, AI agents, backend services, and external tools to reduce manual work and improve engineering productivity.",
-    challenge:
-      "AI workflows must be useful, repeatable, observable, and safe enough for real-world usage instead of being simple one-time prompts.",
-    solution:
-      "Designed workflow steps with tool boundaries, structured prompts, local model support, logging, retries, and integration points for backend services.",
-    outcome:
-      "A reusable automation architecture for research, content generation, engineering support, and operational tasks.",
-    stack: ["Python", "AI Agents", "MCP", "Ollama", "Docker", "Linux"],
-    layers: ["Agent", "Tools", "Memory", "APIs", "Automation"],
-  },
-  {
-    title: "Developer Workspace Platform",
-    slug: "developer-workspace-platform",
-    category: "Full-Stack / Cloud",
-    status: "Product System",
-    icon: Layers3,
-    description:
-      "A platform concept for managing developer workspaces, user flows, backend services, authentication, infrastructure, and production deployment.",
-    challenge:
-      "The system needed to combine product experience with backend reliability, secure access, deployment automation, and clear service boundaries.",
-    solution:
-      "Structured the application with a Next.js frontend, backend APIs, service-based architecture, Docker deployment, and infrastructure automation.",
-    outcome:
-      "A product-oriented system design that connects frontend experience, backend services, and DevOps workflows into one maintainable platform.",
-    stack: ["Next.js", "Node.js", "TypeScript", "Docker", "Traefik", "Linux"],
-    layers: [
-      "Frontend",
-      "Authentication",
-      "APIs",
-      "Services",
-      "Infrastructure",
-    ],
-  },
-  {
-    title: "Cloud Deployment Pipeline",
-    slug: "cloud-deployment-pipeline",
-    category: "DevOps / Infrastructure",
-    status: "Engineering System",
-    icon: Cloud,
-    description:
-      "A deployment workflow focused on repeatable infrastructure setup, Dockerized services, reverse proxy routing, TLS, and production automation.",
-    challenge:
-      "Manual deployments create risk, inconsistency, and slow feedback. The goal was to make production updates more predictable.",
-    solution:
-      "Used infrastructure automation, Docker Compose, reverse proxy configuration, Git-based deployment, and service restart workflows.",
-    outcome:
-      "A cleaner production workflow that supports faster updates, easier rollback thinking, and better operational control.",
-    stack: ["Docker", "Linux", "Traefik", "Ansible", "GitHub Actions", "TLS"],
-    layers: ["Server", "Proxy", "Containers", "Automation", "Monitoring"],
-  },
-  {
-    title: "Portfolio Marketing Website",
-    slug: "portfolio-marketing-website",
-    category: "Frontend / Personal Brand",
-    status: "Production Website",
-    icon: Code2,
-    description:
-      "A modern portfolio and marketing website designed to communicate engineering expertise, technical depth, and professional positioning.",
-    challenge:
-      "The website needed to feel polished, credible, technical, and focused on AI engineering, backend systems, and software architecture.",
-    solution:
-      "Designed a section-based layout using Next.js, Tailwind CSS, shadcn/ui, strong typography, dark glass styling, and clear content hierarchy.",
-    outcome:
-      "A production-ready personal website structure that supports projects, articles, engineering pages, contact flows, and professional positioning.",
-    stack: ["Next.js", "React", "TypeScript", "Tailwind CSS", "shadcn/ui"],
-    layers: ["Brand", "Content", "UI", "SEO", "Conversion"],
-  },
-]
 
 function getLanguageAlternates(): Record<string, string> {
   const languages: Record<string, string> = Object.fromEntries(
@@ -195,6 +42,14 @@ function getLanguageAlternates(): Record<string, string> {
   languages["x-default"] = `/${routing.defaultLocale}/articles`
 
   return languages
+}
+
+function createArticleUrl(locale: string, slug: string): string {
+  return `/${locale}/articles/${slug}`
+}
+
+function getArticleDate(article: ArticleSummary): string {
+  return article.metadata.updatedAt ?? article.metadata.publishedAt
 }
 
 export async function generateMetadata({
@@ -210,9 +65,6 @@ export async function generateMetadata({
   const pageUrl = absoluteUrl(pagePath)
 
   return {
-    /**
-     * The parent layout adds "| Ghassan".
-     */
     title: pageMetadata.title,
     description: pageMetadata.description,
 
@@ -296,6 +148,8 @@ export default async function EngineeringPage({
 
   setRequestLocale(locale)
 
+  const articles = await getArticles(locale as AppLocale)
+
   const pageUrl = absoluteUrl(`/${locale}/articles`)
 
   const jsonLd = {
@@ -315,23 +169,41 @@ export default async function EngineeringPage({
 
     mainEntity: {
       "@type": "ItemList",
-      numberOfItems: projects.length,
+      numberOfItems: articles.length,
 
-      itemListElement: projects.map((project, index) => {
-        const projectUrl = absoluteUrl(`/${locale}/articles/${project.slug}`)
+      itemListElement: articles.map((article, index) => {
+        const articlePath = createArticleUrl(locale, article.slug)
+
+        const articleUrl = absoluteUrl(articlePath)
 
         return {
           "@type": "ListItem",
           position: index + 1,
-          url: projectUrl,
+          url: articleUrl,
 
           item: {
-            "@type": "CreativeWork",
-            name: project.title,
-            description: project.description,
-            url: projectUrl,
-            genre: project.category,
-            keywords: project.stack.join(", "),
+            "@type": "TechArticle",
+
+            name: article.metadata.title,
+
+            headline: article.metadata.title,
+
+            description: article.metadata.description,
+
+            url: articleUrl,
+
+            image: absoluteUrl(article.metadata.coverImage),
+
+            genre: article.metadata.category,
+
+            keywords: [
+              ...article.metadata.tags,
+              ...article.metadata.stack,
+            ].join(", "),
+
+            datePublished: `${article.metadata.publishedAt}T00:00:00.000Z`,
+
+            dateModified: `${getArticleDate(article)}T00:00:00.000Z`,
 
             author: {
               "@type": "Person",
@@ -379,75 +251,98 @@ export default async function EngineeringPage({
               </p>
             </header>
 
-            <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {projects.map((project) => {
-                const Icon = project.icon
+            {articles.length > 0 ? (
+              <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {articles.map((article) => {
+                  const { metadata, slug } = article
 
-                /**
-                 * Your project details are currently MDX
-                 * articles.
-                 */
-                const projectHref = `/${locale}/articles/${project.slug}`
+                  const articleHref = createArticleUrl(locale, slug)
 
-                return (
-                  <Link
-                    key={project.slug}
-                    href={projectHref}
-                    aria-label={`View details about ${project.title}`}
-                    className="group block rounded-3xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background focus-visible:outline-none"
-                  >
-                    <Card className="flex h-full flex-col rounded-3xl border border-border bg-foreground/2 p-6 transition duration-300 group-hover:-translate-y-1 group-hover:border-foreground/20 group-hover:bg-foreground/4">
-                      <div className="mb-6 flex items-start justify-between gap-4">
-                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-border bg-accent-foreground/5 text-accent-foreground">
-                          <Icon className="h-6 w-6" aria-hidden="true" />
+                  const formattedDate = new Intl.DateTimeFormat(locale, {
+                    dateStyle: "medium",
+                  }).format(new Date(`${metadata.publishedAt}T00:00:00.000Z`))
+
+                  return (
+                    <Link
+                      key={slug}
+                      href={articleHref}
+                      aria-label={`Read ${metadata.title}`}
+                      className="group block rounded-3xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background focus-visible:outline-none"
+                    >
+                      <Card className="flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-foreground/2 p-0 transition duration-300 group-hover:-translate-y-1 group-hover:border-foreground/20 group-hover:bg-foreground/4">
+                        <div className="relative aspect-1200/630 overflow-hidden border-b border-border bg-muted">
+                          <Image
+                            src={metadata.coverImage}
+                            alt={metadata.coverImageAlt}
+                            fill
+                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                            className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                          />
                         </div>
 
-                        <span className="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground">
-                          {project.status}
-                        </span>
-                      </div>
+                        <div className="flex flex-1 flex-col p-6">
+                          <p className="text-sm font-medium text-accent-foreground">
+                            {metadata.category}
+                          </p>
 
-                      <p className="text-sm font-medium text-accent-foreground">
-                        {project.category}
-                      </p>
+                          <h2 className="mt-3 text-2xl font-semibold tracking-tight">
+                            {metadata.title}
+                          </h2>
 
-                      <h2 className="mt-3 text-2xl font-semibold tracking-tight">
-                        {project.title}
-                      </h2>
+                          <p className="mt-4 leading-7 text-muted-foreground">
+                            {metadata.description}
+                          </p>
 
-                      <p className="mt-4 leading-7 text-muted-foreground">
-                        {project.description}
-                      </p>
+                          {metadata.stack.length > 0 && (
+                            <div
+                              className="mt-6 flex flex-wrap gap-2"
+                              aria-label={`Technologies used in ${metadata.title}`}
+                            >
+                              {metadata.stack.slice(0, 5).map((technology) => (
+                                <Badge
+                                  key={technology}
+                                  variant="outline"
+                                  className="px-3 py-1 text-xs text-muted-foreground"
+                                >
+                                  {technology}
+                                </Badge>
+                              ))}
+                            </div>
+                          )}
 
-                      <div
-                        className="mt-6 flex flex-wrap gap-2"
-                        aria-label={`Technologies used in ${project.title}`}
-                      >
-                        {project.stack.slice(0, 5).map((technology) => (
-                          <Badge
-                            key={technology}
-                            variant="outline"
-                            className="px-3 py-1 text-xs text-muted-foreground"
-                          >
-                            {technology}
-                          </Badge>
-                        ))}
-                      </div>
+                          <div className="mt-auto flex items-end justify-between gap-4 pt-8">
+                            <time
+                              dateTime={metadata.publishedAt}
+                              className="text-xs text-muted-foreground"
+                            >
+                              {formattedDate}
+                            </time>
 
-                      <div className="mt-auto pt-8">
-                        <span className="inline-flex items-center text-sm font-medium text-accent-foreground">
-                          View case study
-                          <ArrowRight
-                            className="ml-2 h-4 w-4 transition-transform duration-200 group-hover:translate-x-1"
-                            aria-hidden="true"
-                          />
-                        </span>
-                      </div>
-                    </Card>
-                  </Link>
-                )
-              })}
-            </div>
+                            <span className="inline-flex items-center text-sm font-medium text-accent-foreground">
+                              View case study
+                              <ArrowRight
+                                className="ml-2 h-4 w-4 transition-transform duration-200 group-hover:translate-x-1"
+                                aria-hidden="true"
+                              />
+                            </span>
+                          </div>
+                        </div>
+                      </Card>
+                    </Link>
+                  )
+                })}
+              </div>
+            ) : (
+              <div className="mt-12 rounded-3xl border border-dashed border-border bg-foreground/2 p-10 text-center">
+                <h2 className="text-2xl font-semibold">
+                  No published articles yet
+                </h2>
+
+                <p className="mt-3 text-muted-foreground">
+                  Published engineering case studies will appear here.
+                </p>
+              </div>
+            )}
           </div>
         </section>
       </main>

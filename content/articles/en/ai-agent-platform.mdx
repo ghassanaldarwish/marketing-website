@@ -1,47 +1,1078 @@
 ---
 title: "Building a Production AI Agent Platform"
 description: "How I designed an agent platform using Node.js, Python, Redis, PostgreSQL, Docker and Kubernetes."
+
+category: "AI Engineering / Backend"
+status: "Case Study"
+
 publishedAt: "2026-07-11"
 updatedAt: "2026-07-11"
+
 coverImage: "/articles/ai-agent-platform/light_logo_500_180.png"
-coverImageAlt: "Architecture overview of the AI agent platform"
+coverImageAlt: "Architecture of a production AI agent platform"
+
 tags:
   - "AI Engineering"
-  - "Node.js"
-  - "Python"
+  - "AI Agents"
   - "System Design"
+
+stack:
+  - "Python"
+  - "TypeScript"
+  - "OpenAI"
+  - "PostgreSQL"
+  - "Redis"
+  - "Docker"
+
 draft: false
-translationKey: "ai-agent-platform"
 ---
 
-## The problem
+Building an AI agent that answers a prompt is relatively easy.
 
-The platform needed to execute multiple independent AI agents while
-keeping job state, logs and retries consistent.
+Building an AI agent platform that can execute real workloads reliably, recover from failure, call tools safely, preserve state, and scale across multiple workers is a different engineering problem.
 
-<Callout title="Main architectural decision">
+This case study describes the architecture of a production-oriented AI agent platform built with **TypeScript**, **Python**, **Redis**, **PostgreSQL**, **Docker**, and **Kubernetes**.
 
-Each agent runs as an isolated worker. Redis handles short-lived
-coordination, while PostgreSQL stores durable workflow state.
+The goal was not to build another chatbot. The goal was to create a reusable platform for running intelligent, tool-using workflows inside a reliable backend system.
+
+<Callout title="Core engineering principle">
+
+An AI agent should not be treated as an isolated prompt. It should be treated as a distributed workflow with state, tools, permissions, retries, observability, and clear execution boundaries.
 
 </Callout>
 
-## Architecture
+## The problem
 
-![AI agent platform architecture](/articles/ai-agent-platform/light_logo_500_180.png)
+A simple AI integration often starts with a single API request:
 
-## Worker example
+```ts title="simple-completion.ts"
+const response = await openai.responses.create({
+  model: "gpt-5",
+  input: "Analyze this customer request.",
+})
+```
 
-```ts title="worker.ts" showLineNumbers
-type AgentJob = {
-  id: string
+This approach works for demonstrations, but production systems quickly introduce more demanding requirements.
+
+The platform needed to support:
+
+- Multiple specialized agents.
+- Long-running workflows.
+- Structured tool calls.
+- Human approval steps.
+- Retryable background jobs.
+- Persistent conversation and workflow state.
+- Local and cloud-hosted language models.
+- Horizontal worker scaling.
+- Per-user permissions and usage limits.
+- Detailed execution logs.
+- Reliable recovery after process or server failures.
+
+The central challenge was connecting probabilistic AI reasoning with deterministic backend infrastructure.
+
+> Language models are non-deterministic, but production systems cannot be unpredictable about security, state transitions, billing, retries, or data integrity.
+
+The architecture therefore had to isolate AI reasoning from the parts of the system that required strict guarantees.
+
+## Design goals
+
+Before selecting technologies, I defined the primary design goals.
+
+### Reliability
+
+A failed model request, worker restart, network interruption, or tool timeout should not corrupt the workflow.
+
+### Observability
+
+Every workflow step should produce enough information to answer:
+
+- What happened?
+- Which model was used?
+- Which tool was called?
+- How long did it take?
+- Why did it fail?
+- Can it be retried safely?
+
+### Scalability
+
+API servers, agent workers, and tool workers should scale independently.
+
+### Security
+
+The model should never receive unrestricted access to internal services, databases, files, or user credentials.
+
+### Extensibility
+
+New models, tools, agents, and workflow types should be added without rewriting the entire platform.
+
+### Model independence
+
+The application should support cloud providers and local models through a common internal abstraction.
+
+## High-level architecture
+
+The platform is divided into several clearly defined layers.
+
+![AI agent platform architecture](/articles/ai-agent-platform/architecture.png)
+
+| Layer               | Responsibility                                                  | Main technologies            |
+| ------------------- | --------------------------------------------------------------- | ---------------------------- |
+| API layer           | Authentication, validation, rate limiting, and request handling | Node.js, TypeScript, Fastify |
+| Orchestration layer | Workflow state, agent routing, and execution planning           | TypeScript, PostgreSQL       |
+| Agent workers       | Model interaction and reasoning steps                           | Python, OpenAI, Ollama       |
+| Tool workers        | Controlled execution of external actions                        | Python, TypeScript           |
+| Queue layer         | Background work, retries, and worker coordination               | Redis                        |
+| Persistence layer   | Durable workflow and audit data                                 | PostgreSQL                   |
+| Observability layer | Logs, metrics, traces, and execution events                     | OpenTelemetry, Prometheus    |
+| Deployment layer    | Packaging, scaling, and service management                      | Docker, Kubernetes           |
+
+This separation prevents the language model from becoming the center of the entire application.
+
+The model participates in a workflow, but it does not own the workflow.
+
+## Request lifecycle
+
+A typical request moves through the system in the following order:
+
+1. A client creates an agent run through the API.
+2. The API validates the request and checks permissions.
+3. A durable workflow record is created in PostgreSQL.
+4. A job is added to Redis.
+5. An available agent worker claims the job.
+6. The worker loads the workflow context.
+7. The model decides whether it needs to answer, call a tool, or request approval.
+8. Tool calls are validated and dispatched to isolated workers.
+9. Results are written back to PostgreSQL.
+10. The next workflow step is scheduled.
+11. The client receives updates through polling, Server-Sent Events, or WebSockets.
+
+This model makes the API request short-lived while the actual agent workflow can continue for seconds or minutes.
+
+## Why I separated the API from agent execution
+
+Running agent workflows directly inside an HTTP request creates several problems:
+
+- Requests can exceed platform timeouts.
+- A process restart destroys in-memory state.
+- Expensive AI work competes with normal API traffic.
+- Retrying the HTTP request may repeat side effects.
+- Scaling the API also scales expensive agent resources unnecessarily.
+
+Instead, the API creates a durable run and schedules asynchronous work.
+
+```ts title="create-agent-run.ts" showLineNumbers
+type CreateAgentRunInput = {
+  userId: string
   agentType: string
-  payload: unknown
+  message: string
 }
 
-export async function processJob(job: AgentJob) {
-  console.log(`Processing job: ${job.id}`)
+export async function createAgentRun(
+  input: CreateAgentRunInput
+) {
+  const run = await database.transaction(async (transaction) => {
+    const createdRun = await transaction.agentRun.create({
+      data: {
+        userId: input.userId,
+        agentType: input.agentType,
+        status: "queued",
+        input: {
+          message: input.message,
+        },
+      },
+    })
 
-  // Execute the appropriate agent.
+    await transaction.outboxEvent.create({
+      data: {
+        type: "agent.run.created",
+        aggregateId: createdRun.id,
+        payload: {
+          runId: createdRun.id,
+        },
+      },
+    })
+
+    return createdRun
+  })
+
+  return run
 }
 ```
+
+The API does not immediately publish directly to Redis inside the transaction. Instead, it stores an outbox event.
+
+That distinction matters.
+
+## The transactional outbox
+
+A common failure scenario looks like this:
+
+1. PostgreSQL successfully creates a workflow.
+2. The application tries to publish a queue message.
+3. Redis is temporarily unavailable.
+4. The database contains a queued workflow, but no worker knows about it.
+
+The transactional outbox solves this by writing the workflow and the event in the same PostgreSQL transaction.
+
+A separate publisher reads unprocessed outbox events and publishes them to Redis.
+
+```ts title="outbox-publisher.ts" showLineNumbers
+export async function publishOutboxBatch() {
+  const events = await database.outboxEvent.findMany({
+    where: {
+      processedAt: null,
+    },
+    orderBy: {
+      createdAt: "asc",
+    },
+    take: 100,
+  })
+
+  for (const event of events) {
+    await queue.publish(event.type, event.payload)
+
+    await database.outboxEvent.update({
+      where: {
+        id: event.id,
+      },
+      data: {
+        processedAt: new Date(),
+      },
+    })
+  }
+}
+```
+
+<Callout title="Why this matters">
+
+The outbox pattern ensures that a committed workflow cannot silently disappear between the database and the queue.
+
+</Callout>
+
+## Durable workflow state
+
+Redis is useful for queues, locks, short-lived caches, and coordination.
+
+It is not the primary source of truth for agent execution.
+
+PostgreSQL stores the durable state of every run.
+
+```sql title="agent_runs.sql" showLineNumbers
+CREATE TABLE agent_runs (
+  id UUID PRIMARY KEY,
+  user_id UUID NOT NULL,
+  agent_type TEXT NOT NULL,
+  status TEXT NOT NULL,
+  input JSONB NOT NULL,
+  output JSONB,
+  current_step INTEGER NOT NULL DEFAULT 0,
+  version INTEGER NOT NULL DEFAULT 1,
+  started_at TIMESTAMPTZ,
+  completed_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+```
+
+Each individual step is stored separately:
+
+```sql title="agent_run_steps.sql" showLineNumbers
+CREATE TABLE agent_run_steps (
+  id UUID PRIMARY KEY,
+  run_id UUID NOT NULL REFERENCES agent_runs(id),
+  step_number INTEGER NOT NULL,
+  step_type TEXT NOT NULL,
+  status TEXT NOT NULL,
+  model TEXT,
+  tool_name TEXT,
+  input JSONB,
+  output JSONB,
+  error JSONB,
+  started_at TIMESTAMPTZ,
+  completed_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+  UNIQUE (run_id, step_number)
+);
+```
+
+This gives the platform an auditable execution history.
+
+It also means a worker can restart and continue from the last completed step instead of starting the entire workflow again.
+
+## Agent worker design
+
+The Python worker is responsible for model interaction, structured output, and reasoning-related operations.
+
+It is not responsible for unrestricted infrastructure access.
+
+```python title="agent_worker.py" showLineNumbers
+from dataclasses import dataclass
+from typing import Any
+
+@dataclass
+class AgentJob:
+    run_id: str
+    agent_type: str
+    input: dict[str, Any]
+
+async def process_agent_job(job: AgentJob) -> None:
+    run = await workflow_repository.get_run(job.run_id)
+
+    if run.status in {"completed", "cancelled"}:
+        return
+
+    await workflow_repository.mark_running(job.run_id)
+
+    try:
+        context = await context_builder.build(run)
+        decision = await agent_runtime.execute(context)
+
+        await workflow_engine.apply_decision(
+            run_id=job.run_id,
+            decision=decision,
+        )
+
+    except Exception as error:
+        await workflow_repository.record_failure(
+            run_id=job.run_id,
+            error=str(error),
+        )
+
+        raise
+```
+
+The worker receives a job identifier and reloads the current state from PostgreSQL.
+
+This avoids passing large or stale workflow state through the queue.
+
+## Structured model output
+
+Free-form model responses are difficult to process safely.
+
+The agent therefore produces one of a small number of structured decisions.
+
+```ts title="agent-decision.ts" showLineNumbers
+import { z } from "zod"
+
+export const agentDecisionSchema = z.discriminatedUnion("type", [
+  z.object({
+    type: z.literal("final_answer"),
+    content: z.string().min(1),
+  }),
+
+  z.object({
+    type: z.literal("tool_call"),
+    tool: z.string().min(1),
+    arguments: z.record(z.unknown()),
+  }),
+
+  z.object({
+    type: z.literal("request_approval"),
+    reason: z.string().min(1),
+    proposedAction: z.record(z.unknown()),
+  }),
+
+  z.object({
+    type: z.literal("continue"),
+    reason: z.string().min(1),
+  }),
+])
+
+export type AgentDecision = z.infer<
+  typeof agentDecisionSchema
+>
+```
+
+This does not make the model deterministic, but it gives the backend a controlled contract.
+
+The system rejects malformed output rather than guessing what the model intended.
+
+## Tool execution boundaries
+
+Tools are among the most powerful and dangerous parts of an agent platform.
+
+A tool can:
+
+- Query internal databases.
+- Send an email.
+- Modify a calendar.
+- Create a support ticket.
+- Execute code.
+- Read a document.
+- Call an external API.
+
+The model never receives direct credentials.
+
+Instead, it requests a named tool with structured arguments.
+
+```json
+{
+  "type": "tool_call",
+  "tool": "create_support_ticket",
+  "arguments": {
+    "customerId": "cus_123",
+    "subject": "Payment issue",
+    "priority": "high"
+  }
+}
+```
+
+The backend then performs several checks:
+
+1. Is the tool registered?
+2. Is this agent allowed to use it?
+3. Is this user allowed to trigger it?
+4. Do the arguments match the schema?
+5. Does the action require approval?
+6. Has the same side effect already been executed?
+
+```ts title="tool-registry.ts" showLineNumbers
+import { z } from "zod"
+
+const createTicketInputSchema = z.object({
+  customerId: z.string().min(1),
+  subject: z.string().min(3),
+  priority: z.enum(["low", "normal", "high"]),
+})
+
+export const toolRegistry = {
+  create_support_ticket: {
+    inputSchema: createTicketInputSchema,
+    requiresApproval: true,
+
+    execute: async (input: unknown) => {
+      const validatedInput =
+        createTicketInputSchema.parse(input)
+
+      return supportClient.createTicket(validatedInput)
+    },
+  },
+}
+```
+
+<Callout title="Security boundary">
+
+The model proposes an action. The application authorizes, validates, executes, and records it.
+
+</Callout>
+
+## Idempotency and side effects
+
+Retries are unavoidable in distributed systems.
+
+A worker may complete a tool call and crash before acknowledging the queue message. The queue can then deliver the same job again.
+
+Without idempotency, the platform might send the same email twice or create duplicate tickets.
+
+Each side-effecting operation receives an idempotency key:
+
+```ts title="execute-tool.ts" showLineNumbers
+type ExecuteToolInput = {
+  runId: string
+  stepId: string
+  toolName: string
+  arguments: unknown
+}
+
+export async function executeTool(
+  input: ExecuteToolInput
+) {
+  const idempotencyKey =
+    `${input.runId}:${input.stepId}:${input.toolName}`
+
+  const existingExecution =
+    await database.toolExecution.findUnique({
+      where: {
+        idempotencyKey,
+      },
+    })
+
+  if (existingExecution?.status === "completed") {
+    return existingExecution.result
+  }
+
+  return toolExecutionService.execute({
+    ...input,
+    idempotencyKey,
+  })
+}
+```
+
+This allows the worker to retry safely.
+
+## Redis responsibilities
+
+Redis is used for short-lived operational concerns:
+
+| Responsibility    | Example                                             |
+| ----------------- | --------------------------------------------------- |
+| Job queues        | Pending agent and tool jobs                         |
+| Distributed locks | Preventing two workers from processing the same run |
+| Rate limits       | Requests per user, agent, or model                  |
+| Temporary cache   | Reusable model or retrieval results                 |
+| Event delivery    | Progress notifications                              |
+| Retry scheduling  | Delayed jobs with exponential backoff               |
+
+Redis is not used as the only storage location for business-critical workflow state.
+
+## Retry strategy
+
+Not every failure should be retried.
+
+A useful classification is:
+
+| Failure type             |       Retry? | Example                         |
+| ------------------------ | -----------: | ------------------------------- |
+| Temporary provider error |          Yes | HTTP 503 from a model provider  |
+| Rate limit               | Yes, delayed | HTTP 429                        |
+| Network timeout          |      Usually | Connection reset                |
+| Invalid tool arguments   |           No | Missing required field          |
+| Authorization failure    |           No | User cannot access a tool       |
+| Model safety refusal     |   Usually no | Provider policy response        |
+| Database conflict        |    Sometimes | Optimistic concurrency conflict |
+
+Retries use exponential backoff with jitter.
+
+```ts title="retry-delay.ts" showLineNumbers
+export function calculateRetryDelay(
+  attempt: number,
+  baseDelayMs = 1_000,
+  maximumDelayMs = 60_000
+): number {
+  const exponentialDelay =
+    baseDelayMs * 2 ** Math.max(attempt - 1, 0)
+
+  const cappedDelay = Math.min(
+    exponentialDelay,
+    maximumDelayMs
+  )
+
+  const jitter = Math.random() * cappedDelay * 0.2
+
+  return Math.round(cappedDelay + jitter)
+}
+```
+
+An unlimited retry loop is avoided. After the maximum number of attempts, the job moves to a dead-letter queue for inspection.
+
+## Optimistic concurrency control
+
+Two workers should never advance the same workflow version simultaneously.
+
+The workflow record contains a numeric `version`.
+
+```sql title="optimistic-update.sql" showLineNumbers
+UPDATE agent_runs
+SET
+  status = 'running',
+  current_step = current_step + 1,
+  version = version + 1,
+  updated_at = NOW()
+WHERE
+  id = $1
+  AND version = $2;
+```
+
+If the update affects zero rows, another worker has already modified the workflow.
+
+The losing worker reloads the latest state instead of overwriting it.
+
+## Human approval
+
+Some tools are too sensitive to execute automatically.
+
+Examples include:
+
+- Sending external messages.
+- Modifying production data.
+- Starting a paid operation.
+- Deleting files.
+- Publishing public content.
+- Executing high-impact financial actions.
+
+The agent can pause and request approval.
+
+```ts title="approval-state.ts" showLineNumbers
+type ApprovalRequest = {
+  runId: string
+  stepId: string
+  requestedBy: string
+  action: {
+    tool: string
+    arguments: unknown
+  }
+  reason: string
+  expiresAt: Date
+}
+```
+
+The workflow moves to `waiting_for_approval`.
+
+Once a human approves or rejects the action, the next job is scheduled.
+
+This keeps sensitive decisions outside the model.
+
+## Context management
+
+Sending the entire conversation and every previous tool result to the model is expensive and eventually exceeds context limits.
+
+The context builder creates a focused execution context from:
+
+- The system instruction.
+- The current workflow objective.
+- Recent interaction history.
+- Relevant long-term memories.
+- Retrieved documents.
+- The current tool catalog.
+- A compact summary of older steps.
+
+```python title="context_builder.py" showLineNumbers
+async def build_context(run: AgentRun) -> AgentContext:
+    recent_messages = await messages.get_recent(
+        run_id=run.id,
+        limit=20,
+    )
+
+    memories = await memory.search(
+        user_id=run.user_id,
+        query=run.current_objective,
+        limit=8,
+    )
+
+    documents = await retrieval.search(
+        query=run.current_objective,
+        limit=6,
+    )
+
+    return AgentContext(
+        objective=run.current_objective,
+        recent_messages=recent_messages,
+        memories=memories,
+        documents=documents,
+        available_tools=tool_registry.for_agent(
+            run.agent_type
+        ),
+    )
+```
+
+The platform treats context as a constructed resource, not as an unlimited message array.
+
+## Model abstraction
+
+The application should not depend directly on one provider’s SDK throughout the codebase.
+
+A shared interface hides provider-specific details.
+
+```ts title="model-provider.ts" showLineNumbers
+export type ModelRequest = {
+  system: string
+  messages: Array<{
+    role: "user" | "assistant" | "tool"
+    content: string
+  }>
+  tools?: Array<{
+    name: string
+    description: string
+    inputSchema: Record<string, unknown>
+  }>
+}
+
+export type ModelResponse = {
+  content?: string
+  toolCalls?: Array<{
+    id: string
+    name: string
+    arguments: unknown
+  }>
+  usage: {
+    inputTokens: number
+    outputTokens: number
+  }
+}
+
+export interface ModelProvider {
+  generate(
+    request: ModelRequest
+  ): Promise<ModelResponse>
+}
+```
+
+Implementations can wrap OpenAI, Ollama, or another provider.
+
+```ts title="provider-selection.ts" showLineNumbers
+export function selectModelProvider(
+  providerName: string
+): ModelProvider {
+  switch (providerName) {
+    case "openai":
+      return new OpenAIModelProvider()
+
+    case "ollama":
+      return new OllamaModelProvider()
+
+    default:
+      throw new Error(
+        `Unsupported model provider: ${providerName}`
+      )
+  }
+}
+```
+
+This does not eliminate provider differences, but it prevents those differences from spreading across the whole platform.
+
+## Observability
+
+AI applications require more than ordinary request logs.
+
+For each execution step, I record:
+
+- Run ID.
+- User ID.
+- Agent type.
+- Model and provider.
+- Prompt version.
+- Tool name.
+- Input and output token usage.
+- Execution duration.
+- Retry attempt.
+- Error category.
+- Final status.
+- Estimated cost.
+
+A structured log event might look like:
+
+```json title="agent-step-event.json"
+{
+  "event": "agent.step.completed",
+  "runId": "run_123",
+  "stepId": "step_007",
+  "agentType": "research_agent",
+  "model": "gpt-5",
+  "provider": "openai",
+  "durationMs": 1842,
+  "inputTokens": 2140,
+  "outputTokens": 486,
+  "toolCalls": 1,
+  "status": "completed"
+}
+```
+
+Metrics are useful for understanding system behavior over time:
+
+- Agent run success rate.
+- Tool failure rate.
+- Average workflow duration.
+- Model latency.
+- Token consumption.
+- Cost per workflow.
+- Queue wait time.
+- Retry rate.
+- Human approval rate.
+
+## Docker development environment
+
+Each platform service runs in its own container.
+
+```yaml title="compose.yaml" showLineNumbers
+services:
+  api:
+    build:
+      context: ./services/api
+    environment:
+      DATABASE_URL: postgresql://app:app@postgres:5432/agents
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - "3001:3001"
+
+  agent-worker:
+    build:
+      context: ./services/agent-worker
+    environment:
+      DATABASE_URL: postgresql://app:app@postgres:5432/agents
+      REDIS_URL: redis://redis:6379
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    depends_on:
+      - postgres
+      - redis
+
+  tool-worker:
+    build:
+      context: ./services/tool-worker
+    environment:
+      DATABASE_URL: postgresql://app:app@postgres:5432/agents
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: agents
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:8-alpine
+    command:
+      - redis-server
+      - --appendonly
+      - "yes"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  postgres_data:
+  redis_data:
+```
+
+This keeps the local environment close to the production architecture.
+
+## Kubernetes deployment
+
+In Kubernetes, each workload scales according to a different signal.
+
+| Workload          | Scaling signal                    |
+| ----------------- | --------------------------------- |
+| API               | CPU usage and request rate        |
+| Agent workers     | Queue depth and model concurrency |
+| Tool workers      | Queue depth and tool latency      |
+| Outbox publisher  | Pending outbox event count        |
+| WebSocket gateway | Active connection count           |
+
+A simplified worker deployment looks like:
+
+```yaml title="agent-worker-deployment.yaml" showLineNumbers
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agent-worker
+spec:
+  replicas: 3
+
+  selector:
+    matchLabels:
+      app: agent-worker
+
+  template:
+    metadata:
+      labels:
+        app: agent-worker
+
+    spec:
+      containers:
+        - name: agent-worker
+          image: ghassan/agent-worker:1.0.0
+
+          envFrom:
+            - secretRef:
+                name: agent-platform-secrets
+
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+
+            limits:
+              cpu: "1000m"
+              memory: "2Gi"
+
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 20
+```
+
+The worker image is stateless. Durable state remains in PostgreSQL, while Redis coordinates pending work.
+
+## Security model
+
+The platform follows several security rules.
+
+### Least privilege
+
+Each service receives only the credentials and network access it needs.
+
+### Tool allowlists
+
+Every agent has an explicit list of tools it may request.
+
+### Input validation
+
+All model-generated tool arguments pass through runtime schemas.
+
+### Secret isolation
+
+Secrets are never inserted into prompts or returned to the model.
+
+### Network restrictions
+
+Tool workers cannot freely connect to every internal service.
+
+### Audit logging
+
+Every sensitive tool request, approval, execution, and result is recorded.
+
+### Prompt-injection resistance
+
+Retrieved content is treated as untrusted data, not as system-level instructions.
+
+<Callout title="Important limitation">
+
+Prompt injection cannot be solved only with better wording. The strongest protections come from permissions, tool isolation, validation, approval gates, and restricted data access.
+
+</Callout>
+
+## Testing strategy
+
+The platform is tested at multiple levels.
+
+### Unit tests
+
+Unit tests cover:
+
+- Retry calculations.
+- Tool schemas.
+- State transitions.
+- Permission checks.
+- Prompt construction.
+- Model-response parsing.
+
+### Integration tests
+
+Integration tests use real PostgreSQL and Redis containers to verify:
+
+- Queue publishing.
+- Worker processing.
+- Transactional outbox behavior.
+- Idempotent tool execution.
+- Workflow recovery.
+
+### Contract tests
+
+Every tool has request and response contracts.
+
+### Failure tests
+
+The platform deliberately tests:
+
+1. Worker termination during execution.
+2. Redis unavailability.
+3. PostgreSQL transaction failures.
+4. Duplicate job delivery.
+5. Model timeout.
+6. Invalid structured output.
+7. Tool permission denial.
+8. Approval expiration.
+
+### Evaluation tests
+
+AI quality is measured separately from backend correctness.
+
+Evaluation datasets compare:
+
+- Answer accuracy.
+- Tool-selection accuracy.
+- Citation quality.
+- Hallucination rate.
+- Task-completion rate.
+- Cost and latency.
+
+A technically reliable workflow can still produce a poor answer, so both dimensions must be evaluated.
+
+## What worked well
+
+The strongest architectural decisions were:
+
+- Keeping PostgreSQL as the durable source of truth.
+- Executing agent runs asynchronously.
+- Separating agent workers from tool workers.
+- Using schemas for model decisions and tool arguments.
+- Adding idempotency before enabling retries.
+- Treating human approval as a workflow state.
+- Recording every step as a durable event.
+- Keeping model providers behind an internal interface.
+
+These choices made the platform easier to reason about and safer to extend.
+
+## What I would improve next
+
+The next iteration would focus on:
+
+- Event-based streaming for real-time workflow updates.
+- Better distributed tracing across agent and tool workers.
+- Per-agent cost budgets.
+- Automatic prompt and model version tracking.
+- More advanced memory expiration rules.
+- A visual workflow debugger.
+- Replayable production traces.
+- Policy-based authorization for tool calls.
+- Automated agent evaluations in CI.
+- Kubernetes autoscaling based on queue depth.
+
+## Lessons learned
+
+The most important lesson is that production AI engineering is primarily systems engineering.
+
+The model is important, but it is only one component.
+
+A reliable platform also needs:
+
+- Durable state.
+- Explicit workflow transitions.
+- Controlled tool execution.
+- Retry and idempotency strategies.
+- Strong observability.
+- Security boundaries.
+- Cost management.
+- Evaluation pipelines.
+- Deployment automation.
+
+The difference between a prototype and a production AI system is not the sophistication of a single prompt.
+
+It is the quality of the architecture surrounding the model.
+
+## Final architecture principles
+
+The platform can be summarized through six principles:
+
+1. **Persist before executing.**
+   Durable workflow state must exist before background work begins.
+
+2. **Treat every side effect as retryable.**
+   Use idempotency keys and execution records.
+
+3. **Keep models behind boundaries.**
+   Models propose actions; backend services validate and execute them.
+
+4. **Separate reasoning from orchestration.**
+   Agent workers reason, while the workflow engine controls state transitions.
+
+5. **Design for failure from the beginning.**
+   Workers, providers, queues, tools, and networks will eventually fail.
+
+6. **Observe every important decision.**
+   A production agent must be debuggable after the execution has finished.
+
+<Callout title="Final takeaway">
+
+A production AI agent platform is not a chatbot with more tools. It is a distributed system in which language models operate inside carefully designed engineering boundaries.
+
+</Callout>
+
+You can learn more about the technologies behind this architecture through the official documentation for [Next.js](https://nextjs.org/), [PostgreSQL](https://www.postgresql.org/), [Redis](https://redis.io/), [Docker](https://www.docker.com/), and [Kubernetes](https://kubernetes.io/).

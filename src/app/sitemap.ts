@@ -1,19 +1,23 @@
 import type { MetadataRoute } from "next"
 
 import { routing } from "@/i18n/routing"
-import { getArticle, type AppLocale } from "@/lib/mdx/get-article"
+import { getArticles, type AppLocale } from "@/lib/mdx/get-article"
+import type { ArticleSummary } from "@/lib/mdx/article-schema"
 import { absoluteUrl } from "@/lib/site"
 
-/**
- * Move this into a central article registry later,
- * or load it from a remote index.json endpoint.
- */
-const articleSlugs = ["ai-agent-platform"] as const
+type SitemapChangeFrequency = NonNullable<
+  MetadataRoute.Sitemap[number]["changeFrequency"]
+>
 
 type StaticRoute = {
   path: string
-  changeFrequency: NonNullable<MetadataRoute.Sitemap[number]["changeFrequency"]>
+  changeFrequency: SitemapChangeFrequency
   priority: number
+}
+
+type LocalizedArticle = {
+  locale: AppLocale
+  article: ArticleSummary
 }
 
 const staticRoutes: StaticRoute[] = [
@@ -58,14 +62,21 @@ function createStaticLanguageAlternates(path: string): Record<string, string> {
   return languages
 }
 
+function createArticlePath(locale: string, slug: string): string {
+  return `/${locale}/articles/${slug}`
+}
+
+function getArticleLastModified(article: ArticleSummary): Date {
+  const date = article.metadata.updatedAt ?? article.metadata.publishedAt
+
+  return new Date(`${date}T00:00:00.000Z`)
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const sitemapEntries: MetadataRoute.Sitemap = []
 
-  /**
-   * Static pages.
-   *
-   * Do not set lastModified unless you have a real date
-   * representing the last meaningful content change.
+  /*
+   * Static localized pages.
    */
   for (const route of staticRoutes) {
     const languageAlternates = createStaticLanguageAlternates(route.path)
@@ -75,6 +86,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         url: absoluteUrl(createLocalizedPath(locale, route.path)),
 
         changeFrequency: route.changeFrequency,
+
         priority: route.priority,
 
         alternates: {
@@ -84,67 +96,81 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
-  /**
-   * Dynamic article pages.
+  /*
+   * Load every published article for every locale.
+   *
+   * getArticles() derives each slug from its filename.
    */
-  for (const slug of articleSlugs) {
-    const localizedArticles = await Promise.all(
-      routing.locales.map(async (locale) => {
-        const typedLocale = locale as AppLocale
+  const localizedArticleCollections = await Promise.all(
+    routing.locales.map(async (locale) => {
+      const typedLocale = locale as AppLocale
 
-        return {
-          locale: typedLocale,
-          article: await getArticle(typedLocale, slug),
-        }
-      })
-    )
+      const articles = await getArticles(typedLocale)
 
-    const availableArticles = localizedArticles.filter(
-      (
-        entry
-      ): entry is {
-        locale: AppLocale
-        article: NonNullable<Awaited<ReturnType<typeof getArticle>>>
-      } => entry.article !== null
-    )
+      return articles.map((article) => ({
+        locale: typedLocale,
+        article,
+      }))
+    })
+  )
 
-    if (availableArticles.length === 0) {
+  const localizedArticles = localizedArticleCollections.flat()
+
+  /*
+   * Group translations by translationKey when provided.
+   * Otherwise use the filename-derived slug.
+   *
+   * This supports translated files that may later use
+   * different slugs.
+   */
+  const articleGroups = new Map<string, LocalizedArticle[]>()
+
+  for (const entry of localizedArticles) {
+    const translationGroup =
+      entry.article.metadata.translationKey ?? entry.article.slug
+
+    const existingGroup = articleGroups.get(translationGroup) ?? []
+
+    existingGroup.push(entry)
+
+    articleGroups.set(translationGroup, existingGroup)
+  }
+
+  for (const articles of articleGroups.values()) {
+    if (articles.length === 0) {
       continue
     }
 
-    /**
-     * Only include translations that actually exist.
+    /*
+     * Add only translations that actually exist.
      */
-    const articleAlternates: Record<string, string> = Object.fromEntries(
-      availableArticles.map(({ locale }) => [
+    const languageAlternates: Record<string, string> = Object.fromEntries(
+      articles.map(({ locale, article }) => [
         locale,
-        absoluteUrl(`/${locale}/articles/${slug}`),
+        absoluteUrl(createArticlePath(locale, article.slug)),
       ])
     )
 
     const defaultArticle =
-      availableArticles.find(
-        ({ locale }) => locale === routing.defaultLocale
-      ) ?? availableArticles[0]
+      articles.find(({ locale }) => locale === routing.defaultLocale) ??
+      articles[0]
 
-    articleAlternates["x-default"] = absoluteUrl(
-      `/${defaultArticle.locale}/articles/${slug}`
+    languageAlternates["x-default"] = absoluteUrl(
+      createArticlePath(defaultArticle.locale, defaultArticle.article.slug)
     )
 
-    for (const { locale, article } of availableArticles) {
-      const lastModified =
-        article.metadata.updatedAt ?? article.metadata.publishedAt
-
+    for (const { locale, article } of articles) {
       sitemapEntries.push({
-        url: absoluteUrl(`/${locale}/articles/${slug}`),
+        url: absoluteUrl(createArticlePath(locale, article.slug)),
 
-        lastModified: new Date(`${lastModified}T00:00:00.000Z`),
+        lastModified: getArticleLastModified(article),
 
         changeFrequency: "monthly",
-        priority: 0.8,
+
+        priority: article.metadata.featured ? 0.9 : 0.8,
 
         alternates: {
-          languages: articleAlternates,
+          languages: languageAlternates,
         },
       })
     }

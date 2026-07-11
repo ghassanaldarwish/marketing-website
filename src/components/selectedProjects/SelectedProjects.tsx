@@ -63,36 +63,8 @@ export default function SelectedProjects() {
           {projects.map((project, index) => (
             <article
               key={project.title}
-              className="grid gap-8 rounded-3xl border bg-background/70 p-6 lg:grid-cols-[0.8fr_1.2fr]"
+              className="gap-8 rounded-3xl border bg-background/70 p-6"
             >
-              <Card className="bg-foreground/1 p-5">
-                <div className="mb-6 flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">
-                    Project 0{index + 1}
-                  </span>
-                  <Layers3 className="h-5 w-5 text-accent-foreground" />
-                </div>
-
-                <div className="space-y-3">
-                  {[
-                    "Input",
-                    "Processing",
-                    "Services",
-                    "Data",
-                    "Deployment",
-                  ].map((label, stepIndex) => (
-                    <div key={label}>
-                      <Alert className="bg-background px-4 py-3 text-sm">
-                        {label}
-                      </Alert>
-                      {stepIndex !== 4 && (
-                        <div className="mx-auto h-4 w-px bg-white/10" />
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </Card>
-
               <div>
                 <p className="text-sm font-medium text-accent-foreground">
                   {project.category}
@@ -124,7 +96,7 @@ export default function SelectedProjects() {
                 </div>
 
                 <Button className="mt-6" variant="outline" asChild>
-                  <Link href="/projects">
+                  <Link href="/articles">
                     Read Case Study
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>

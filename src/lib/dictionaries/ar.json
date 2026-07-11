@@ -5,12 +5,12 @@
       {
         "title": "Engineering",
         "url": "/articles",
-        "disabled": true
+        "disabled": false
       },
       {
         "title": "about",
         "url": "/about",
-        "disabled": true
+        "disabled": false
       },
       {
         "title": "contact",
@@ -18,6 +18,14 @@
         "disabled": false
       }
     ]
+  },
+  "NotFoundPage": {
+    "eyebrow": "Page not found",
+    "title": "This route leads nowhere.",
+    "description": "The page may have been moved, renamed, or never existed. Return to the homepage or continue exploring my engineering work.",
+    "home": "Back to home",
+    "engineering": "Explore engineering",
+    "hint": "Error code: 404"
   },
   "hero": {
     "badge": ["AI Engineer", "DevOps", "Backend"],
