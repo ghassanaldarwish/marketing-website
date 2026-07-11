@@ -1,0 +1,46 @@
+---
+title: "Building a Production AI Agent Platform DE"
+description: "How I designed an agent platform using Node.js, Python, Redis, PostgreSQL, Docker and Kubernetes."
+publishedAt: "2026-07-11"
+updatedAt: "2026-07-11"
+coverImage: "/articles/ai-agent-platform/cover.png"
+tags:
+  - "AI Engineering"
+  - "Node.js"
+  - "Python"
+  - "System Design"
+draft: false
+translationKey: "ai-agent-platform"
+---
+
+## The problem
+
+The platform needed to execute multiple independent AI agents while
+keeping job state, logs and retries consistent.
+
+<Callout title="Main architectural decision">
+
+Each agent runs as an isolated worker. Redis handles short-lived
+coordination, while PostgreSQL stores durable workflow state.
+
+</Callout>
+
+## Architecture
+
+![AI agent platform architecture](/articles/ai-agent-platform/architecture.png)
+
+## Worker example
+
+```ts title="worker.ts" showLineNumbers
+type AgentJob = {
+  id: string
+  agentType: string
+  payload: unknown
+}
+
+export async function processJob(job: AgentJob) {
+  console.log(`Processing job: ${job.id}`)
+
+  // Execute the appropriate agent.
+}
+```

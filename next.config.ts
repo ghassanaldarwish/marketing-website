@@ -1,15 +1,74 @@
 import type { NextConfig } from "next"
+import createMDX from "@next/mdx"
 import createNextIntlPlugin from "next-intl/plugin"
+
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts")
+
+const withMDX = createMDX({
+  extension: /\.(md|mdx)$/,
+
+  options: {
+    remarkPlugins: [
+      "remark-gfm",
+
+      // Enable YAML frontmatter for directly imported MDX files.
+      "remark-frontmatter",
+
+      // Export YAML frontmatter as:
+      // export const metadata = { ... }
+      [
+        "remark-mdx-frontmatter",
+        {
+          name: "metadata",
+        },
+      ],
+    ],
+
+    rehypePlugins: [
+      "rehype-slug",
+
+      [
+        "rehype-autolink-headings",
+        {
+          behavior: "wrap",
+        },
+      ],
+
+      [
+        "rehype-pretty-code",
+        {
+          theme: {
+            light: "github-light",
+            dark: "github-dark",
+          },
+          keepBackground: false,
+          defaultLang: "plaintext",
+        },
+      ],
+    ],
+  },
+})
+
 const nextConfig: NextConfig = {
-  /* config options here */
+  pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
 
   compiler: {
     removeConsole:
       process.env.NODE_ENV === "production"
-        ? { exclude: ["error", "warn"] }
+        ? {
+            exclude: ["error", "warn"],
+          }
         : false,
   },
+
+  /**
+   * Enable these only when deploying with Docker using
+   * Next.js standalone output.
+   */
+  // output: "standalone",
+  // outputFileTracingIncludes: {
+  //   "/*": ["./content/**/*"],
+  // },
 }
 
-export default withNextIntl(nextConfig)
+export default withMDX(withNextIntl(nextConfig))

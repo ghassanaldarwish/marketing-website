@@ -15,8 +15,9 @@ export default function Navbar() {
   return (
     <nav className="w-screen">
       <FloatingNav className="fixed top-0 z-50 flex h-10 w-full max-w-6xl items-center justify-between bg-background/50 px-2 backdrop-blur-md lg:top-2 lg:left-1/2 lg:m-auto lg:h-12 lg:-translate-x-1/2 lg:rounded-xl">
-        <Link href="/" className="">
+        <Link href="/" className="flex gap-4">
           <Logo />
+          <span className="hidden text-xl font-bold lg:block">Ghassan</span>
         </Link>
 
         <div className="hidden w-1/2 justify-center gap-6 capitalize lg:flex">
