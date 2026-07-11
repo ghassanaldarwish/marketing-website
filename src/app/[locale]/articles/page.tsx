@@ -189,10 +189,10 @@ const projects: Project[] = [
 
 function getLanguageAlternates(): Record<string, string> {
   const languages: Record<string, string> = Object.fromEntries(
-    routing.locales.map((locale) => [locale, `/${locale}/engineering`])
+    routing.locales.map((locale) => [locale, `/${locale}/articles`])
   )
 
-  languages["x-default"] = `/${routing.defaultLocale}/engineering`
+  languages["x-default"] = `/${routing.defaultLocale}/articles`
 
   return languages
 }
@@ -206,7 +206,7 @@ export async function generateMetadata({
     notFound()
   }
 
-  const pagePath = `/${locale}/engineering`
+  const pagePath = `/${locale}/articles`
   const pageUrl = absoluteUrl(pagePath)
 
   return {
@@ -296,7 +296,7 @@ export default async function EngineeringPage({
 
   setRequestLocale(locale)
 
-  const pageUrl = absoluteUrl(`/${locale}/engineering`)
+  const pageUrl = absoluteUrl(`/${locale}/articles`)
 
   const jsonLd = {
     "@context": "https://schema.org",

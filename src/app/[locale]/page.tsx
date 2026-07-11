@@ -6,7 +6,7 @@ import { setRequestLocale } from "next-intl/server"
 
 import ArchitectureShowcase from "@/components/architectureShowcase/ArchitectureShowcase"
 import CoreExpertise from "@/components/coreExpertise/CoreExpertise"
-import EngineeringBeyondCode from "@/components/engineeringBeyondCode/EngineeringBeyondCode"
+
 import FinalCTA from "@/components/finalCTA/FinalCTA"
 import Hero from "@/components/hero/Hero"
 import SelectedProjects from "@/components/selectedProjects/SelectedProjects"
@@ -20,6 +20,7 @@ import {
   isProductionDeployment,
   siteConfig,
 } from "@/lib/site"
+import EngineeringBeyondCode from "@/components/engineeringBeyondCode/EngineeringBeyondCode"
 
 type HomePageProps = {
   params: Promise<{
@@ -169,7 +170,7 @@ export default async function HomePage({ params }: HomePageProps) {
 
   const homeUrl = absoluteUrl(`/${locale}`)
   const aboutUrl = absoluteUrl(`/${locale}/about`)
-  const engineeringUrl = absoluteUrl(`/${locale}/engineering`)
+  const engineeringUrl = absoluteUrl(`/${locale}/articles`)
   const contactUrl = absoluteUrl(`/${locale}/contact`)
 
   const jsonLd = {

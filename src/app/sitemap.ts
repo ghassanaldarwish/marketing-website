@@ -28,11 +28,6 @@ const staticRoutes: StaticRoute[] = [
     priority: 0.8,
   },
   {
-    path: "/engineering",
-    changeFrequency: "weekly",
-    priority: 0.9,
-  },
-  {
     path: "/articles",
     changeFrequency: "weekly",
     priority: 0.9,

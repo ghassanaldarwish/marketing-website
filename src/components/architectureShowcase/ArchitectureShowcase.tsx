@@ -29,7 +29,7 @@ export default function ArchitectureShowcase() {
           </p>
 
           <Button className="mt-8" asChild>
-            <Link href="/engineering">
+            <Link href="/articles">
               Explore Architecture
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
