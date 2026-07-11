@@ -92,14 +92,6 @@ export async function generateMetadata({
   const articlePath = `/${locale}/articles/${slug}`
   const articleUrl = absoluteUrl(articlePath)
 
-  const socialImage = absoluteUrl(
-    metadata.coverImage ?? siteConfig.defaultSocialImage
-  )
-
-  const socialImageAlt =
-    metadata.coverImageAlt ??
-    `${metadata.title} — article by ${siteConfig.fullName}`
-
   const { languages, availableLocales } =
     await getArticleLanguageAlternates(slug)
 
@@ -144,51 +136,26 @@ export async function generateMetadata({
     openGraph: {
       type: "article",
       url: articleUrl,
-
       title: metadata.title,
       description: metadata.description,
-
       siteName: siteConfig.name,
       locale: getOpenGraphLocale(locale),
-
       alternateLocale: availableLocales
         .filter((availableLocale) => availableLocale !== typedLocale)
         .map(getOpenGraphLocale),
-
       publishedTime,
       modifiedTime,
-
       authors: [siteConfig.fullName],
-
       section: metadata.tags[0] ?? "Software Engineering",
-
       tags: metadata.tags,
-
-      images: [
-        {
-          url: socialImage,
-          width: 1200,
-          height: 630,
-          alt: socialImageAlt,
-        },
-      ],
     },
 
     twitter: {
       card: "summary_large_image",
-
       title: metadata.title,
       description: metadata.description,
-
       site: siteConfig.twitterHandle,
       creator: siteConfig.twitterHandle,
-
-      images: [
-        {
-          url: socialImage,
-          alt: socialImageAlt,
-        },
-      ],
     },
 
     robots: {
@@ -345,7 +312,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                   alt={imageAlt}
                   width={1200}
                   height={630}
-                  fetchPriority="high"
+                  sizes="(max-width: 768px) 100vw, 896px"
+                  priority
                   className="aspect-1200/630 h-auto w-full object-contain"
                 />
               </figure>
