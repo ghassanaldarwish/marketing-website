@@ -9,6 +9,7 @@ import { Link } from "@/i18n/routing"
 import { useTranslations } from "next-intl"
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "../ui/button"
+import { Suspense } from "react"
 export default function Navbar() {
   const t = useTranslations("navbar")
   const navItems = t.raw("pages") as LinkType[]
@@ -58,11 +59,22 @@ export default function Navbar() {
         </div>
         <div className="hidden items-center gap-2 lg:flex">
           <ModeToggle />
-          <LanguageToggle />
+          <Suspense fallback={<LanguageToggleFallback />}>
+            <LanguageToggle />
+          </Suspense>
         </div>
 
         <MobileMenu />
       </FloatingNav>
     </nav>
+  )
+}
+
+function LanguageToggleFallback() {
+  return (
+    <div
+      className="h-9 w-9 animate-pulse rounded-md border bg-muted"
+      aria-hidden="true"
+    />
   )
 }
