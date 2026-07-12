@@ -63,22 +63,21 @@
     "socialImageAlt": "Ghassan Aldarwish — AI Engineer and Backend Engineer"
   },
   "home": {
-    "socialImage": {
-      "alt": "Ghassan Aldarwish — AI Engineer and Backend Engineer",
-      "availability": "Available for opportunities in Germany",
-      "expertise": "AI Engineering · Backend Systems",
-      "role": "AI Engineer · Backend Engineer · Software Architecture",
-      "twitterRole": "AI Engineer · Backend Engineer",
-      "openGraphAction": "Explore my engineering →",
-      "twitterAction": "View my work →"
-    },
     "metadata": {
       "title": "Ghassan — AI Engineer & Backend Engineer",
       "description": "Ghassan Aldarwish is an AI Engineer and Backend Engineer building production AI systems, scalable backend platforms, distributed architectures, automation workflows, and cloud-native applications.",
       "headline": "Building intelligent systems that scale.",
       "shortDescription": "Production AI systems, scalable backend architecture, and cloud-native software.",
       "category": "Technology",
-
+      "socialImage": {
+        "alt": "Ghassan Aldarwish — AI Engineer and Backend Engineer",
+        "availability": "Available for opportunities in Germany",
+        "expertise": "AI Engineering · Backend Systems",
+        "role": "AI Engineer · Backend Engineer · Software Architecture",
+        "twitterRole": "AI Engineer · Backend Engineer",
+        "openGraphAction": "Explore my engineering →",
+        "twitterAction": "View my work →"
+      },
       "keywords": [
         "Ghassan Aldarwish",
         "AI Engineer",
@@ -142,7 +141,7 @@
     },
     "hero": {
       "badge": ["AI Engineer", "DevOps", "Backend"],
-      "title": "Building AI Systems DE",
+      "title": "Building AI Systems",
       "secondaryTitle": "That Scale",
       "description": "I design and build production-ready AI systems, scalable backend platforms, and cloud infrastructure.",
       "contact": "Contact Me",
