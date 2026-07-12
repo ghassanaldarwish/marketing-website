@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import ar from "@/lib/dictionaries/ar.json"
+import ar from "../../content/dictionaries/ar.json"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))

@@ -3,7 +3,7 @@
   "navbar": {
     "pages": [
       {
-        "title": "Engineering",
+        "title": "Articles",
         "url": "/articles",
         "disabled": false
       },

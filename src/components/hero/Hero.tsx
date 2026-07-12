@@ -52,7 +52,7 @@ export default function Hero() {
         </div>
       </div>
       <div className="relative m-auto max-w-6xl items-end justify-between md:flex">
-        <div className="flex lg:w-[62%]">
+        <div className="flex lg:w-[59%]">
           <InfiniteMovingCards className="bg-background/10 text-lg leading-8 text-muted-foreground backdrop-blur-xs">
             <p>7+ Years Experience</p>
             <p>Berlin, Germany</p>
@@ -63,7 +63,7 @@ export default function Hero() {
         </div>
         <Terminal
           initialDelay={6000}
-          className="h-62 sm:w-full lg:w-[38%]"
+          className="h-62 sm:w-full lg:w-[41%]"
           commands={["npx ai architect", "pnpm build", "git push origin main"]}
           outputs={{
             0: [
