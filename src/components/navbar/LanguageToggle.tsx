@@ -1,8 +1,5 @@
 "use client"
 
-import { Moon, Sun } from "lucide-react"
-import { Button } from "@/components/ui/button"
-
 import { useTransition } from "react"
 import {
   useParams,
@@ -10,15 +7,9 @@ import {
   useSearchParams,
   useRouter,
 } from "next/navigation"
-import useTextDirection from "@/hooks/useTextDirection"
 import { LOCALE } from "@/lib/types"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
-
-interface Language {
-  name: string
-  icon: string
-}
 
 export default function LanguageToggle() {
   const { locale } = useParams<{ locale: string }>()

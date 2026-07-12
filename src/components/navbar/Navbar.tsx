@@ -59,7 +59,7 @@ export default function Navbar() {
         </div>
         <div className="hidden items-center gap-2 lg:flex">
           <ModeToggle />
-          <Suspense fallback={<LanguageToggleFallback />}>
+          <Suspense fallback={null}>
             <LanguageToggle />
           </Suspense>
         </div>
@@ -67,14 +67,5 @@ export default function Navbar() {
         <MobileMenu />
       </FloatingNav>
     </nav>
-  )
-}
-
-function LanguageToggleFallback() {
-  return (
-    <div
-      className="h-9 w-9 animate-pulse rounded-md border bg-muted"
-      aria-hidden="true"
-    />
   )
 }
