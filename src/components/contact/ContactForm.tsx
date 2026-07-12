@@ -6,7 +6,6 @@ import { toast } from "sonner"
 
 import {
   Field,
-  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
@@ -52,7 +51,7 @@ export function ContactForm({ setIsOpen }: ContactFormProps) {
       form.reset()
       setIsOpen?.(false)
     } else {
-      toast.error("فشل الإرسال: " + result.error)
+      toast.error("Error" + result.error)
     }
   }
 
