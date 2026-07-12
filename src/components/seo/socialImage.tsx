@@ -1,43 +1,23 @@
-import { ImageResponse } from "next/og"
-import { getTranslations } from "next-intl/server"
+// components/seo/SocialImage.tsx
 
-import { routing } from "@/i18n/routing"
-import { siteConfig } from "@/lib/site"
-
-export const alt = "Ghassan Aldarwish — AI Engineer and Backend Engineer"
-
-export const size = {
-  width: 1200,
-  height: 630,
+type SocialImageProps = {
+  badge: string
+  headline: string
+  description: string
+  role: string
+  action: string
+  direction?: "ltr" | "rtl"
 }
 
-export const contentType = "image/png"
-
-type OpenGraphImageProps = {
-  params: Promise<{
-    locale: string
-  }>
-}
-
-function isSupportedLocale(
-  locale: string
-): locale is (typeof routing.locales)[number] {
-  return routing.locales.includes(locale as (typeof routing.locales)[number])
-}
-
-export default async function OpenGraphImage({ params }: OpenGraphImageProps) {
-  const { locale } = await params
-
-  const safeLocale = isSupportedLocale(locale) ? locale : routing.defaultLocale
-
-  const t = await getTranslations({
-    locale: safeLocale,
-    namespace: "about.metadata.socialImage",
-  })
-
-  const direction = safeLocale === "ar" ? "rtl" : "ltr"
-
-  return new ImageResponse(
+export function SocialImage({
+  badge,
+  headline,
+  description,
+  role,
+  action,
+  direction = "ltr",
+}: SocialImageProps) {
+  return (
     <div
       dir={direction}
       style={{
@@ -57,8 +37,8 @@ export default async function OpenGraphImage({ params }: OpenGraphImageProps) {
       <div
         style={{
           display: "flex",
-          justifyContent: "space-between",
           alignItems: "center",
+          justifyContent: "space-between",
         }}
       >
         <div
@@ -71,7 +51,7 @@ export default async function OpenGraphImage({ params }: OpenGraphImageProps) {
             fontSize: "23px",
           }}
         >
-          {t("badge")}
+          {badge}
         </div>
 
         <div
@@ -81,7 +61,7 @@ export default async function OpenGraphImage({ params }: OpenGraphImageProps) {
             fontSize: "23px",
           }}
         >
-          {siteConfig.url.hostname}
+          ghassan.de
         </div>
       </div>
 
@@ -89,51 +69,40 @@ export default async function OpenGraphImage({ params }: OpenGraphImageProps) {
         style={{
           display: "flex",
           flexDirection: "column",
-          maxWidth: "1050px",
+          maxWidth: "1060px",
         }}
       >
         <div
           style={{
             display: "flex",
-            fontSize: "68px",
-            lineHeight: 1.05,
+            fontSize: "69px",
+            lineHeight: 1.04,
             fontWeight: 700,
             letterSpacing: direction === "rtl" ? "0" : "-2px",
           }}
         >
-          {t("headline")}
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            marginTop: "20px",
-            fontSize: "34px",
-            color: "#d4d4d8",
-          }}
-        >
-          {t("role")}
+          {headline}
         </div>
 
         <div
           style={{
             display: "flex",
             marginTop: "28px",
-            maxWidth: "940px",
-            fontSize: "27px",
-            lineHeight: 1.4,
+            maxWidth: "960px",
             color: "#a1a1aa",
+            fontSize: "29px",
+            lineHeight: 1.4,
           }}
         >
-          {t("description")}
+          {description}
         </div>
       </div>
 
       <div
         style={{
           display: "flex",
-          justifyContent: "space-between",
           alignItems: "center",
+          justifyContent: "space-between",
           borderTop: "1px solid rgba(255,255,255,0.14)",
           paddingTop: "28px",
         }}
@@ -141,11 +110,29 @@ export default async function OpenGraphImage({ params }: OpenGraphImageProps) {
         <div
           style={{
             display: "flex",
-            fontSize: "23px",
-            color: "#a1a1aa",
+            flexDirection: "column",
           }}
         >
-          {t("technologies")}
+          <div
+            style={{
+              display: "flex",
+              fontSize: "26px",
+              fontWeight: 600,
+            }}
+          >
+            Ghassan Aldarwish
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              marginTop: "6px",
+              color: "#a1a1aa",
+              fontSize: "20px",
+            }}
+          >
+            {role}
+          </div>
         </div>
 
         <div
@@ -155,14 +142,13 @@ export default async function OpenGraphImage({ params }: OpenGraphImageProps) {
             borderRadius: "10px",
             background: "#fafafa",
             color: "#18181b",
-            fontSize: "21px",
+            fontSize: "22px",
             fontWeight: 600,
           }}
         >
-          {t("action")}
+          {action}
         </div>
       </div>
-    </div>,
-    size
+    </div>
   )
 }

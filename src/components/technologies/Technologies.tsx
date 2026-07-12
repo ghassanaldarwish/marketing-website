@@ -1,4 +1,5 @@
-import React from "react"
+import { useTranslations } from "next-intl"
+
 import Docker from "./docker"
 import Kubernetes from "./kubernetes"
 import Ansible from "./ansible"
@@ -12,7 +13,6 @@ import Nginx from "./nginx"
 import Bash from "./bash"
 import Typescript from "./typescript"
 import Kafka from "./kafka"
-
 import Traefik from "./traefik"
 import Qdrant from "./qdrant"
 import OpenAI from "./openAI"
@@ -26,19 +26,21 @@ import Hermes from "./hermes"
 import Gitlab from "./gitlab"
 
 export default function Technologies() {
+  const t = useTranslations("home.technologies")
+
   return (
     <section className="relative lg:px-0">
       <div className="relative m-auto flex h-full max-w-6xl flex-col gap-8 px-2 py-8 lg:gap-16 lg:px-0 lg:py-24">
         <div className="flex flex-col gap-2 lg:gap-4">
           <h2 className="text-4xl font-semibold tracking-tight sm:text-5xl">
-            Trusted Technologies
+            {t("title")}
           </h2>
 
           <p className="mt-6 text-lg leading-8 text-muted-foreground">
-            Technologies I&apos;ve used to build scalable software and AI
-            solutions in production.
+            {t("description")}
           </p>
         </div>
+
         <div className="grid grid-cols-5 gap-6 md:grid-cols-12 md:gap-16">
           <Docker />
           <Kubernetes />
@@ -49,17 +51,14 @@ export default function Technologies() {
           <Mongodb />
           <Traefik />
           <Hermes />
-
           <Cloudflare />
           <Gitlab />
           <Bash />
-
           <PostgreSQL />
           <Terraform />
           <Jenkins />
           <Kafka />
           <Nginx />
-
           <Qdrant />
           <OpenAI />
           <GitHubActions />

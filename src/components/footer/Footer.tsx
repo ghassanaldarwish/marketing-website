@@ -11,7 +11,7 @@ export default function Footer() {
   const tFooter = useTranslations("footer")
   const tNavbar = useTranslations("navbar")
   const t = useTranslations()
-  const name = t("name")
+  const name = t("brand.shortName")
   const copyright = tFooter("copyright")
   const navItems = tNavbar.raw("pages") as LinkType[]
   const socialTitle = tFooter("social.title")

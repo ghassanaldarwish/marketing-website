@@ -8,11 +8,13 @@ import { ContactModel } from "../contact/Contact"
 import { Icons } from "../ui/icons"
 
 export default function Hero() {
-  const t = useTranslations("hero")
-  const title = t("title")
-  const description = t("description")
+  const t = useTranslations("home")
+  const title = t("hero.title")
+  const description = t("hero.description")
 
-  const secondaryTitle = t("secondaryTitle")
+  const secondaryTitle = t("hero.secondaryTitle")
+
+  const infiniteMovingCards = t.raw("hero.infiniteMovingCards")
   return (
     <div className="relative px-2 lg:mb-24 lg:px-0">
       <div className="relative m-auto flex h-full max-w-6xl flex-col pt-12 md:mt-0 lg:flex-row">
@@ -54,11 +56,9 @@ export default function Hero() {
       <div className="relative m-auto max-w-6xl items-end justify-between md:flex">
         <div className="flex lg:w-[59%]">
           <InfiniteMovingCards className="bg-background/10 text-lg leading-8 text-muted-foreground backdrop-blur-xs">
-            <p>7+ Years Experience</p>
-            <p>Berlin, Germany</p>
-            <p>AI Engineering</p>
-            <p>Production Backend Systems</p>
-            <p>Cloud & DevOps</p>
+            {infiniteMovingCards.map((i: string, idx: number) => (
+              <p key={idx}>{i}</p>
+            ))}
           </InfiniteMovingCards>
         </div>
         <Terminal

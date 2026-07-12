@@ -6,45 +6,40 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 
 import { hasLocale } from "next-intl"
-import { setRequestLocale } from "next-intl/server"
+import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 
 import { routing } from "@/i18n/routing"
-import { getArticles, type AppLocale } from "@/lib/mdx/get-article"
 import type { ArticleSummary } from "@/lib/mdx/article-schema"
-import {
-  absoluteUrl,
-  getOpenGraphLocale,
-  isProductionDeployment,
-  siteConfig,
-} from "@/lib/site"
+import { getArticles, type AppLocale } from "@/lib/mdx/get-article"
+import { absoluteUrl, getOpenGraphLocale, siteConfig } from "@/lib/site"
 
-type EngineeringPageProps = {
+type ArticlesPageProps = {
   params: Promise<{
     locale: string
   }>
 }
 
-const pageMetadata = {
-  title: "Engineering",
-
-  description:
-    "Explore software systems, AI platforms, backend architectures, automation workflows and cloud infrastructure designed by Ghassan Aldarwish.",
+type ArticlesStructuredData = {
+  pageName: string
 }
 
 function getLanguageAlternates(): Record<string, string> {
   const languages: Record<string, string> = Object.fromEntries(
-    routing.locales.map((locale) => [locale, `/${locale}/articles`])
+    routing.locales.map((locale) => [
+      locale,
+      absoluteUrl(`/${locale}/articles`),
+    ])
   )
 
-  languages["x-default"] = `/${routing.defaultLocale}/articles`
+  languages["x-default"] = absoluteUrl(`/${routing.defaultLocale}/articles`)
 
   return languages
 }
 
-function createArticleUrl(locale: string, slug: string): string {
+function createArticlePath(locale: string, slug: string): string {
   return `/${locale}/articles/${slug}`
 }
 
@@ -52,59 +47,51 @@ function getArticleDate(article: ArticleSummary): string {
   return article.metadata.updatedAt ?? article.metadata.publishedAt
 }
 
+function toIsoDate(date: string): string {
+  return `${date}T00:00:00.000Z`
+}
+
 export async function generateMetadata({
   params,
-}: EngineeringPageProps): Promise<Metadata> {
+}: ArticlesPageProps): Promise<Metadata> {
   const { locale } = await params
 
   if (!hasLocale(routing.locales, locale)) {
     notFound()
   }
 
-  const pagePath = `/${locale}/articles`
-  const pageUrl = absoluteUrl(pagePath)
+  const t = await getTranslations({
+    locale,
+    namespace: "articles.metadata",
+  })
+
+  const title = t("title")
+  const description = t("description")
+  const keywords = t.raw("keywords") as string[]
+
+  const pageUrl = absoluteUrl(`/${locale}/articles`)
 
   return {
-    title: pageMetadata.title,
-    description: pageMetadata.description,
-
-    keywords: [
-      "Ghassan Aldarwish Projects",
-      "Software Engineering Projects",
-      "AI Engineering Projects",
-      "Backend Architecture",
-      "Distributed Systems",
-      "AI Agents",
-      "Microservices",
-      "Node.js",
-      "TypeScript",
-      "Python",
-      "DevOps",
-      "Cloud Infrastructure",
-      "System Design",
-    ],
-
-    authors: [
-      {
-        name: siteConfig.fullName,
-        url: absoluteUrl(`/${locale}/about`),
-      },
-    ],
-
-    creator: siteConfig.fullName,
-    publisher: siteConfig.fullName,
-    category: "Software Engineering",
+    title,
+    description,
+    keywords,
 
     alternates: {
-      canonical: pagePath,
+      canonical: pageUrl,
       languages: getLanguageAlternates(),
     },
 
+    /**
+     * Images are provided automatically by:
+     *
+     * app/[locale]/articles/opengraph-image.tsx
+     * app/[locale]/articles/twitter-image.tsx
+     */
     openGraph: {
       type: "website",
       url: pageUrl,
-      title: pageMetadata.title,
-      description: pageMetadata.description,
+      title,
+      description,
       siteName: siteConfig.name,
       locale: getOpenGraphLocale(locale),
 
@@ -115,31 +102,15 @@ export async function generateMetadata({
 
     twitter: {
       card: "summary_large_image",
-      title: pageMetadata.title,
-      description: pageMetadata.description,
+      title,
+      description,
       site: siteConfig.twitterHandle,
       creator: siteConfig.twitterHandle,
-    },
-
-    robots: {
-      index: isProductionDeployment,
-      follow: isProductionDeployment,
-
-      googleBot: {
-        index: isProductionDeployment,
-        follow: isProductionDeployment,
-        noimageindex: false,
-        "max-image-preview": "large",
-        "max-snippet": -1,
-        "max-video-preview": -1,
-      },
     },
   }
 }
 
-export default async function EngineeringPage({
-  params,
-}: EngineeringPageProps) {
+export default async function ArticlesPage({ params }: ArticlesPageProps) {
   const { locale } = await params
 
   if (!hasLocale(routing.locales, locale)) {
@@ -148,71 +119,139 @@ export default async function EngineeringPage({
 
   setRequestLocale(locale)
 
-  const articles = await getArticles(locale as AppLocale)
+  const [articles, metadata, content] = await Promise.all([
+    getArticles(locale as AppLocale),
 
+    getTranslations({
+      locale,
+      namespace: "articles.metadata",
+    }),
+
+    getTranslations({
+      locale,
+      namespace: "articles.content",
+    }),
+  ])
+
+  const structuredData = metadata.raw(
+    "structuredData"
+  ) as ArticlesStructuredData
+
+  const siteUrl = siteConfig.url.toString()
   const pageUrl = absoluteUrl(`/${locale}/articles`)
+
+  const websiteId = `${siteUrl}#website`
+  const personId = `${siteUrl}#person`
+  const collectionPageId = `${pageUrl}#webpage`
+  const itemListId = `${pageUrl}#item-list`
 
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "CollectionPage",
 
-    name: `${pageMetadata.title} | ${siteConfig.name}`,
-    description: pageMetadata.description,
-    url: pageUrl,
-    inLanguage: locale,
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        "@id": collectionPageId,
 
-    author: {
-      "@type": "Person",
-      name: siteConfig.fullName,
-      url: absoluteUrl(`/${locale}/about`),
-    },
+        name: structuredData.pageName,
+        description: metadata("description"),
+        url: pageUrl,
+        inLanguage: locale,
 
-    mainEntity: {
-      "@type": "ItemList",
-      numberOfItems: articles.length,
+        isPartOf: {
+          "@id": websiteId,
+        },
 
-      itemListElement: articles.map((article, index) => {
-        const articlePath = createArticleUrl(locale, article.slug)
+        author: {
+          "@id": personId,
+        },
 
-        const articleUrl = absoluteUrl(articlePath)
+        about: {
+          "@id": personId,
+        },
 
-        return {
-          "@type": "ListItem",
-          position: index + 1,
-          url: articleUrl,
+        mainEntity: {
+          "@id": itemListId,
+        },
+      },
 
-          item: {
-            "@type": "TechArticle",
+      {
+        "@type": "ItemList",
+        "@id": itemListId,
 
-            name: article.metadata.title,
+        numberOfItems: articles.length,
 
-            headline: article.metadata.title,
+        itemListElement: articles.map((article, index) => {
+          const articlePath = createArticlePath(locale, article.slug)
+          const articleUrl = absoluteUrl(articlePath)
 
-            description: article.metadata.description,
-
+          return {
+            "@type": "ListItem",
+            position: index + 1,
             url: articleUrl,
 
-            image: absoluteUrl(article.metadata.coverImage),
+            item: {
+              "@type": "TechArticle",
+              "@id": `${articleUrl}#article`,
 
-            genre: article.metadata.category,
+              name: article.metadata.title,
+              headline: article.metadata.title,
+              description: article.metadata.description,
 
-            keywords: [
-              ...article.metadata.tags,
-              ...article.metadata.stack,
-            ].join(", "),
+              url: articleUrl,
+              mainEntityOfPage: articleUrl,
 
-            datePublished: `${article.metadata.publishedAt}T00:00:00.000Z`,
+              ...(article.metadata.coverImage
+                ? {
+                    image: absoluteUrl(article.metadata.coverImage),
+                  }
+                : {}),
 
-            dateModified: `${getArticleDate(article)}T00:00:00.000Z`,
+              genre: article.metadata.category,
 
-            author: {
-              "@type": "Person",
-              name: siteConfig.fullName,
+              keywords: [
+                ...article.metadata.tags,
+                ...article.metadata.stack,
+              ].join(", "),
+
+              datePublished: toIsoDate(article.metadata.publishedAt),
+
+              dateModified: toIsoDate(getArticleDate(article)),
+
+              inLanguage: locale,
+
+              author: {
+                "@id": personId,
+              },
+
+              publisher: {
+                "@id": personId,
+              },
             },
-          },
-        }
-      }),
-    },
+          }
+        }),
+      },
+
+      {
+        "@type": "Person",
+        "@id": personId,
+
+        name: siteConfig.fullName,
+        alternateName: siteConfig.handle,
+
+        url: absoluteUrl(`/${locale}/about`),
+
+        image: {
+          "@type": "ImageObject",
+          url: absoluteUrl(siteConfig.profileImage),
+        },
+
+        sameAs: [
+          siteConfig.socialLinks.linkedin,
+          siteConfig.socialLinks.github,
+        ],
+      },
+    ],
   }
 
   return (
@@ -233,95 +272,106 @@ export default async function EngineeringPage({
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
             <header className="max-w-3xl">
               <p className="mb-3 text-sm font-medium tracking-widest text-accent-foreground uppercase">
-                Engineering
+                {content("eyebrow")}
               </p>
 
               <h1
                 id="engineering-heading"
                 className="text-4xl font-semibold tracking-tight text-balance sm:text-5xl lg:text-6xl"
               >
-                Systems, products, and architectures built for real-world use.
+                {content("title")}
               </h1>
 
               <p className="mt-6 text-lg leading-8 text-muted-foreground">
-                Explore a selection of AI platforms, backend systems, automation
-                workflows, cloud infrastructure, and product experiences I
-                designed with maintainability, scalability, and production
-                readiness in mind.
+                {content("description")}
               </p>
             </header>
 
             {articles.length > 0 ? (
               <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {articles.map((article) => {
-                  const { metadata, slug } = article
+                  const { metadata: articleMetadata, slug } = article
 
-                  const articleHref = createArticleUrl(locale, slug)
+                  const articleHref = createArticlePath(locale, slug)
 
                   const formattedDate = new Intl.DateTimeFormat(locale, {
                     dateStyle: "medium",
-                  }).format(new Date(`${metadata.publishedAt}T00:00:00.000Z`))
+                  }).format(
+                    new Date(`${articleMetadata.publishedAt}T00:00:00.000Z`)
+                  )
 
                   return (
                     <Link
                       key={slug}
                       href={articleHref}
-                      aria-label={`Read ${metadata.title}`}
+                      aria-label={content("readArticleLabel", {
+                        title: articleMetadata.title,
+                      })}
                       className="group block rounded-3xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background focus-visible:outline-none"
                     >
                       <Card className="flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-foreground/2 p-0 transition duration-300 group-hover:-translate-y-1 group-hover:border-foreground/20 group-hover:bg-foreground/4">
-                        <div className="relative aspect-1200/630 overflow-hidden border-b border-border bg-muted">
-                          <Image
-                            src={metadata.coverImage}
-                            alt={metadata.coverImageAlt}
-                            fill
-                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                            className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                          />
-                        </div>
+                        {articleMetadata.coverImage && (
+                          <div className="relative aspect-1200/630 overflow-hidden border-b border-border bg-muted">
+                            <Image
+                              src={articleMetadata.coverImage}
+                              alt={
+                                articleMetadata.coverImageAlt ??
+                                articleMetadata.title
+                              }
+                              fill
+                              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                              className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                            />
+                          </div>
+                        )}
 
                         <div className="flex flex-1 flex-col p-6">
                           <p className="text-sm font-medium text-accent-foreground">
-                            {metadata.category}
+                            {articleMetadata.category}
                           </p>
 
                           <h2 className="mt-3 text-2xl font-semibold tracking-tight">
-                            {metadata.title}
+                            {articleMetadata.title}
                           </h2>
 
                           <p className="mt-4 leading-7 text-muted-foreground">
-                            {metadata.description}
+                            {articleMetadata.description}
                           </p>
 
-                          {metadata.stack.length > 0 && (
+                          {articleMetadata.stack.length > 0 && (
                             <div
                               className="mt-6 flex flex-wrap gap-2"
-                              aria-label={`Technologies used in ${metadata.title}`}
+                              aria-label={content("technologiesLabel", {
+                                title: articleMetadata.title,
+                              })}
                             >
-                              {metadata.stack.slice(0, 5).map((technology) => (
-                                <Badge
-                                  key={technology}
-                                  variant="outline"
-                                  className="px-3 py-1 text-xs text-muted-foreground"
-                                >
-                                  {technology}
-                                </Badge>
-                              ))}
+                              {articleMetadata.stack
+                                .slice(0, 5)
+                                .map((technology) => (
+                                  <Badge
+                                    key={technology}
+                                    variant="outline"
+                                    className="px-3 py-1 text-xs text-muted-foreground"
+                                  >
+                                    {technology}
+                                  </Badge>
+                                ))}
                             </div>
                           )}
 
                           <div className="mt-auto flex items-end justify-between gap-4 pt-8">
                             <time
-                              dateTime={metadata.publishedAt}
+                              dateTime={articleMetadata.publishedAt}
                               className="text-xs text-muted-foreground"
                             >
                               {formattedDate}
                             </time>
 
                             <span className="inline-flex items-center text-sm font-medium text-accent-foreground">
-                              View case study
+                              {content("viewCaseStudy")}
+
                               <ArrowRight
-                                className="ml-2 h-4 w-4 transition-transform duration-200 group-hover:translate-x-1"
+                                className="ms-2 h-4 w-4 transition-transform duration-200 group-hover:translate-x-1 rtl:rotate-180 rtl:group-hover:-translate-x-1"
                                 aria-hidden="true"
                               />
                             </span>
@@ -335,11 +385,11 @@ export default async function EngineeringPage({
             ) : (
               <div className="mt-12 rounded-3xl border border-dashed border-border bg-foreground/2 p-10 text-center">
                 <h2 className="text-2xl font-semibold">
-                  No published articles yet
+                  {content("emptyTitle")}
                 </h2>
 
                 <p className="mt-3 text-muted-foreground">
-                  Published engineering case studies will appear here.
+                  {content("emptyDescription")}
                 </p>
               </div>
             )}

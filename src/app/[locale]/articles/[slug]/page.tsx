@@ -1,25 +1,26 @@
 import type { Metadata } from "next"
 
+import Image from "next/image"
 import { notFound } from "next/navigation"
 import { hasLocale } from "next-intl"
-import { setRequestLocale } from "next-intl/server"
+import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { MdxRenderer } from "@/components/mdx/mdx-renderer"
+
 import { routing } from "@/i18n/routing"
 import { getArticle, type AppLocale } from "@/lib/mdx/get-article"
-import {
-  absoluteUrl,
-  getOpenGraphLocale,
-  isProductionDeployment,
-  siteConfig,
-} from "@/lib/site"
-import Image from "next/image"
+import { absoluteUrl, getOpenGraphLocale, siteConfig } from "@/lib/site"
 
 type ArticlePageProps = {
   params: Promise<{
     locale: string
     slug: string
   }>
+}
+
+type ArticleLanguageAlternates = {
+  languages: Record<string, string>
+  availableLocales: AppLocale[]
 }
 
 export const runtime = "nodejs"
@@ -29,10 +30,13 @@ function toIsoDate(date: string): string {
   return new Date(`${date}T00:00:00.000Z`).toISOString()
 }
 
-async function getArticleLanguageAlternates(slug: string): Promise<{
-  languages: Record<string, string>
-  availableLocales: AppLocale[]
-}> {
+function createArticlePath(locale: string, slug: string): string {
+  return `/${locale}/articles/${slug}`
+}
+
+async function getArticleLanguageAlternates(
+  slug: string
+): Promise<ArticleLanguageAlternates> {
   const localizedArticles = await Promise.all(
     routing.locales.map(async (locale) => {
       const typedLocale = locale as AppLocale
@@ -52,17 +56,18 @@ async function getArticleLanguageAlternates(slug: string): Promise<{
       continue
     }
 
-    languages[localizedArticle.locale] =
-      `/${localizedArticle.locale}/articles/${slug}`
+    languages[localizedArticle.locale] = absoluteUrl(
+      createArticlePath(localizedArticle.locale, slug)
+    )
 
     availableLocales.push(localizedArticle.locale)
   }
 
-  const defaultLanguagePath =
+  const defaultLanguageUrl =
     languages[routing.defaultLocale] ?? languages[availableLocales[0]]
 
-  if (defaultLanguagePath) {
-    languages["x-default"] = defaultLanguagePath
+  if (defaultLanguageUrl) {
+    languages["x-default"] = defaultLanguageUrl
   }
 
   return {
@@ -81,7 +86,15 @@ export async function generateMetadata({
   }
 
   const typedLocale = locale as AppLocale
-  const article = await getArticle(typedLocale, slug)
+
+  const [article, t] = await Promise.all([
+    getArticle(typedLocale, slug),
+
+    getTranslations({
+      locale,
+      namespace: "article.metadata",
+    }),
+  ])
 
   if (!article) {
     notFound()
@@ -89,7 +102,7 @@ export async function generateMetadata({
 
   const { metadata } = article
 
-  const articlePath = `/${locale}/articles/${slug}`
+  const articlePath = createArticlePath(locale, slug)
   const articleUrl = absoluteUrl(articlePath)
 
   const { languages, availableLocales } =
@@ -98,55 +111,58 @@ export async function generateMetadata({
   const publishedTime = toIsoDate(metadata.publishedAt)
   const modifiedTime = toIsoDate(metadata.updatedAt ?? metadata.publishedAt)
 
+  const defaultKeywords = t.raw("defaultKeywords") as string[]
+  const defaultCategory = t("defaultCategory")
+
+  const category = metadata.category || metadata.tags[0] || defaultCategory
+
+  const keywords = Array.from(
+    new Set([...metadata.tags, ...metadata.stack, ...defaultKeywords])
+  )
+
   return {
     /**
-     * The parent layout adds:
-     * | Ghassan
+     * The locale layout applies:
+     *
+     * Article title | Ghassan
      */
     title: metadata.title,
 
     description: metadata.description,
-
-    keywords: Array.from(
-      new Set([
-        ...metadata.tags,
-        "Ghassan Aldarwish",
-        "AI Engineering",
-        "Backend Engineering",
-      ])
-    ),
-
-    authors: [
-      {
-        name: siteConfig.fullName,
-        url: absoluteUrl(`/${locale}/about`),
-      },
-    ],
-
-    creator: siteConfig.fullName,
-    publisher: siteConfig.fullName,
-
-    category: metadata.tags[0] ?? "Software Engineering",
+    keywords,
+    category,
 
     alternates: {
-      canonical: articlePath,
+      canonical: articleUrl,
       languages,
     },
 
+    /**
+     * Social images are generated automatically by:
+     *
+     * app/[locale]/articles/[slug]/opengraph-image.tsx
+     * app/[locale]/articles/[slug]/twitter-image.tsx
+     */
     openGraph: {
       type: "article",
       url: articleUrl,
+
       title: metadata.title,
       description: metadata.description,
+
       siteName: siteConfig.name,
       locale: getOpenGraphLocale(locale),
+
       alternateLocale: availableLocales
         .filter((availableLocale) => availableLocale !== typedLocale)
         .map(getOpenGraphLocale),
+
       publishedTime,
       modifiedTime,
-      authors: [siteConfig.fullName],
-      section: metadata.tags[0] ?? "Software Engineering",
+
+      authors: [absoluteUrl(`/${locale}/about`)],
+
+      section: category,
       tags: metadata.tags,
     },
 
@@ -156,20 +172,6 @@ export async function generateMetadata({
       description: metadata.description,
       site: siteConfig.twitterHandle,
       creator: siteConfig.twitterHandle,
-    },
-
-    robots: {
-      index: isProductionDeployment,
-      follow: isProductionDeployment,
-
-      googleBot: {
-        index: isProductionDeployment,
-        follow: isProductionDeployment,
-        noimageindex: false,
-        "max-image-preview": "large",
-        "max-snippet": -1,
-        "max-video-preview": -1,
-      },
     },
   }
 }
@@ -183,7 +185,19 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   setRequestLocale(locale)
 
-  const article = await getArticle(locale as AppLocale, slug)
+  const [article, content, metadataTranslations] = await Promise.all([
+    getArticle(locale as AppLocale, slug),
+
+    getTranslations({
+      locale,
+      namespace: "article.content",
+    }),
+
+    getTranslations({
+      locale,
+      namespace: "article.metadata",
+    }),
+  ])
 
   if (!article) {
     notFound()
@@ -191,16 +205,16 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   const { metadata, body } = article
 
-  const articlePath = `/${locale}/articles/${slug}`
+  const articlePath = createArticlePath(locale, slug)
   const articleUrl = absoluteUrl(articlePath)
 
-  const socialImage = absoluteUrl(
-    metadata.coverImage ?? siteConfig.defaultSocialImage
-  )
+  const siteUrl = siteConfig.url.toString()
+  const aboutUrl = absoluteUrl(`/${locale}/about`)
 
-  const imageAlt =
-    metadata.coverImageAlt ??
-    `${metadata.title} — article by ${siteConfig.fullName}`
+  const websiteId = `${siteUrl}#website`
+  const personId = `${siteUrl}#person`
+  const webpageId = `${articleUrl}#webpage`
+  const articleId = `${articleUrl}#article`
 
   const publishedTime = toIsoDate(metadata.publishedAt)
   const modifiedTime = toIsoDate(metadata.updatedAt ?? metadata.publishedAt)
@@ -215,44 +229,115 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       }).format(new Date(modifiedTime))
     : null
 
+  const imageAlt =
+    metadata.coverImageAlt ??
+    content("coverImageAlt", {
+      title: metadata.title,
+      author: siteConfig.fullName,
+    })
+
+  const defaultCategory = metadataTranslations("defaultCategory")
+
+  const articleSection =
+    metadata.category || metadata.tags[0] || defaultCategory
+
   const wordCount = body.trim().split(/\s+/).filter(Boolean).length
+
+  const articleKeywords = Array.from(
+    new Set([...metadata.tags, ...metadata.stack])
+  )
 
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "BlogPosting",
 
-    headline: metadata.title,
-    description: metadata.description,
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": webpageId,
 
-    url: articleUrl,
-    mainEntityOfPage: {
-      "@type": "WebPage",
-      "@id": articleUrl,
-    },
+        url: articleUrl,
+        name: metadata.title,
+        description: metadata.description,
+        inLanguage: locale,
 
-    image: [socialImage],
+        isPartOf: {
+          "@id": websiteId,
+        },
 
-    datePublished: publishedTime,
-    dateModified: modifiedTime,
+        about: {
+          "@id": articleId,
+        },
 
-    inLanguage: locale,
-    wordCount,
+        mainEntity: {
+          "@id": articleId,
+        },
+      },
 
-    articleSection: metadata.tags[0] ?? "Software Engineering",
+      {
+        "@type": "TechArticle",
+        "@id": articleId,
 
-    keywords: metadata.tags.join(", "),
+        headline: metadata.title,
+        name: metadata.title,
+        description: metadata.description,
 
-    author: {
-      "@type": "Person",
-      name: siteConfig.fullName,
-      url: absoluteUrl(`/${locale}/about`),
-    },
+        url: articleUrl,
 
-    publisher: {
-      "@type": "Person",
-      name: siteConfig.fullName,
-      url: siteConfig.url.toString(),
-    },
+        mainEntityOfPage: {
+          "@id": webpageId,
+        },
+
+        ...(metadata.coverImage
+          ? {
+              image: {
+                "@type": "ImageObject",
+                url: absoluteUrl(metadata.coverImage),
+                width: 1200,
+                height: 630,
+              },
+            }
+          : {}),
+
+        datePublished: publishedTime,
+        dateModified: modifiedTime,
+
+        inLanguage: locale,
+        wordCount,
+
+        articleSection,
+        genre: metadata.category,
+
+        keywords: articleKeywords.join(", "),
+
+        author: {
+          "@id": personId,
+        },
+
+        publisher: {
+          "@id": personId,
+        },
+      },
+
+      {
+        "@type": "Person",
+        "@id": personId,
+
+        name: siteConfig.fullName,
+        alternateName: siteConfig.handle,
+
+        url: aboutUrl,
+
+        image: {
+          "@type": "ImageObject",
+          url: absoluteUrl(siteConfig.profileImage),
+        },
+
+        sameAs: [
+          siteConfig.socialLinks.linkedin,
+          siteConfig.socialLinks.github,
+        ],
+      },
+    ],
   }
 
   return (
@@ -289,7 +374,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             </p>
 
             <div className="mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
-              <span>By {siteConfig.fullName}</span>
+              <span>
+                {content("authorPrefix")} {siteConfig.fullName}
+              </span>
 
               <span aria-hidden="true">•</span>
 
@@ -299,14 +386,15 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 <>
                   <span aria-hidden="true">•</span>
 
-                  <span>Updated {formattedModifiedDate}</span>
+                  <span>
+                    {content("updatedPrefix")} {formattedModifiedDate}
+                  </span>
                 </>
               )}
             </div>
 
             {metadata.coverImage && (
               <figure className="mt-10 overflow-hidden rounded-2xl border border-border bg-muted">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <Image
                   src={metadata.coverImage}
                   alt={imageAlt}

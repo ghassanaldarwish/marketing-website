@@ -2,11 +2,11 @@ import type { Metadata } from "next"
 
 import { notFound } from "next/navigation"
 import { hasLocale } from "next-intl"
-import { setRequestLocale } from "next-intl/server"
+import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import ArchitectureShowcase from "@/components/architectureShowcase/ArchitectureShowcase"
 import CoreExpertise from "@/components/coreExpertise/CoreExpertise"
-
+import EngineeringBeyondCode from "@/components/engineeringBeyondCode/EngineeringBeyondCode"
 import FinalCTA from "@/components/finalCTA/FinalCTA"
 import Hero from "@/components/hero/Hero"
 import SelectedProjects from "@/components/selectedProjects/SelectedProjects"
@@ -14,13 +14,7 @@ import Technologies from "@/components/technologies/Technologies"
 import GridBackground from "@/components/ui/GridBackground"
 
 import { routing } from "@/i18n/routing"
-import {
-  absoluteUrl,
-  getOpenGraphLocale,
-  isProductionDeployment,
-  siteConfig,
-} from "@/lib/site"
-import EngineeringBeyondCode from "@/components/engineeringBeyondCode/EngineeringBeyondCode"
+import { absoluteUrl, getOpenGraphLocale, siteConfig } from "@/lib/site"
 
 type HomePageProps = {
   params: Promise<{
@@ -28,24 +22,22 @@ type HomePageProps = {
   }>
 }
 
-const homeMetadata = {
-  title: "Ghassan — AI Engineer & Backend Engineer",
-
-  description:
-    "Ghassan Aldarwish is an AI Engineer and Backend Engineer building production AI systems, scalable backend platforms, distributed architectures, automation workflows and cloud-native applications.",
-
-  headline: "Building intelligent systems that scale.",
-
-  shortDescription:
-    "Production AI systems, scalable backend architecture and cloud-native software.",
+type HomeStructuredData = {
+  personDescription: string
+  jobTitles: string[]
+  knowsAbout: string[]
+  pages: {
+    engineering: string
+    contact: string
+  }
 }
 
 function getLanguageAlternates(): Record<string, string> {
   const languages: Record<string, string> = Object.fromEntries(
-    routing.locales.map((locale) => [locale, `/${locale}`])
+    routing.locales.map((locale) => [locale, absoluteUrl(`/${locale}`)])
   )
 
-  languages["x-default"] = `/${routing.defaultLocale}`
+  languages["x-default"] = absoluteUrl(`/${routing.defaultLocale}`)
 
   return languages
 }
@@ -59,72 +51,46 @@ export async function generateMetadata({
     notFound()
   }
 
-  const pagePath = `/${locale}`
-  const pageUrl = absoluteUrl(pagePath)
+  const t = await getTranslations({
+    locale,
+    namespace: "home.metadata",
+  })
+
+  const title = t("title")
+  const description = t("description")
+  const keywords = t.raw("keywords") as string[]
+
+  const pageUrl = absoluteUrl(`/${locale}`)
 
   return {
     /**
-     * Prevents the parent template from generating:
+     * Prevent the parent layout template from producing:
+     *
      * Ghassan — AI Engineer & Backend Engineer | Ghassan
      */
     title: {
-      absolute: homeMetadata.title,
+      absolute: title,
     },
 
-    description: homeMetadata.description,
-
-    keywords: [
-      "Ghassan Aldarwish",
-      "AI Engineer",
-      "Backend Engineer",
-      "Senior Software Engineer",
-      "Software Engineer Germany",
-      "AI Engineer Germany",
-      "Backend Engineer Germany",
-      "Production AI Systems",
-      "AI Agents",
-      "Large Language Models",
-      "RAG Systems",
-      "Model Context Protocol",
-      "MCP Servers",
-      "Node.js",
-      "TypeScript",
-      "Python",
-      "FastAPI",
-      "Microservices",
-      "Distributed Systems",
-      "Software Architecture",
-      "Docker",
-      "Kubernetes",
-      "DevOps",
-      "Cloud Engineering",
-    ],
-
-    authors: [
-      {
-        name: siteConfig.fullName,
-        url: absoluteUrl(`/${locale}/about`),
-      },
-    ],
-
-    creator: siteConfig.fullName,
-    publisher: siteConfig.fullName,
-
-    applicationName: siteConfig.name,
-    category: "Technology",
+    description,
+    keywords,
 
     alternates: {
-      canonical: pagePath,
+      canonical: pageUrl,
       languages: getLanguageAlternates(),
     },
 
+    /**
+     * Images are supplied automatically by:
+     *
+     * app/[locale]/opengraph-image.tsx
+     * app/[locale]/twitter-image.tsx
+     */
     openGraph: {
       type: "website",
       url: pageUrl,
-
-      title: homeMetadata.title,
-      description: homeMetadata.description,
-
+      title,
+      description,
       siteName: siteConfig.name,
       locale: getOpenGraphLocale(locale),
 
@@ -135,26 +101,10 @@ export async function generateMetadata({
 
     twitter: {
       card: "summary_large_image",
-
-      title: homeMetadata.title,
-      description: homeMetadata.description,
-
+      title,
+      description,
       site: siteConfig.twitterHandle,
       creator: siteConfig.twitterHandle,
-    },
-
-    robots: {
-      index: isProductionDeployment,
-      follow: isProductionDeployment,
-
-      googleBot: {
-        index: isProductionDeployment,
-        follow: isProductionDeployment,
-        noimageindex: false,
-        "max-image-preview": "large",
-        "max-snippet": -1,
-        "max-video-preview": -1,
-      },
     },
   }
 }
@@ -166,12 +116,36 @@ export default async function HomePage({ params }: HomePageProps) {
     notFound()
   }
 
+  /**
+   * Makes the locale available to next-intl and supports
+   * static rendering for localized routes.
+   */
   setRequestLocale(locale)
+
+  const t = await getTranslations({
+    locale,
+    namespace: "home.metadata",
+  })
+
+  const structuredData = t.raw("structuredData") as HomeStructuredData
+
+  const title = t("title")
+  const description = t("description")
+
+  const siteUrl = siteConfig.url.toString()
 
   const homeUrl = absoluteUrl(`/${locale}`)
   const aboutUrl = absoluteUrl(`/${locale}/about`)
   const engineeringUrl = absoluteUrl(`/${locale}/articles`)
   const contactUrl = absoluteUrl(`/${locale}/contact`)
+
+  /**
+   * WebSite and Person IDs remain identical across languages.
+   * Only the localized WebPage ID changes.
+   */
+  const websiteId = `${siteUrl}#website`
+  const personId = `${siteUrl}#person`
+  const webpageId = `${homeUrl}#webpage`
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -179,40 +153,42 @@ export default async function HomePage({ params }: HomePageProps) {
     "@graph": [
       {
         "@type": "WebSite",
-        "@id": `${siteConfig.url.toString()}#website`,
+        "@id": websiteId,
 
         name: siteConfig.name,
         alternateName: siteConfig.fullName,
 
-        url: siteConfig.url.toString(),
-        description: homeMetadata.description,
+        url: siteUrl,
+        description,
 
         inLanguage: locale,
 
         publisher: {
-          "@id": `${aboutUrl}#person`,
+          "@id": personId,
         },
       },
 
       {
         "@type": "WebPage",
-        "@id": `${homeUrl}#webpage`,
+        "@id": webpageId,
 
         url: homeUrl,
-        name: homeMetadata.title,
-        description: homeMetadata.description,
+        name: title,
+        description,
 
         isPartOf: {
-          "@id": `${siteConfig.url.toString()}#website`,
+          "@id": websiteId,
         },
 
         about: {
-          "@id": `${aboutUrl}#person`,
+          "@id": personId,
         },
 
         primaryImageOfPage: {
           "@type": "ImageObject",
           url: absoluteUrl(siteConfig.defaultSocialImage),
+          width: 1200,
+          height: 630,
         },
 
         inLanguage: locale,
@@ -220,43 +196,27 @@ export default async function HomePage({ params }: HomePageProps) {
 
       {
         "@type": "Person",
-        "@id": `${aboutUrl}#person`,
+        "@id": personId,
 
         name: siteConfig.fullName,
-        alternateName: "@ghassanaldarwish",
+        alternateName: siteConfig.handle,
 
         url: aboutUrl,
-        mainEntityOfPage: aboutUrl,
 
-        image: absoluteUrl(siteConfig.defaultSocialImage),
+        mainEntityOfPage: {
+          "@type": "WebPage",
+          "@id": `${aboutUrl}#webpage`,
+          url: aboutUrl,
+        },
 
-        jobTitle: ["AI Engineer", "Backend Engineer", "Software Engineer"],
+        image: {
+          "@type": "ImageObject",
+          url: absoluteUrl(siteConfig.profileImage),
+        },
 
-        description:
-          "AI Engineer and Backend Engineer focused on production AI systems, distributed backend architecture, cloud infrastructure, DevOps and modern web development.",
-
-        knowsAbout: [
-          "Artificial Intelligence",
-          "Large Language Models",
-          "AI Agents",
-          "Retrieval-Augmented Generation",
-          "Model Context Protocol",
-          "Backend Engineering",
-          "Distributed Systems",
-          "Microservices",
-          "Node.js",
-          "TypeScript",
-          "Python",
-          "FastAPI",
-          "PostgreSQL",
-          "Redis",
-          "Docker",
-          "Kubernetes",
-          "CI/CD",
-          "Cloud Infrastructure",
-          "Next.js",
-          "React",
-        ],
+        jobTitle: structuredData.jobTitles,
+        description: structuredData.personDescription,
+        knowsAbout: structuredData.knowsAbout,
 
         address: {
           "@type": "PostalAddress",
@@ -264,19 +224,19 @@ export default async function HomePage({ params }: HomePageProps) {
         },
 
         sameAs: [
-          "https://www.linkedin.com/in/ghassanaldarwish",
-          "https://github.com/ghassanaldarwish",
+          siteConfig.socialLinks.linkedin,
+          siteConfig.socialLinks.github,
         ],
 
         subjectOf: [
           {
             "@type": "CollectionPage",
-            name: "Engineering",
+            name: structuredData.pages.engineering,
             url: engineeringUrl,
           },
           {
             "@type": "ContactPage",
-            name: "Contact",
+            name: structuredData.pages.contact,
             url: contactUrl,
           },
         ],

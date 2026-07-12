@@ -1,9 +1,17 @@
+// lib/site.ts
+
 const rawSiteUrl =
   process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://ghassan.de"
 
 function createSiteUrl(): URL {
   try {
-    return new URL(rawSiteUrl)
+    const url = new URL(rawSiteUrl)
+
+    url.pathname = "/"
+    url.search = ""
+    url.hash = ""
+
+    return url
   } catch {
     throw new Error(
       `NEXT_PUBLIC_SITE_URL must be a valid absolute URL. Received: "${rawSiteUrl}"`
@@ -14,20 +22,18 @@ function createSiteUrl(): URL {
 export const siteConfig = {
   name: "Ghassan",
   fullName: "Ghassan Aldarwish",
+  handle: "@ghassanaldarwish",
 
   url: createSiteUrl(),
 
-  title: "Ghassan — AI Engineer & Backend Engineer",
-
-  description:
-    "AI Engineer and Backend Engineer building production AI systems, scalable backend platforms, microservices and cloud-native applications.",
-
   twitterHandle: "@ghassanaldarwish",
 
-  /**
-   * Must exist under:
-   * public/images/social/default-og.png
-   */
+  socialLinks: {
+    linkedin: "https://www.linkedin.com/in/ghassanaldarwish",
+    github: "https://github.com/ghassanaldarwish",
+  },
+
+  profileImage: "/images/ghassan-profile.png",
   defaultSocialImage: "/images/social/default-og.png",
 } as const
 

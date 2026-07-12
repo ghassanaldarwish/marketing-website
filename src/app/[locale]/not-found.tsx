@@ -7,7 +7,7 @@ import GridBackground from "@/components/ui/GridBackground"
 
 export default function NotFoundPage() {
   const locale = useLocale()
-  const t = useTranslations("NotFoundPage")
+  const t = useTranslations("notFound")
 
   return (
     <main className="relative isolate flex min-h-[calc(100vh-5rem)] items-center overflow-hidden px-4 py-20 sm:px-6 lg:py-28">

@@ -5,7 +5,11 @@ import { Geist_Mono, Inter } from "next/font/google"
 import { notFound } from "next/navigation"
 
 import { hasLocale, NextIntlClientProvider } from "next-intl"
-import { getMessages, setRequestLocale } from "next-intl/server"
+import {
+  getMessages,
+  getTranslations,
+  setRequestLocale,
+} from "next-intl/server"
 
 import { isRtlLang } from "rtl-detect"
 
@@ -31,7 +35,7 @@ const inter = Inter({
   display: "swap",
 })
 
-const fontMono = Geist_Mono({
+const geistMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
   display: "swap",
@@ -44,6 +48,12 @@ type LocaleLayoutProps = Readonly<{
   }>
 }>
 
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({
+    locale,
+  }))
+}
+
 export async function generateMetadata({
   params,
 }: LocaleLayoutProps): Promise<Metadata> {
@@ -53,26 +63,24 @@ export async function generateMetadata({
     return {}
   }
 
-  const socialImage = absoluteUrl(siteConfig.defaultSocialImage)
+  const t = await getTranslations({
+    locale,
+    namespace: "metadata",
+  })
+
+  const defaultTitle = t("defaultTitle")
+  const description = t("description")
+  const category = t("category")
 
   return {
     metadataBase: siteConfig.url,
 
-    /**
-     * Child pages can return:
-     *
-     * title: "About Me"
-     *
-     * Browser output:
-     *
-     * About Me | Ghassan
-     */
     title: {
-      default: siteConfig.title,
+      default: defaultTitle,
       template: "%s | Ghassan",
     },
 
-    description: siteConfig.description,
+    description,
 
     applicationName: siteConfig.name,
 
@@ -85,7 +93,7 @@ export async function generateMetadata({
 
     creator: siteConfig.fullName,
     publisher: siteConfig.fullName,
-    category: "Technology",
+    category,
 
     referrer: "origin-when-cross-origin",
 
@@ -96,50 +104,35 @@ export async function generateMetadata({
     },
 
     /**
-     * These are safe global defaults.
-     *
-     * Each page should provide its own:
+     * The page-level metadata should provide:
      * - canonical URL
-     * - hreflang alternates
+     * - hreflang alternatives
      * - Open Graph URL
-     * - page-specific title and description
+     * - page-specific title
+     * - page-specific description
+     *
+     * Images are generated automatically by:
+     * - app/[locale]/opengraph-image.tsx
+     * - app/[locale]/twitter-image.tsx
      */
     openGraph: {
       type: "website",
-      title: siteConfig.title,
-      description: siteConfig.description,
+      title: defaultTitle,
+      description,
       siteName: siteConfig.name,
       locale: getOpenGraphLocale(locale),
 
       alternateLocale: routing.locales
         .filter((supportedLocale) => supportedLocale !== locale)
         .map(getOpenGraphLocale),
-
-      images: [
-        {
-          url: socialImage,
-          width: 1200,
-          height: 630,
-          alt: `${siteConfig.fullName} — AI Engineer and Backend Engineer`,
-        },
-      ],
     },
 
     twitter: {
       card: "summary_large_image",
-      title: siteConfig.title,
-      description: siteConfig.description,
+      title: defaultTitle,
+      description,
       site: siteConfig.twitterHandle,
       creator: siteConfig.twitterHandle,
-
-      images: [
-        {
-          url: socialImage,
-          width: 1200,
-          height: 630,
-          alt: `${siteConfig.fullName} — AI Engineer and Backend Engineer`,
-        },
-      ],
     },
 
     robots: {
@@ -185,12 +178,15 @@ export default async function LocaleLayout({
   }
 
   /**
-   * Allows next-intl to use the route locale and helps
-   * enable static rendering for localized routes.
+   * Makes the route locale available to next-intl and supports
+   * static rendering for localized routes.
    */
   setRequestLocale(locale)
 
-  const messages = await getMessages()
+  const messages = await getMessages({
+    locale,
+  })
+
   const direction = isRtlLang(locale) ? "rtl" : "ltr"
 
   return (
@@ -199,10 +195,14 @@ export default async function LocaleLayout({
       dir={direction}
       suppressHydrationWarning
       data-scroll-behavior="smooth"
-      className={cn(inter.variable, fontMono.variable, "font-sans antialiased")}
+      className={cn(
+        inter.variable,
+        geistMono.variable,
+        "font-sans antialiased"
+      )}
     >
       <body className="min-h-screen bg-background text-foreground">
-        <NextIntlClientProvider messages={messages}>
+        <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
