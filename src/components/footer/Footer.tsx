@@ -9,6 +9,7 @@ import GridBackground from "@/components/ui/GridBackground"
 import { navigationConfig } from "@/lib/config/navigation"
 import { siteConfig } from "@/lib/config/site"
 import { cn } from "@/lib/utils"
+import { Mail } from "lucide-react"
 
 export default function Footer() {
   const t = useTranslations()
@@ -45,6 +46,11 @@ export default function Footer() {
 
           <div className="mt-2 text-center text-sm text-muted-foreground md:text-start">
             <p>{copyright}</p>
+
+            <p className="flex items-center justify-center gap-2 md:justify-start">
+              <Mail />
+              info@ghassan.de
+            </p>
           </div>
         </div>
 

@@ -350,7 +350,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       />
 
       <main className="mx-auto w-full max-w-4xl px-4 py-16 sm:px-6">
-        <article className="prose max-w-none prose-neutral dark:prose-invert prose-headings:scroll-mt-24 prose-headings:font-semibold prose-a:text-primary prose-a:no-underline prose-a:hover:underline prose-pre:m-0 prose-pre:bg-transparent prose-pre:p-0">
+        <article
+          key={`${locale}:${slug}`}
+          className="prose max-w-none prose-neutral dark:prose-invert prose-headings:scroll-mt-24 prose-headings:font-semibold prose-a:text-primary prose-a:no-underline prose-a:hover:underline prose-code:font-mono prose-code:text-foreground prose-code:opacity-100 prose-code:before:content-none prose-code:after:content-none prose-pre:overflow-x-auto prose-pre:rounded-xl prose-pre:border prose-pre:border-border prose-pre:bg-muted/60 prose-pre:px-5 prose-pre:py-4 prose-pre:text-sm prose-pre:leading-7 prose-pre:text-foreground"
+        >
           <header className="not-prose mb-12 border-b border-border pb-10">
             {metadata.tags.length > 0 && (
               <div className="mb-5 flex flex-wrap gap-2">
@@ -408,7 +411,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             )}
           </header>
 
-          <MdxRenderer source={body} />
+          <MdxRenderer key={`${locale}:${slug}`} source={body} />
         </article>
       </main>
     </>

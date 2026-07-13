@@ -1,32 +1,139 @@
 ---
-title: "Building a Production AI Agent Platform"
-description: "How I designed an agent platform using Node.js, Python, Redis, PostgreSQL, Docker and Kubernetes."
+title: "Designing a Scalable Backend Platform"
+description: "How I designed a production-ready backend platform using TypeScript, Node.js, PostgreSQL, Redis, event-driven architecture, Docker, and Kubernetes."
 
-category: "AI Engineering / Backend"
+category: "Backend Engineering / System Design"
 status: "Case Study"
 
-publishedAt: "2026-07-11"
-updatedAt: "2026-07-11"
+publishedAt: "2026-07-12"
+updatedAt: "2026-07-13"
 
 coverImage: "/articles/ai-agent-platform/light_logo_500_180.png"
-coverImageAlt: "Architecture of a production AI agent platform"
+coverImageAlt: "Architecture of a scalable backend platform"
 
 tags:
-  - "AI Engineering"
-  - "AI Agents"
+  - "Backend Engineering"
   - "System Design"
+  - "Distributed Systems"
 
 stack:
-  - "Python"
+  - "Node.js"
   - "TypeScript"
-  - "OpenAI"
   - "PostgreSQL"
   - "Redis"
   - "Docker"
+  - "Kubernetes"
 
+featured: false
+order: 2
 draft: false
 ---
 
+A backend can be easy to start and difficult to evolve.
+
+Many applications begin with a single API, a database, and a small number of endpoints. That architecture can work well during the early stages of a product, but problems appear as traffic, teams, features, and operational requirements grow.
+
+This case study explains how I designed a scalable backend platform with clear service boundaries, reliable asynchronous processing, durable data, observability, and independent deployment.
+
+<Callout title="Core engineering principle">
+
+Scalability is not only about handling more requests. It is also about keeping the system understandable, deployable, observable, and reliable as its complexity grows.
+
+</Callout>
+
 ## The problem
 
-Article content starts here.
+The platform needed to support several product domains while remaining maintainable for a growing engineering team.
+
+The main requirements were:
+
+- Clear separation between business domains.
+- Independent scaling of expensive workloads.
+- Reliable communication between services.
+- Consistent authentication and authorization.
+- Durable background processing.
+- Protection against duplicate requests.
+- Centralized observability.
+- Safe database migrations.
+- Horizontal scaling.
+- Automated deployment.
+- Recovery from partial failures.
+
+A single large application could satisfy the initial requirements, but it would eventually make deployments, ownership, testing, and scaling more difficult.
+
+The goal was therefore not to split everything into microservices immediately.
+
+The goal was to introduce boundaries only where they provided operational or organizational value.
+
+## Design goals
+
+Before choosing technologies, I defined the system qualities that mattered most.
+
+### Reliability
+
+A service failure should not corrupt data or silently lose work.
+
+### Scalability
+
+API servers, background workers, and data-processing services should scale independently.
+
+### Maintainability
+
+Each module or service should have a clear responsibility and ownership boundary.
+
+### Observability
+
+Engineers should be able to trace a request across services and understand where and why it failed.
+
+### Security
+
+Authentication, authorization, secrets, validation, and network boundaries should be part of the architecture rather than added later.
+
+### Deployment safety
+
+Each release should support automated testing, controlled rollout, health checks, and rollback.
+
+## High-level architecture
+
+The platform is divided into several layers.
+
+![Scalable backend platform architecture](/articles/scalable-backend-platform/architecture.png)
+
+| Layer           | Responsibility                               | Main technologies         |
+| --------------- | -------------------------------------------- | ------------------------- |
+| Edge layer      | TLS termination, routing, request limits     | Traefik, Cloudflare       |
+| API layer       | Validation, authentication, request handling | Node.js, TypeScript       |
+| Domain services | Business logic and domain ownership          | Node.js, TypeScript       |
+| Worker layer    | Background and long-running jobs             | Node.js, Python           |
+| Event layer     | Asynchronous communication                   | Kafka or RabbitMQ         |
+| Cache layer     | Caching, locks, rate limits                  | Redis                     |
+| Data layer      | Durable transactional storage                | PostgreSQL                |
+| Observability   | Logs, metrics, and traces                    | OpenTelemetry, Prometheus |
+| Deployment      | Packaging and orchestration                  | Docker, Kubernetes        |
+
+The platform uses synchronous communication when the caller requires an immediate response and asynchronous communication when the work can continue independently.
+
+## Modular monolith before microservices
+
+One of the most important architectural decisions was not to begin with dozens of services.
+
+The first version uses a modular monolith with strict internal boundaries.
+
+```
+src/
+├── modules/
+│   ├── authentication/
+│   ├── users/
+│   ├── organizations/
+│   ├── billing/
+│   └── notifications/
+├── infrastructure/
+│   ├── database/
+│   ├── cache/
+│   ├── messaging/
+│   └── observability/
+└── shared/
+    ├── errors/
+    ├── validation/
+    └── types/
+```
