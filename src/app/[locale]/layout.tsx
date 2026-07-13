@@ -201,7 +201,10 @@ export default async function LocaleLayout({
         "font-sans antialiased"
       )}
     >
-      <body className="min-h-screen bg-background text-foreground">
+      <body
+        suppressHydrationWarning
+        className="min-h-screen bg-background text-foreground"
+      >
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider
             attribute="class"
