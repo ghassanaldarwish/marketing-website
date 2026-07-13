@@ -9,9 +9,10 @@ import { LinkType } from "@/lib/types"
 import { useTranslations } from "next-intl"
 import LanguageToggle from "./LanguageToggle"
 import ModeToggle from "./ModeToggle"
-import Link from "next/link"
 import Logo from "./Logo"
 import { cn } from "@/lib/utils"
+import { Link } from "@/i18n/routing"
+
 // type NavItem = {
 //   name: string
 //   href: string

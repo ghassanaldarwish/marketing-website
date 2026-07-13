@@ -6,6 +6,7 @@ import { buttonVariants } from "../ui/button"
 import { cn } from "@/lib/utils"
 import { Icons } from "../ui/icons"
 import GridBackground from "../ui/GridBackground"
+import { siteConfig } from "@/lib/site"
 
 export default function Footer() {
   const tFooter = useTranslations("footer")
@@ -15,7 +16,6 @@ export default function Footer() {
   const copyright = tFooter("copyright")
   const navItems = tNavbar.raw("pages") as LinkType[]
   const socialTitle = tFooter("social.title")
-  const socialLinks = tFooter.raw("social.links") as LinkType[]
 
   return (
     <div className="relative border-t bg-background px-2 py-8">
@@ -78,23 +78,12 @@ export default function Footer() {
               {socialTitle}
             </h5>
             <div className="flex items-center gap-2">
-              {socialLinks.map((item, idx) => {
-                const IconComponent = Icons[item.title as keyof typeof Icons]
-
-                return (
-                  <Link
-                    key={idx}
-                    href={item.url}
-                    className="text-foreground/60 transition-colors hover:text-foreground/80"
-                  >
-                    {IconComponent ? (
-                      <IconComponent className="h-6 w-6" />
-                    ) : (
-                      item.title
-                    )}
-                  </Link>
-                )
-              })}
+              <a href={siteConfig.socialLinks.github} target="_blank">
+                <Icons.gitHub className="h-10 w-10 text-foreground/60 transition-colors hover:text-foreground/80" />
+              </a>
+              <a href={siteConfig.socialLinks.linkedin} target="_blank">
+                <Icons.linkedin className="h-10 w-10 text-foreground/60 transition-colors hover:text-foreground/80" />
+              </a>{" "}
             </div>
           </div>
         </div>

@@ -29,7 +29,7 @@ export const siteConfig = {
   twitterHandle: "@ghassanaldarwish",
 
   socialLinks: {
-    linkedin: "https://www.linkedin.com/in/ghassanaldarwish",
+    linkedin: "https://linkedin.com/in/ghassan-aldarwish",
     github: "https://github.com/ghassanaldarwish",
   },
 

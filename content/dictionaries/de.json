@@ -2,123 +2,117 @@
   "brand": {
     "name": "Ghassan Aldarwish",
     "shortName": "Ghassan",
-    "role": "KI-Ingenieur, Backend-Ingenieur und DevOps-Ingenieur",
-    "location": "Deutschland"
+    "role": "AI Engineer, Backend Engineer, and DevOps Engineer",
+    "location": "Germany"
   },
   "contactModal": {
-    "trigger": "Kontakt aufnehmen",
-    "title": "Kontakt aufnehmen",
-    "description": "Haben Sie ein Projekt, eine Stellenmöglichkeit oder eine technische Frage? Senden Sie mir eine Nachricht.",
-    "cancel": "Abbrechen",
-    "submit": "Nachricht senden"
+    "trigger": "Contact Me",
+    "title": "Get in Touch",
+    "description": "Have a project, job opportunity, or technical question? Send me a message.",
+    "cancel": "Cancel",
+    "submit": "Send Message"
   },
   "navbar": {
     "pages": [
       {
-        "title": "Artikel",
+        "title": "articles",
         "url": "/articles",
         "disabled": false
       },
       {
-        "title": "Über mich",
+        "title": "about",
         "url": "/about",
         "disabled": false
       },
       {
-        "title": "Kontakt",
+        "title": "contact",
         "url": "/contact",
         "disabled": false
       }
-    ]
+    ],
+    "theme": {
+      "system": "system",
+      "dark": "dark",
+      "light": "light"
+    }
   },
   "footer": {
     "copyright": "© Ghassan Aldarwish 2026",
     "social": {
-      "title": "Soziale Medien",
-      "links": [
-        {
-          "title": "Twitter",
-          "url": "/"
-        },
-        {
-          "title": "LinkedIn",
-          "url": "/"
-        }
-      ]
+      "title": "Social media"
     }
   },
   "notFound": {
-    "eyebrow": "Seite nicht gefunden",
-    "title": "Diese Route führt ins Leere.",
-    "description": "Die Seite wurde möglicherweise verschoben, umbenannt oder hat nie existiert. Kehren Sie zur Startseite zurück oder entdecken Sie weitere Einblicke in meine Engineering-Arbeit.",
-    "home": "Zurück zur Startseite",
-    "engineering": "Engineering entdecken",
-    "hint": "Fehlercode: 404"
+    "eyebrow": "Page not found",
+    "title": "This route leads nowhere.",
+    "description": "The page may have been moved, renamed, or never existed. Return to the homepage or continue exploring my engineering work.",
+    "home": "Back to home",
+    "engineering": "Explore engineering",
+    "hint": "Error code: 404"
   },
   "metadata": {
-    "defaultTitle": "Ghassan — KI-Ingenieur & Backend-Ingenieur",
+    "defaultTitle": "Ghassan — AI Engineer & Backend Engineer",
     "titleTemplate": "{title} | Ghassan",
-    "description": "KI-Ingenieur und Backend-Ingenieur für produktionsreife KI-Systeme, skalierbare Backend-Plattformen, Microservices und cloudnative Anwendungen.",
-    "category": "Technologie",
-    "socialImageAlt": "Ghassan Aldarwish — KI-Ingenieur und Backend-Ingenieur"
+    "description": "AI Engineer and Backend Engineer building production AI systems, scalable backend platforms, microservices, and cloud-native applications.",
+    "category": "Technology",
+    "socialImageAlt": "Ghassan Aldarwish — AI Engineer and Backend Engineer"
   },
   "home": {
     "metadata": {
-      "title": "Ghassan — KI-Ingenieur & Backend-Ingenieur",
-      "description": "Ghassan Aldarwish ist KI-Ingenieur und Backend-Ingenieur und entwickelt produktionsreife KI-Systeme, skalierbare Backend-Plattformen, verteilte Architekturen, Automatisierungsworkflows und cloudnative Anwendungen.",
-      "headline": "Ich entwickle intelligente Systeme, die skalieren.",
-      "shortDescription": "Produktionsreife KI-Systeme, skalierbare Backend-Architektur und cloudnative Software.",
-      "category": "Technologie",
+      "title": "Ghassan — AI Engineer & Backend Engineer",
+      "description": "Ghassan Aldarwish is an AI Engineer and Backend Engineer building production AI systems, scalable backend platforms, distributed architectures, automation workflows, and cloud-native applications.",
+      "headline": "Building intelligent systems that scale.",
+      "shortDescription": "Production AI systems, scalable backend architecture, and cloud-native software.",
+      "category": "Technology",
       "socialImage": {
-        "alt": "Ghassan Aldarwish — KI-Ingenieur und Backend-Ingenieur",
-        "availability": "Offen für berufliche Möglichkeiten in Deutschland",
-        "expertise": "KI-Engineering · Backend-Systeme",
-        "role": "KI-Ingenieur · Backend-Ingenieur · Softwarearchitektur",
-        "twitterRole": "KI-Ingenieur · Backend-Ingenieur",
-        "openGraphAction": "Mein Engineering entdecken →",
-        "twitterAction": "Meine Arbeit ansehen →"
+        "alt": "Ghassan Aldarwish — AI Engineer and Backend Engineer",
+        "availability": "Available for opportunities in Germany",
+        "expertise": "AI Engineering · Backend Systems",
+        "role": "AI Engineer · Backend Engineer · Software Architecture",
+        "twitterRole": "AI Engineer · Backend Engineer",
+        "openGraphAction": "Explore my engineering →",
+        "twitterAction": "View my work →"
       },
       "keywords": [
         "Ghassan Aldarwish",
-        "KI-Ingenieur",
-        "Backend-Ingenieur",
-        "Senior Softwareentwickler",
-        "Softwareentwickler Deutschland",
-        "KI-Ingenieur Deutschland",
-        "Backend-Ingenieur Deutschland",
-        "Produktionsreife KI-Systeme",
-        "KI-Agenten",
-        "Große Sprachmodelle",
-        "RAG-Systeme",
+        "AI Engineer",
+        "Backend Engineer",
+        "Senior Software Engineer",
+        "Software Engineer Germany",
+        "AI Engineer Germany",
+        "Backend Engineer Germany",
+        "Production AI Systems",
+        "AI Agents",
+        "Large Language Models",
+        "RAG Systems",
         "Model Context Protocol",
-        "MCP-Server",
+        "MCP Servers",
         "Node.js",
         "TypeScript",
         "Python",
         "FastAPI",
         "Microservices",
-        "Verteilte Systeme",
-        "Softwarearchitektur",
+        "Distributed Systems",
+        "Software Architecture",
         "Docker",
         "Kubernetes",
         "DevOps",
         "Cloud Engineering"
       ],
+
       "structuredData": {
-        "personDescription": "KI-Ingenieur und Backend-Ingenieur mit Schwerpunkt auf produktionsreifen KI-Systemen, verteilter Backend-Architektur, Cloud-Infrastruktur, DevOps und moderner Webentwicklung.",
-        "jobTitles": [
-          "KI-Ingenieur",
-          "Backend-Ingenieur",
-          "Softwareentwickler"
-        ],
+        "personDescription": "AI Engineer and Backend Engineer focused on production AI systems, distributed backend architecture, cloud infrastructure, DevOps, and modern web development.",
+
+        "jobTitles": ["AI Engineer", "Backend Engineer", "Software Engineer"],
+
         "knowsAbout": [
-          "Künstliche Intelligenz",
-          "Große Sprachmodelle",
-          "KI-Agenten",
+          "Artificial Intelligence",
+          "Large Language Models",
+          "AI Agents",
           "Retrieval-Augmented Generation",
           "Model Context Protocol",
-          "Backend-Engineering",
-          "Verteilte Systeme",
+          "Backend Engineering",
+          "Distributed Systems",
           "Microservices",
           "Node.js",
           "TypeScript",
@@ -129,122 +123,123 @@
           "Docker",
           "Kubernetes",
           "CI/CD",
-          "Cloud-Infrastruktur",
+          "Cloud Infrastructure",
           "Next.js",
           "React"
         ],
+
         "pages": {
           "engineering": "Engineering",
-          "contact": "Kontakt"
+          "contact": "Contact"
         }
       }
     },
     "hero": {
-      "badge": ["KI-Ingenieur", "DevOps", "Backend"],
-      "title": "Ich entwickle KI-Systeme",
-      "secondaryTitle": "die skalieren",
-      "description": "Ich konzipiere und entwickle produktionsreife KI-Systeme, skalierbare Backend-Plattformen und Cloud-Infrastruktur.",
-      "contact": "Kontakt aufnehmen",
+      "badge": ["AI Engineer", "DevOps", "Backend"],
+      "title": "Building AI Systems",
+      "secondaryTitle": "That Scale",
+      "description": "I design and build production-ready AI systems, scalable backend platforms, and cloud infrastructure.",
+      "contact": "Contact Me",
       "infiniteMovingCards": [
-        "+ Jahre Erfahrung",
-        "Berlin, Deutschland",
-        "KI-Engineering",
-        "Produktionsreife Backend-Systeme",
+        "+ Years Experience",
+        "Berlin, Germany",
+        "AI Engineering",
+        "Production Backend Systems",
         "Cloud & DevOps"
       ]
     },
     "technologies": {
-      "title": "Bewährte Technologien",
-      "description": "Technologien, die ich zur Entwicklung skalierbarer Software- und KI-Lösungen im Produktiveinsatz eingesetzt habe."
+      "title": "Trusted Technologies",
+      "description": "Technologies I’ve used to build scalable software and AI solutions in production."
     },
     "engineeringBeyondCode": {
-      "eyebrow": "Engineering über den Code hinaus",
-      "title": "Großartige Software bedeutet mehr, als nur Code zu schreiben.",
-      "description": "Es geht darum, geschäftliche Probleme zu verstehen, skalierbare Architekturen zu entwerfen, durchdachte technische Entscheidungen zu treffen und Systeme zu entwickeln, die auch mit zunehmender Größe zuverlässig funktionieren.",
-      "secondaryDescription": "Diese Denkweise bringe ich in jedes Projekt ein: Ich verbinde KI, Backend-Engineering, Cloud-Infrastruktur und sorgfältige Frontend-Entwicklung, um Software zu schaffen, die in der realen Welt funktioniert.",
+      "eyebrow": "Engineering Beyond Code",
+      "title": "Great software is not just about writing code.",
+      "description": "It is about understanding business problems, designing scalable architectures, making thoughtful technical decisions, and building systems that continue to perform as they grow.",
+      "secondaryDescription": "That is the mindset I bring to every project: combining AI, backend engineering, cloud infrastructure, and frontend craftsmanship to create software that works in the real world.",
       "layers": [
         {
-          "title": "Nutzer",
-          "description": "Produkterlebnis und Mehrwert für Nutzer"
+          "title": "Users",
+          "description": "Product experience and user value"
         },
         {
-          "title": "API-Gateway",
-          "description": "Sichere und dokumentierte Zugangspunkte"
+          "title": "API Gateway",
+          "description": "Secure and documented entry points"
         },
         {
           "title": "Services",
-          "description": "Klare Domänengrenzen und Geschäftslogik"
+          "description": "Clear domain boundaries and business logic"
         },
         {
-          "title": "KI-Schicht",
-          "description": "LLMs, Agenten, Tools, Speicher und Retrieval"
+          "title": "AI Layer",
+          "description": "LLMs, agents, tools, memory, and retrieval"
         },
         {
-          "title": "Daten",
-          "description": "Relationale Datenbanken, Cache-, Queue- und Vektorspeicher"
+          "title": "Data",
+          "description": "Relational, cache, queue, and vector storage"
         },
         {
           "title": "Observability",
-          "description": "Logs, Metriken, Monitoring und Warnmeldungen"
+          "description": "Logs, metrics, monitoring, and alerts"
         }
       ]
     },
     "coreExpertise": {
-      "eyebrow": "Kernkompetenzen",
-      "title": "Die Bereiche, in denen ich den größten Mehrwert schaffe.",
-      "description": "Meine Arbeit liegt an der Schnittstelle von KI-Engineering, Backend-Architektur, Cloud-Infrastruktur und moderner Frontend-Entwicklung.",
+      "eyebrow": "Core Expertise",
+      "title": "The areas where I create the most value.",
+      "description": "My work sits at the intersection of AI engineering, backend architecture, cloud infrastructure, and modern frontend development.",
       "items": [
         {
           "id": "aiEngineering",
-          "title": "KI-Engineering",
-          "description": "Produktionsreife KI-Systeme mit LLMs, KI-Agenten, RAG-Pipelines, MCP-Servern, Vektordatenbanken und intelligenter Automatisierung.",
+          "title": "AI Engineering",
+          "description": "Production-ready AI systems using LLMs, AI agents, RAG pipelines, MCP servers, vector databases, and intelligent automation.",
           "points": [
-            "LLM-Anwendungen",
-            "KI-Agenten",
+            "LLM Applications",
+            "AI Agents",
             "RAG",
             "MCP",
-            "Vektorsuche"
+            "Vector Search"
           ]
         },
         {
           "id": "backendEngineering",
-          "title": "Backend-Engineering",
-          "description": "Skalierbare Backend-Plattformen mit Node.js, TypeScript, Python, REST-APIs, GraphQL, gRPC und ereignisgesteuerter Architektur.",
+          "title": "Backend Engineering",
+          "description": "Scalable backend platforms built with Node.js, TypeScript, Python, REST APIs, GraphQL, gRPC, and event-driven architecture.",
           "points": [
             "Microservices",
-            "REST-APIs",
+            "REST APIs",
             "GraphQL",
             "gRPC",
-            "Skalierbarkeit"
+            "Scalability"
           ]
         },
         {
           "id": "cloudDevOps",
           "title": "Cloud & DevOps",
-          "description": "Zuverlässige Cloud-Infrastruktur mit Docker, Kubernetes, Linux, CI/CD-Pipelines, Monitoring, Automatisierung und produktiven Deployments.",
+          "description": "Reliable cloud infrastructure with Docker, Kubernetes, Linux, CI/CD pipelines, monitoring, automation, and production deployments.",
           "points": ["Docker", "Kubernetes", "CI/CD", "Linux", "Monitoring"]
         },
         {
           "id": "modernFrontend",
-          "title": "Modernes Frontend",
-          "description": "Hochwertige Frontend-Erlebnisse mit React, Next.js, TypeScript, responsiven Layouts, Animationen und einer auf Performance ausgerichteten UI-Architektur.",
+          "title": "Modern Frontend",
+          "description": "Polished frontend experiences using React, Next.js, TypeScript, responsive layouts, animations, and performance-focused UI architecture.",
           "points": ["React", "Next.js", "TypeScript", "UX", "Performance"]
         }
       ]
     },
     "selectedProjects": {
-      "eyebrow": "Ausgewählte Projekte",
-      "title": "Fallstudien mit Fokus auf technische Entscheidungen.",
-      "description": "Statt nur Screenshots zu zeigen, präsentiere ich Projekte anhand ihrer Architektur, Abwägungen, Implementierungsentscheidungen und gewonnenen Erkenntnisse.",
-      "challengeTitle": "Technische Herausforderung",
-      "readCaseStudy": "Fallstudie lesen",
+      "eyebrow": "Selected Projects",
+      "title": "Case studies focused on engineering decisions.",
+      "description": "Instead of showing only screenshots, I present projects through architecture, trade-offs, implementation decisions, and lessons learned.",
+      "challengeTitle": "Engineering Challenge",
+      "readCaseStudy": "Read Case Study",
       "projects": [
         {
           "id": "aiTradingAssistant",
-          "title": "KI-Trading-Assistent",
-          "category": "KI-Engineering / Backend",
-          "description": "Eine KI-gestützte Plattform, die Sprachmodelle, strukturierte Workflows, Backend-APIs und Echtzeit-Datenverarbeitung kombiniert, um intelligente Analysen und Entscheidungen zu unterstützen.",
-          "problem": "Die Herausforderung bestand darin, KI-Reasoning mit zuverlässigen Backend-Services zu verbinden und das System zugleich nachvollziehbar, skalierbar und produktionsreif zu halten.",
+          "title": "AI Trading Assistant",
+          "category": "AI Engineering / Backend",
+          "description": "An AI-powered platform that combines language models, structured workflows, backend APIs, and real-time data processing to support intelligent analysis and decision-making.",
+          "problem": "The challenge was connecting AI reasoning with reliable backend services while keeping the system explainable, scalable, and production-ready.",
           "stack": [
             "Python",
             "TypeScript",
@@ -256,10 +251,10 @@
         },
         {
           "id": "scalableBackendPlatform",
-          "title": "Skalierbare Backend-Plattform",
-          "category": "Backend-Architektur",
-          "description": "Ein verteiltes Backend-System auf Basis von Microservices, Authentifizierung, REST- und GraphQL-APIs, Hintergrundjobs und produktiven Deployment-Workflows.",
-          "problem": "Das Ziel war, die Services wartbar zu halten und gleichzeitig unabhängige Deployments, klare Kommunikation und vorhersehbare Skalierung zu ermöglichen.",
+          "title": "Scalable Backend Platform",
+          "category": "Backend Architecture",
+          "description": "A distributed backend system designed around microservices, authentication, REST and GraphQL APIs, background jobs, and production deployment workflows.",
+          "problem": "The goal was to keep services maintainable while supporting independent deployments, clean communication, and predictable scaling.",
           "stack": [
             "Node.js",
             "TypeScript",
@@ -271,35 +266,35 @@
         },
         {
           "id": "aiWorkflowAutomation",
-          "title": "KI-Workflow-Automatisierung",
-          "category": "KI-Agenten / DevOps",
-          "description": "Automatisierungspipelines, die APIs, Sprachmodelle, Backend-Services und externe Tools verbinden, um manuelle Arbeit zu reduzieren und die Produktivität im Engineering zu steigern.",
-          "problem": "Der Schwerpunkt lag auf der Entwicklung von Workflows, die nützlich, wiederholbar, beobachtbar und sicher genug für den Einsatz in der Praxis sind.",
-          "stack": ["Python", "KI-Agenten", "MCP", "Ollama", "Docker", "Linux"]
+          "title": "AI Workflow Automation",
+          "category": "AI Agents / DevOps",
+          "description": "Automation pipelines connecting APIs, language models, backend services, and external tools to reduce manual work and improve engineering productivity.",
+          "problem": "The main focus was designing workflows that are useful, repeatable, observable, and safe enough for real-world usage.",
+          "stack": ["Python", "AI Agents", "MCP", "Ollama", "Docker", "Linux"]
         }
       ]
     },
     "architectureShowcase": {
-      "eyebrow": "Architektur im Überblick",
-      "title": "Jede skalierbare Anwendung beginnt mit einer durchdachten Architektur.",
-      "description": "Mit Diagrammen erkläre ich den Aufbau von Systemen: KI-Agenten, APIs, Services, Queues, Datenbanken, Observability, Infrastruktur und Deployment-Workflows.",
-      "button": "Architektur entdecken",
+      "eyebrow": "Architecture Showcase",
+      "title": "Every scalable application begins with thoughtful architecture.",
+      "description": "I use diagrams to explain how systems are structured: AI agents, APIs, services, queues, databases, observability, infrastructure, and deployment workflows.",
+      "button": "Explore Architecture",
       "layers": [
         {
           "id": "clientApp",
-          "label": "Client-App"
+          "label": "Client App"
         },
         {
           "id": "apiLayer",
-          "label": "API-Schicht"
+          "label": "API Layer"
         },
         {
           "id": "aiAgent",
-          "label": "KI-Agent"
+          "label": "AI Agent"
         },
         {
           "id": "vectorDatabase",
-          "label": "Vektordatenbank"
+          "label": "Vector DB"
         },
         {
           "id": "services",
@@ -307,105 +302,99 @@
         },
         {
           "id": "cloudDeploy",
-          "label": "Cloud-Deployment"
+          "label": "Cloud Deploy"
         }
       ]
     },
     "finalCTA": {
-      "title": "Lassen Sie uns etwas Außergewöhnliches entwickeln.",
-      "description": "Ob Sie KI-Produkte, skalierbare Backend-Plattformen oder moderne Cloud-Infrastruktur entwickeln: Ich interessiere mich stets für anspruchsvolle technische Herausforderungen und passende berufliche Möglichkeiten."
+      "title": "Let’s build something exceptional.",
+      "description": "Whether you are building AI products, scalable backend platforms, or modern cloud infrastructure, I am always interested in meaningful engineering challenges and opportunities."
     }
   },
+
   "contact": {
     "metadata": {
-      "title": "Kontakt",
-      "description": "Kontaktieren Sie Ghassan Aldarwish zu KI-Engineering, Backend-Entwicklung, Softwarearchitektur, Beratung, Zusammenarbeit oder beruflichen Möglichkeiten in Deutschland.",
+      "title": "Contact",
+      "description": "Contact Ghassan Aldarwish about AI engineering, backend development, software architecture, consulting, collaboration, or job opportunities in Germany.",
       "keywords": [
-        "Ghassan Aldarwish kontaktieren",
-        "KI-Ingenieur einstellen",
-        "Backend-Ingenieur einstellen",
-        "Softwareentwickler Deutschland",
-        "Berater für KI-Engineering",
-        "Backend-Entwicklung",
-        "Softwarearchitektur",
-        "Node.js-Entwickler",
-        "TypeScript-Entwickler",
-        "Python-Entwickler"
+        "Contact Ghassan Aldarwish",
+        "Hire AI Engineer",
+        "Hire Backend Engineer",
+        "Software Engineer Germany",
+        "AI Engineering Consultant",
+        "Backend Development",
+        "Software Architecture",
+        "Node.js Engineer",
+        "TypeScript Engineer",
+        "Python Engineer"
       ],
       "structuredData": {
-        "pageName": "Ghassan Aldarwish kontaktieren",
-        "personDescription": "KI-Ingenieur und Backend-Ingenieur mit Schwerpunkt auf produktionsreifen KI-Systemen, verteilter Backend-Architektur, Cloud-Infrastruktur, DevOps und moderner Webentwicklung.",
-        "jobTitles": [
-          "KI-Ingenieur",
-          "Backend-Ingenieur",
-          "Softwareentwickler"
-        ],
+        "pageName": "Contact Ghassan Aldarwish",
+        "personDescription": "AI Engineer and Backend Engineer focused on production AI systems, distributed backend architecture, cloud infrastructure, DevOps, and modern web development.",
+        "jobTitles": ["AI Engineer", "Backend Engineer", "Software Engineer"],
         "knowsAbout": [
-          "Künstliche Intelligenz",
-          "KI-Agenten",
-          "Große Sprachmodelle",
-          "Backend-Engineering",
-          "Verteilte Systeme",
+          "Artificial Intelligence",
+          "AI Agents",
+          "Large Language Models",
+          "Backend Engineering",
+          "Distributed Systems",
           "Microservices",
           "Node.js",
           "TypeScript",
           "Python",
           "Docker",
           "Kubernetes",
-          "Softwarearchitektur"
+          "Software Architecture"
         ]
       },
       "socialImage": {
-        "alt": "Kontakt zu Ghassan Aldarwish — KI-Ingenieur und Backend-Ingenieur",
-        "badge": "Kontakt",
-        "headline": "Lassen Sie uns etwas Sinnvolles entwickeln.",
-        "description": "Kontaktieren Sie mich zu KI-Engineering, Backend-Systemen, Softwarearchitektur oder beruflichen Möglichkeiten in Deutschland.",
-        "role": "KI-Ingenieur · Backend-Ingenieur",
-        "action": "Gespräch beginnen →"
+        "alt": "Contact Ghassan Aldarwish — AI Engineer and Backend Engineer",
+        "badge": "Contact",
+        "headline": "Let’s build something meaningful.",
+        "description": "Get in touch about AI engineering, backend systems, software architecture, or opportunities in Germany.",
+        "role": "AI Engineer · Backend Engineer",
+        "action": "Start a conversation →"
       }
     },
     "content": {
-      "eyebrow": "Kontakt",
-      "title": "Kontakt aufnehmen",
-      "description": "Haben Sie ein Projekt, eine Stellenmöglichkeit oder eine technische Frage? Senden Sie mir eine Nachricht und teilen Sie mir mit, wie ich helfen kann.",
-      "formHeading": "Kontaktformular",
-      "sendMessage": "Nachricht senden"
+      "eyebrow": "Contact",
+      "title": "Get in Touch",
+      "description": "Have a project, job opportunity, or technical question? Send me a message and tell me how I can help.",
+      "formHeading": "Contact form",
+      "sendMessage": "Send Message"
     }
   },
+
   "about": {
     "metadata": {
-      "title": "Über mich",
-      "description": "Erfahren Sie mehr über Ghassan Aldarwish, einen KI-Ingenieur und Backend-Ingenieur mit Erfahrung in produktionsreifen KI-Systemen, verteilter Backend-Architektur, DevOps, Cloud-Infrastruktur und moderner Webentwicklung.",
+      "title": "About Me",
+      "description": "Learn about Ghassan Aldarwish, an AI Engineer and Backend Engineer with experience in production AI systems, distributed backend architecture, DevOps, cloud infrastructure, and modern web development.",
       "keywords": [
         "Ghassan Aldarwish",
-        "KI-Ingenieur",
-        "Backend-Ingenieur",
-        "Softwareentwickler Deutschland",
-        "Node.js-Entwickler",
-        "TypeScript-Entwickler",
-        "Python-Entwickler",
-        "KI-Systeme",
-        "Backend-Architektur",
-        "Verteilte Systeme",
-        "DevOps-Ingenieur",
+        "AI Engineer",
+        "Backend Engineer",
+        "Software Engineer Germany",
+        "Node.js Engineer",
+        "TypeScript Engineer",
+        "Python Engineer",
+        "AI Systems",
+        "Backend Architecture",
+        "Distributed Systems",
+        "DevOps Engineer",
         "Cloud Engineering"
       ],
       "structuredData": {
-        "pageName": "Über Ghassan Aldarwish",
-        "personDescription": "KI-Ingenieur und Backend-Ingenieur mit Schwerpunkt auf produktionsreifen KI-Systemen, verteilter Backend-Architektur, Cloud-Infrastruktur, DevOps und moderner Webentwicklung.",
-        "jobTitles": [
-          "KI-Ingenieur",
-          "Backend-Ingenieur",
-          "Softwareentwickler"
-        ],
+        "pageName": "About Ghassan Aldarwish",
+        "personDescription": "AI Engineer and Backend Engineer focused on production AI systems, distributed backend architecture, cloud infrastructure, DevOps, and modern web development.",
+        "jobTitles": ["AI Engineer", "Backend Engineer", "Software Engineer"],
         "knowsAbout": [
-          "Künstliche Intelligenz",
-          "Große Sprachmodelle",
-          "KI-Agenten",
+          "Artificial Intelligence",
+          "Large Language Models",
+          "AI Agents",
           "Retrieval-Augmented Generation",
           "Model Context Protocol",
-          "Backend-Engineering",
-          "Verteilte Systeme",
+          "Backend Engineering",
+          "Distributed Systems",
           "Microservices",
           "Node.js",
           "TypeScript",
@@ -415,126 +404,128 @@
           "Docker",
           "Kubernetes",
           "CI/CD",
-          "Cloud-Infrastruktur",
+          "Cloud Infrastructure",
           "Next.js",
           "React"
         ],
-        "educationName": "Physik"
+        "educationName": "Physics"
       },
       "socialImage": {
-        "alt": "Ghassan Aldarwish — KI-Ingenieur und Backend-Ingenieur",
-        "badge": "Über mich",
+        "alt": "Ghassan Aldarwish — AI Engineer and Backend Engineer",
+        "badge": "About Me",
         "headline": "Ghassan Aldarwish",
-        "role": "KI-Ingenieur · Backend-Ingenieur",
-        "description": "Ich entwickle produktionsreife KI-Systeme, skalierbare Backend-Plattformen und cloudnative Software.",
-        "technologies": "Node.js · TypeScript · Python · KI-Systeme",
-        "action": "Meinen Werdegang entdecken →"
+        "role": "AI Engineer · Backend Engineer",
+        "description": "Building production AI systems, scalable backend platforms, and cloud-native software.",
+        "technologies": "Node.js · TypeScript · Python · AI Systems",
+        "action": "Explore my journey →"
       }
     },
     "intro": {
-      "eyebrow": "Wer ich bin",
-      "title": "Ein Ingenieur mit Fokus auf Systeme, nicht nur auf Code.",
+      "eyebrow": "Who I Am",
+      "title": "An engineer focused on systems, not just code.",
       "paragraphs": [
-        "Meine Arbeit liegt an der Schnittstelle von KI-Engineering, Backend-Systemen, DevOps und moderner Webentwicklung. Ich entwickle gerne Software, die nicht nur funktioniert, sondern auch skalierbar, zuverlässig, beobachtbar und wartbar ist.",
-        "Ein großer Teil meiner stärksten Arbeit findet hinter den Kulissen statt: Backend-Services, APIs, Infrastruktur, Automatisierung, KI-Workflows, Deployment-Systeme und Architekturentscheidungen. Diese Bereiche sind in einer Benutzeroberfläche nicht immer sichtbar, bilden jedoch die Grundlage für leistungsfähige Software.",
-        "Gleichzeitig ist mir die Qualität des Frontends wichtig. Ein starkes Produkt braucht klare Benutzeroberflächen, gute Performance, durchdachte UX und verständliche Kommunikation. Deshalb entwickle ich auch hochwertige React- und Next.js-Anwendungen, die die Qualität der dahinterliegenden Systeme widerspiegeln."
+        "My work sits at the intersection of AI engineering, backend systems, DevOps, and modern web development. I enjoy building software that is not only functional, but also scalable, reliable, observable, and maintainable.",
+        "Most of my strongest work is behind the scenes: backend services, APIs, infrastructure, automation, AI workflows, deployment systems, and architecture decisions. These are not always visible in a user interface, but they are the foundation that makes serious software work.",
+        "At the same time, I care about frontend quality. A strong product needs clean interfaces, good performance, thoughtful UX, and clear communication. That is why I also build polished React and Next.js experiences that reflect the quality of the systems behind them."
       ]
     },
     "journey": {
-      "eyebrow": "Mein Weg im Engineering",
-      "title": "Von analytischem Denken zu produktionsreifen KI-Systemen.",
-      "description": "Mein Weg verbindet wissenschaftliches Denken, Backend-Engineering, Cloud-Infrastruktur und moderne KI-Entwicklung.",
-      "stageLabel": "Phase",
+      "eyebrow": "Engineering Journey",
+      "title": "From analytical thinking to production AI systems.",
+      "description": "My path combines scientific thinking, backend engineering, cloud infrastructure, and modern AI development.",
+      "stageLabel": "Stage",
       "timeline": [
         {
           "id": "physics",
-          "stage": "Grundlage",
-          "title": "Hintergrund in Physik",
-          "description": "Mein akademischer Hintergrund in Physik hat meine Herangehensweise an Engineering geprägt: analytisches Denken, die Zerlegung von Problemen, Systemverständnis und Neugier darauf, wie komplexe Dinge funktionieren."
+          "stage": "Foundation",
+          "title": "Physics Background",
+          "description": "My academic background in Physics shaped the way I approach engineering: analytical thinking, problem decomposition, systems understanding, and curiosity about how complex things work."
         },
         {
           "id": "softwareEngineering",
-          "stage": "Seit 2017",
-          "title": "Softwareentwicklung",
-          "description": "Ich begann mit der Entwicklung produktiver Software und legte dabei einen starken Schwerpunkt auf Backend-Entwicklung, APIs, Datenbanken und skalierbare Anwendungsarchitektur."
+          "stage": "2017+",
+          "title": "Software Engineering",
+          "description": "I started building production software with a strong focus on backend development, APIs, databases, and scalable application architecture."
         },
         {
           "id": "backend",
           "stage": "Backend",
-          "title": "Verteilte Systeme & APIs",
-          "description": "Im Laufe der Jahre arbeitete ich intensiv mit Node.js, TypeScript, Python, REST-APIs, GraphQL, gRPC, Microservices, ereignisgesteuerten Systemen und produktiven Backend-Plattformen."
+          "title": "Distributed Systems & APIs",
+          "description": "Over the years, I worked deeply with Node.js, TypeScript, Python, REST APIs, GraphQL, gRPC, microservices, event-driven systems, and production backend platforms."
         },
         {
           "id": "devops",
           "stage": "DevOps",
-          "title": "Cloud, Container & Automatisierung",
-          "description": "Ich erweiterte meine Erfahrung um Docker, Kubernetes, Linux, CI/CD, Infrastrukturautomatisierung und produktive Deployment-Workflows, um zu verstehen, wie Software über die Codebasis hinaus betrieben wird."
+          "title": "Cloud, Containers & Automation",
+          "description": "I expanded into Docker, Kubernetes, Linux, CI/CD, infrastructure automation, and production deployment workflows to understand how software runs beyond the codebase."
         },
         {
           "id": "ai",
-          "stage": "KI",
-          "title": "Produktionsreifes KI-Engineering",
-          "description": "Mein aktueller Schwerpunkt liegt auf der Entwicklung von KI-Systemen mit LLMs, KI-Agenten, MCP-Servern, RAG-Pipelines, Vektordatenbanken, OpenAI, Ollama, LangChain sowie Python- und TypeScript-Services."
+          "stage": "AI",
+          "title": "Production AI Engineering",
+          "description": "My recent focus is building AI systems with LLMs, AI agents, MCP servers, RAG pipelines, vector databases, OpenAI, Ollama, LangChain, Python, and TypeScript services."
         }
       ]
     }
   },
+
   "articles": {
     "metadata": {
       "title": "Engineering",
-      "description": "Entdecken Sie Softwaresysteme, KI-Plattformen, Backend-Architekturen, Automatisierungsworkflows und Cloud-Infrastruktur von Ghassan Aldarwish.",
+      "description": "Explore software systems, AI platforms, backend architectures, automation workflows, and cloud infrastructure designed by Ghassan Aldarwish.",
       "keywords": [
-        "Projekte von Ghassan Aldarwish",
-        "Softwareentwicklungsprojekte",
-        "KI-Engineering-Projekte",
-        "Backend-Architektur",
-        "Verteilte Systeme",
-        "KI-Agenten",
+        "Ghassan Aldarwish Projects",
+        "Software Engineering Projects",
+        "AI Engineering Projects",
+        "Backend Architecture",
+        "Distributed Systems",
+        "AI Agents",
         "Microservices",
         "Node.js",
         "TypeScript",
         "Python",
         "DevOps",
-        "Cloud-Infrastruktur",
-        "Systemdesign"
+        "Cloud Infrastructure",
+        "System Design"
       ],
       "structuredData": {
-        "pageName": "Engineering-Systeme und Projekte von Ghassan Aldarwish"
+        "pageName": "Engineering systems and projects by Ghassan Aldarwish"
       },
       "socialImage": {
-        "alt": "Engineering-Systeme und Projekte von Ghassan Aldarwish",
+        "alt": "Engineering systems and projects by Ghassan Aldarwish",
         "badge": "Engineering",
-        "headline": "Systeme, die über den Code hinausgehen.",
-        "description": "KI-Plattformen, Backend-Architekturen, Automatisierungsworkflows und Cloud-Infrastruktur für den produktiven Einsatz.",
-        "role": "KI-Ingenieur · Backend-Ingenieur",
-        "action": "Systeme entdecken →"
+        "headline": "Systems built beyond the code.",
+        "description": "AI platforms, backend architectures, automation workflows, and cloud infrastructure designed for production.",
+        "role": "AI Engineer · Backend Engineer",
+        "action": "Explore the systems →"
       }
     },
     "content": {
       "eyebrow": "Engineering",
-      "title": "Systeme, Produkte und Architekturen für den Einsatz in der Praxis.",
-      "description": "Entdecken Sie eine Auswahl an KI-Plattformen, Backend-Systemen, Automatisierungsworkflows, Cloud-Infrastruktur und Produkterlebnissen, die ich mit Blick auf Wartbarkeit, Skalierbarkeit und Produktionsreife entwickelt habe.",
-      "readArticleLabel": "{title} lesen",
-      "technologiesLabel": "In {title} verwendete Technologien",
-      "viewCaseStudy": "Fallstudie ansehen",
-      "emptyTitle": "Noch keine veröffentlichten Artikel",
-      "emptyDescription": "Veröffentlichte Engineering-Fallstudien werden hier angezeigt."
+      "title": "Systems, products, and architectures built for real-world use.",
+      "description": "Explore a selection of AI platforms, backend systems, automation workflows, cloud infrastructure, and product experiences I designed with maintainability, scalability, and production readiness in mind.",
+      "readArticleLabel": "Read {title}",
+      "technologiesLabel": "Technologies used in {title}",
+      "viewCaseStudy": "View case study",
+      "emptyTitle": "No published articles yet",
+      "emptyDescription": "Published engineering case studies will appear here."
     }
   },
+
   "article": {
     "metadata": {
-      "defaultCategory": "Softwareentwicklung",
+      "defaultCategory": "Software Engineering",
       "defaultKeywords": [
         "Ghassan Aldarwish",
-        "KI-Engineering",
-        "Backend-Engineering"
+        "AI Engineering",
+        "Backend Engineering"
       ],
-      "socialImageAlt": "Artikel von Ghassan Aldarwish"
+      "socialImageAlt": "Article by Ghassan Aldarwish"
     },
     "content": {
-      "authorPrefix": "Von",
-      "updatedPrefix": "Aktualisiert",
-      "coverImageAlt": "{title} — Artikel von {author}"
+      "authorPrefix": "By",
+      "updatedPrefix": "Updated",
+      "coverImageAlt": "{title} — article by {author}"
     }
   }
 }

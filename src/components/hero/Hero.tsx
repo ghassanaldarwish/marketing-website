@@ -1,11 +1,12 @@
 import Image from "next/image"
 import { useTranslations } from "next-intl"
 import { TechBadge } from "./TechBadge"
-import { EncryptedText } from "../ui/EncryptedText"
 import { Terminal } from "../ui/Terminal"
 import InfiniteMovingCards from "../ui/InfiniteMovingCards"
 import { ContactModel } from "../contact/Contact"
 import { Icons } from "../ui/icons"
+import Link from "next/link"
+import { siteConfig } from "@/lib/site"
 
 export default function Hero() {
   const t = useTranslations("home")
@@ -25,20 +26,17 @@ export default function Hero() {
             {title} <br /> {secondaryTitle}
           </h1>
 
-          <p className="min-h-30 text-xl md:min-h-10">
-            <EncryptedText
-              text={description}
-              encryptedClassName="text-neutral-500"
-              revealedClassName="leading-8 text-muted-foreground"
-              revealDelayMs={50}
-            />
-          </p>
+          <p className="min-h-30 text-xl md:min-h-10">{description}</p>
           <div className="flex items-center justify-start gap-8">
             <ContactModel />
 
             <div className="flex items-center gap-4">
-              <Icons.twitter />
-              <Icons.linkedin />
+              <Link href={siteConfig.socialLinks.github} target="_blank">
+                <Icons.gitHub className="h-10 w-10 text-foreground/60 transition-colors hover:text-foreground/80" />
+              </Link>
+              <Link href={siteConfig.socialLinks.linkedin} target="_blank">
+                <Icons.linkedin className="h-10 w-10 text-foreground/60 transition-colors hover:text-foreground/80" />
+              </Link>{" "}
             </div>
           </div>
         </div>
@@ -62,7 +60,7 @@ export default function Hero() {
           </InfiniteMovingCards>
         </div>
         <Terminal
-          initialDelay={6000}
+          initialDelay={800}
           className="h-62 sm:w-full lg:w-[41%]"
           commands={["npx ai architect", "pnpm build", "git push origin main"]}
           outputs={{

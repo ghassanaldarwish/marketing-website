@@ -29,22 +29,17 @@
         "url": "/contact",
         "disabled": false
       }
-    ]
+    ],
+    "theme": {
+      "system": "system",
+      "dark": "dark",
+      "light": "light"
+    }
   },
   "footer": {
     "copyright": "© Ghassan Aldarwish 2026",
     "social": {
-      "title": "Social media",
-      "links": [
-        {
-          "title": "twitter",
-          "url": "/"
-        },
-        {
-          "title": "linkedin",
-          "url": "/"
-        }
-      ]
+      "title": "Social media"
     }
   },
   "notFound": {
