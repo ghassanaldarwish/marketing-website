@@ -14,7 +14,7 @@ import Technologies from "@/components/technologies/Technologies"
 import GridBackground from "@/components/ui/GridBackground"
 
 import { routing } from "@/i18n/routing"
-import { absoluteUrl, getOpenGraphLocale, siteConfig } from "@/lib/site"
+import { absoluteUrl, getOpenGraphLocale, siteConfig } from "@/lib/config/site"
 
 type HomePageProps = {
   params: Promise<{

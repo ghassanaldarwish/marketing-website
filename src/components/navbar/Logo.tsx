@@ -13,32 +13,20 @@ export default function Logo() {
     setMounted(true)
   }, [])
 
-  if (!mounted) {
-    return (
-      <Image
-        className="w-16 object-contain lg:w-20"
-        src="/light_logo_500_180.png"
-        width={153}
-        height={55}
-        loading="eager"
-        alt="Ghassan Logo"
-      />
-    )
-  }
+  const source =
+    mounted && resolvedTheme === "dark"
+      ? "/dark_logo_500_180.png"
+      : "/light_logo_500_180.png"
 
   return (
     <Image
-      className="w-16 object-contain lg:w-20"
-      src={
-        resolvedTheme === "dark"
-          ? "/dark_logo_500_180.png"
-          : "/light_logo_500_180.png"
-      }
-      loading="eager"
-      objectFit=""
+      src={source}
       width={153}
       height={55}
-      alt="Ghassan Logo"
+      alt="Ghassan Aldarwish"
+      loading="eager"
+      priority
+      className="h-auto w-16 object-contain lg:w-20"
     />
   )
 }

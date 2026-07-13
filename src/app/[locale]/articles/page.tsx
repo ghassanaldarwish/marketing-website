@@ -14,7 +14,7 @@ import { Card } from "@/components/ui/card"
 import { routing } from "@/i18n/routing"
 import type { ArticleSummary } from "@/lib/mdx/article-schema"
 import { getArticles, type AppLocale } from "@/lib/mdx/get-article"
-import { absoluteUrl, getOpenGraphLocale, siteConfig } from "@/lib/site"
+import { absoluteUrl, getOpenGraphLocale, siteConfig } from "@/lib/config/site"
 
 type ArticlesPageProps = {
   params: Promise<{

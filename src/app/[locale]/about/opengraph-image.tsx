@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og"
 import { getTranslations } from "next-intl/server"
 
 import { routing } from "@/i18n/routing"
-import { siteConfig } from "@/lib/site"
+import { siteConfig } from "@/lib/config/site"
 
 export const alt = "Ghassan Aldarwish — AI Engineer and Backend Engineer"
 

@@ -26,7 +26,7 @@ import {
   getOpenGraphLocale,
   isProductionDeployment,
   siteConfig,
-} from "@/lib/site"
+} from "@/lib/config/site"
 import { cn } from "@/lib/utils"
 
 const inter = Inter({

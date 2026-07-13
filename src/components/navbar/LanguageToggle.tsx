@@ -1,70 +1,110 @@
 "use client"
 
-import { useTransition } from "react"
-import {
-  useParams,
-  usePathname,
-  useSearchParams,
-  useRouter,
-} from "next/navigation"
-import { LOCALE } from "@/lib/types"
 import Image from "next/image"
+import { useSearchParams } from "next/navigation"
+import { useLocale, useTranslations } from "next-intl"
+import { useTransition } from "react"
+
+import { usePathname, useRouter } from "@/i18n/routing"
+import { LOCALE } from "@/lib/types"
 import { cn } from "@/lib/utils"
 
-export default function LanguageToggle() {
-  const { locale } = useParams<{ locale: string }>()
+type LanguageToggleProps = {
+  onNavigate?: () => void
+}
+
+type SupportedLocale = LOCALE.en | LOCALE.de
+
+export default function LanguageToggle({ onNavigate }: LanguageToggleProps) {
+  const locale = useLocale() as SupportedLocale
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const router = useRouter()
-  const [, startTransition] = useTransition()
-  //const direction = useTextDirection()
-  // Ensure locale is a valid key of languages or default to 'en'
-  // const safeLocale =
-  //   typeof locale === "string" && languages.hasOwnProperty(locale)
-  //     ? locale
-  //     : "en"
-  //const languageInfo: Language = languages[safeLocale] // Now accessing with a guaranteed string key
+  const t = useTranslations("navbar.language")
+  const [isPending, startTransition] = useTransition()
 
-  const selectorHandler = (lang: string) => {
-    if (!lang) return
+  function changeLocale(nextLocale: SupportedLocale) {
+    if (nextLocale === locale || isPending) {
+      return
+    }
 
-    const url = `${pathname}?${searchParams}`.replace(/^\/[a-z]{2}/, `/${lang}`)
+    const queryString = searchParams.toString()
+
+    const href = queryString ? `${pathname}?${queryString}` : pathname
+
     startTransition(() => {
-      router.replace(url, { scroll: false })
+      router.replace(href, {
+        locale: nextLocale,
+        scroll: false,
+      })
+
+      onNavigate?.()
     })
   }
 
-  return (
-    <div className="flex gap-2">
-      <Image
-        onClick={() => selectorHandler(LOCALE.de)}
-        src="/de.svg"
-        width={80}
-        height={30}
-        className={cn(
-          "w-6 cursor-pointer",
-          locale === LOCALE.en
-            ? "opacity-100"
-            : "scale-90 cursor-not-allowed opacity-50"
-        )}
-        alt="Ghassan Hero"
-        loading="eager"
-      />
+  const languages = [
+    {
+      id: LOCALE.de,
+      image: "/de.svg",
+      alt: "German flag",
+      label: t("switchToGerman"),
+    },
+    {
+      id: LOCALE.en,
+      image: "/gb.svg",
+      alt: "British flag",
+      label: t("switchToEnglish"),
+    },
+  ] satisfies Array<{
+    id: SupportedLocale
+    image: string
+    alt: string
+    label: string
+  }>
 
-      <Image
-        onClick={() => selectorHandler(LOCALE.en)}
-        src="/gb.svg"
-        width={80}
-        height={30}
-        className={cn(
-          "w-6 cursor-pointer",
-          locale === LOCALE.en
-            ? "scale-90 cursor-not-allowed opacity-50"
-            : "opacity-100"
-        )}
-        alt="Ghassan Hero"
-        loading="eager"
-      />
+  return (
+    <div
+      role="group"
+      aria-label={t("selectorLabel")}
+      className="flex items-center gap-2"
+    >
+      {languages.map((language) => {
+        const isCurrent = locale === language.id
+
+        return (
+          <button
+            key={language.id}
+            type="button"
+            disabled={isCurrent || isPending}
+            aria-label={
+              isCurrent
+                ? `${language.label}. ${t("currentLanguage")}`
+                : language.label
+            }
+            aria-pressed={isCurrent}
+            onClick={() => changeLocale(language.id)}
+            className={cn(
+              "inline-flex size-8 items-center justify-center rounded-md",
+              "transition-[opacity,transform] focus-visible:outline-none",
+              "focus-visible:ring-2 focus-visible:ring-ring",
+              "focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+              isCurrent
+                ? "cursor-default opacity-50"
+                : "cursor-pointer hover:scale-105 hover:bg-accent",
+              isPending && "cursor-wait opacity-50"
+            )}
+          >
+            <Image
+              src={language.image}
+              width={24}
+              height={18}
+              alt={language.alt}
+              loading="eager"
+              className="h-auto w-6"
+            />
+          </button>
+        )
+      })}
     </div>
   )
 }

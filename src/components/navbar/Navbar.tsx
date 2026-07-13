@@ -1,70 +1,72 @@
-import Logo from "./Logo"
-import ModeToggle from "./ModeToggle"
-import { FloatingNav } from "../ui/FloatingNav"
-import { LinkType } from "@/lib/types"
+import { Suspense } from "react"
+import { useTranslations } from "next-intl"
+
+import { Link } from "@/i18n/routing"
+import { navigationConfig } from "@/lib/config/navigation"
+import { FloatingNav } from "@/components/ui/FloatingNav"
+
+import DesktopNavigation from "@/components/navbar/DesktopNavigation"
+import MobileMenu from "@/components/navbar/MobileMenu"
 
 import LanguageToggle from "./LanguageToggle"
-import MobileMenu from "./MobileMenu"
-import { Link } from "@/i18n/routing"
-import { useTranslations } from "next-intl"
-import { cn } from "@/lib/utils"
-import { buttonVariants } from "../ui/button"
-import { Suspense } from "react"
+import ModeToggle from "./ModeToggle"
+import Logo from "./Logo"
+import { NavigationItem } from "@/lib/types"
+
 export default function Navbar() {
   const t = useTranslations("navbar")
-  const navItems = t.raw("pages") as LinkType[]
+
+  const navigationItems: NavigationItem[] = navigationConfig.map((item) => ({
+    id: item.id,
+    href: item.href,
+    disabled: item.disabled,
+    title: t(`pages.${item.id}`),
+  }))
+
+  const navigationLabels = {
+    desktopNavigation: t("desktopNavigationLabel"),
+    mobileNavigation: t("mobileNavigationLabel"),
+    openMenu: t("openMenu"),
+    closeMenu: t("closeMenu"),
+    brandLink: t("brandLinkLabel"),
+    disabled: t("disabledLabel"),
+  }
+
   return (
-    <nav className="w-screen">
-      <FloatingNav className="fixed top-0 z-50 flex h-10 w-full max-w-6xl items-center justify-between bg-background/50 px-2 backdrop-blur-md lg:top-2 lg:left-1/2 lg:m-auto lg:h-12 lg:-translate-x-1/2 lg:rounded-xl">
-        <Link href="/" className="flex gap-4">
+    <nav aria-label={navigationLabels.desktopNavigation} className="w-full">
+      <FloatingNav className="fixed top-0 z-50 flex h-10 w-full max-w-6xl items-center justify-between bg-background/50 px-2 backdrop-blur-md lg:top-2 lg:left-1/2 lg:h-12 lg:-translate-x-1/2 lg:rounded-xl">
+        <Link
+          href="/"
+          aria-label={navigationLabels.brandLink}
+          className="flex items-center gap-4"
+        >
           <Logo />
+
           <span className="hidden text-xl font-bold lg:block">Ghassan</span>
         </Link>
 
-        <div className="hidden w-1/2 justify-center gap-6 capitalize lg:flex">
-          {navItems.map((i, idx) =>
-            i.disabled ? (
-              <div
-                key={idx}
+        <DesktopNavigation
+          items={navigationItems}
+          ariaLabel={navigationLabels.desktopNavigation}
+          disabledLabel={navigationLabels.disabled}
+        />
 
-                style={{
-                  textDecoration: "none",
-                }}
-
-                className={cn(
-                  "hover cursor-not-allowed text-center opacity-30",
-                  buttonVariants({
-                    variant: "link",
-                  })
-                )}
-              >
-                {i.title}
-              </div>
-            ) : (
-              <Link
-                key={idx}
-
-                className={cn(
-                  "text-center",
-                  buttonVariants({
-                    variant: "link",
-                  })
-                )}
-                href={i.url}
-              >
-                {i.title}
-              </Link>
-            )
-          )}
-        </div>
         <div className="hidden items-center gap-2 lg:flex">
           <ModeToggle />
+
           <Suspense fallback={null}>
             <LanguageToggle />
           </Suspense>
         </div>
 
-        <MobileMenu />
+        <MobileMenu
+          items={navigationItems}
+          navigationLabel={navigationLabels.mobileNavigation}
+          openMenuLabel={navigationLabels.openMenu}
+          closeMenuLabel={navigationLabels.closeMenu}
+          brandLinkLabel={navigationLabels.brandLink}
+          disabledLabel={navigationLabels.disabled}
+        />
       </FloatingNav>
     </nav>
   )

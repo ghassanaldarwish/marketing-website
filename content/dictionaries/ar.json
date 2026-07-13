@@ -13,27 +13,30 @@
     "submit": "Send Message"
   },
   "navbar": {
-    "pages": [
-      {
-        "title": "articles",
-        "url": "/articles",
-        "disabled": false
-      },
-      {
-        "title": "about",
-        "url": "/about",
-        "disabled": false
-      },
-      {
-        "title": "contact",
-        "url": "/contact",
-        "disabled": false
-      }
-    ],
+    "brandLinkLabel": "Go to homepage",
+    "desktopNavigationLabel": "Primary navigation",
+    "mobileNavigationLabel": "Mobile navigation",
+    "openMenu": "Open navigation menu",
+    "closeMenu": "Close navigation menu",
+    "disabledLabel": "Unavailable",
+    "pages": {
+      "home": "Home",
+      "about": "About",
+      "articles": "Articles",
+      "contact": "Contact",
+      "labs": "Labs"
+    },
     "theme": {
-      "system": "system",
-      "dark": "dark",
-      "light": "light"
+      "toggle": "Change color theme",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "language": {
+      "selectorLabel": "Choose language",
+      "switchToGerman": "Switch language to German",
+      "switchToEnglish": "Switch language to English",
+      "currentLanguage": "Current language"
     }
   },
   "footer": {

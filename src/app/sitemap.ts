@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next"
 import { routing } from "@/i18n/routing"
 import type { ArticleSummary } from "@/lib/mdx/article-schema"
 import { getArticles, type AppLocale } from "@/lib/mdx/get-article"
-import { absoluteUrl } from "@/lib/site"
+import { absoluteUrl } from "@/lib/config/site"
 
 type SitemapEntry = MetadataRoute.Sitemap[number]
 

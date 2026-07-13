@@ -6,7 +6,7 @@ import InfiniteMovingCards from "../ui/InfiniteMovingCards"
 import { ContactModel } from "../contact/Contact"
 import { Icons } from "../ui/icons"
 import Link from "next/link"
-import { siteConfig } from "@/lib/site"
+import { siteConfig } from "@/lib/config/site"
 
 export default function Hero() {
   const t = useTranslations("home")

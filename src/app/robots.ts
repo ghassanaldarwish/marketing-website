@@ -1,6 +1,10 @@
 import type { MetadataRoute } from "next"
 
-import { absoluteUrl, isProductionDeployment, siteConfig } from "@/lib/site"
+import {
+  absoluteUrl,
+  isProductionDeployment,
+  siteConfig,
+} from "@/lib/config/site"
 
 export default function robots(): MetadataRoute.Robots {
   if (!isProductionDeployment) {

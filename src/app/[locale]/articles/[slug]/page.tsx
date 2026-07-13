@@ -9,7 +9,7 @@ import { MdxRenderer } from "@/components/mdx/mdx-renderer"
 
 import { routing } from "@/i18n/routing"
 import { getArticle, type AppLocale } from "@/lib/mdx/get-article"
-import { absoluteUrl, getOpenGraphLocale, siteConfig } from "@/lib/site"
+import { absoluteUrl, getOpenGraphLocale, siteConfig } from "@/lib/config/site"
 
 type ArticlePageProps = {
   params: Promise<{

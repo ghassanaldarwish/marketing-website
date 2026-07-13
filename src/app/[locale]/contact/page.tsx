@@ -8,7 +8,7 @@ import { ContactForm } from "@/components/contact/ContactForm"
 import { Button } from "@/components/ui/button"
 
 import { routing } from "@/i18n/routing"
-import { absoluteUrl, getOpenGraphLocale, siteConfig } from "@/lib/site"
+import { absoluteUrl, getOpenGraphLocale, siteConfig } from "@/lib/config/site"
 
 type ContactPageProps = {
   params: Promise<{

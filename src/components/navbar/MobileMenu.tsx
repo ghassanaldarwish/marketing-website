@@ -1,87 +1,131 @@
 "use client"
-// import { Link } from "@/navigation"
-// import navbarData from "./data"
-import { Button, buttonVariants } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Menu } from "lucide-react"
+
+import { Menu, X } from "lucide-react"
 import { useState } from "react"
-import { LinkType } from "@/lib/types"
-import { useTranslations } from "next-intl"
-import LanguageToggle from "./LanguageToggle"
-import ModeToggle from "./ModeToggle"
-import Logo from "./Logo"
-import { cn } from "@/lib/utils"
+
 import { Link } from "@/i18n/routing"
+import { Button, buttonVariants } from "@/components/ui/button"
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+import { cn } from "@/lib/utils"
 
-// type NavItem = {
-//   name: string
-//   href: string
-// }
+import LanguageToggle from "@/components/navbar/LanguageToggle"
+import ModeToggle from "@/components/navbar/ModeToggle"
+import Logo from "@/components/navbar/Logo"
+import { NavigationItem } from "@/lib/types"
 
-const MobileMenu = () => {
+type MobileMenuProps = {
+  items: NavigationItem[]
+  navigationLabel: string
+  openMenuLabel: string
+  closeMenuLabel: string
+  brandLinkLabel: string
+  disabledLabel: string
+}
+
+export default function MobileMenu({
+  items,
+  navigationLabel,
+  openMenuLabel,
+  closeMenuLabel,
+  brandLinkLabel,
+  disabledLabel,
+}: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false)
-  const t = useTranslations("navbar")
-  const navItems = t.raw("pages") as LinkType[]
+
+  function closeMenu() {
+    setIsOpen(false)
+  }
+
   return (
     <div className="lg:hidden">
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
-          <Button size="icon" variant="outline">
-            <Menu className="h-[1.2rem] w-[1.2rem]" />
+          <Button
+            type="button"
+            size="icon"
+            variant="outline"
+            aria-label={openMenuLabel}
+          >
+            <Menu aria-hidden="true" className="size-5" />
           </Button>
         </SheetTrigger>
-        <SheetContent>
-          <div className="flex h-full flex-col justify-between gap-4 px-4">
-            <div className="flex h-14 w-full items-center">
-              <Link href="/" className="">
+
+        <SheetContent
+          showCloseButton={false}
+          aria-label={navigationLabel}
+          className="flex flex-col"
+        >
+          <SheetTitle className="sr-only">{navigationLabel}</SheetTitle>
+
+          <div className="flex h-full flex-col justify-between gap-6 px-4">
+            <div className="flex h-14 items-center justify-between">
+              <Link
+                href="/"
+                aria-label={brandLinkLabel}
+                onNavigate={closeMenu}
+                className="inline-flex"
+              >
                 <Logo />
               </Link>
-            </div>
-            <div className="flex flex-col items-center gap-4">
-              {navItems.map((i, idx) =>
-                i.disabled ? (
-                  <div
-                    key={idx}
 
-                    style={{
-                      textDecoration: "none",
-                      fontSize: 20,
-                    }}
-
-                    className={cn(
-                      "hover cursor-not-allowed text-center opacity-30",
-                      buttonVariants({
-                        variant: "link",
-                      })
-                    )}
-                  >
-                    {i.title}
-                  </div>
-                ) : (
-                  <Link
-                    style={{
-                      textDecoration: "none",
-                      fontSize: 20,
-                    }}
-                    key={idx}
-                    onClick={() => setIsOpen(false)}
-                    className={cn(
-                      "text-center",
-                      buttonVariants({
-                        variant: "link",
-                      })
-                    )}
-                    href={i.url}
-                  >
-                    {i.title}
-                  </Link>
-                )
-              )}
+              <SheetClose asChild>
+                <Button
+                  type="button"
+                  size="icon"
+                  variant="ghost"
+                  aria-label={closeMenuLabel}
+                >
+                  <X aria-hidden="true" className="size-5" />
+                </Button>
+              </SheetClose>
             </div>
 
-            <div className="flex h-14 w-full items-center justify-between gap-2">
+            <nav aria-label={navigationLabel}>
+              <ul className="flex flex-col items-center gap-4">
+                {items.map((item) => (
+                  <li key={item.id}>
+                    {item.disabled ? (
+                      <span
+                        aria-disabled="true"
+                        className={cn(
+                          buttonVariants({
+                            variant: "link",
+                          }),
+                          "cursor-not-allowed text-xl capitalize opacity-40"
+                        )}
+                      >
+                        {item.title}
+
+                        <span className="sr-only"> ({disabledLabel})</span>
+                      </span>
+                    ) : (
+                      <Link
+                        href={item.href}
+                        onNavigate={closeMenu}
+                        className={cn(
+                          buttonVariants({
+                            variant: "link",
+                          }),
+                          "text-xl capitalize"
+                        )}
+                      >
+                        {item.title}
+                      </Link>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </nav>
+
+            <div className="flex h-14 items-center justify-between gap-2">
               <ModeToggle />
-              <LanguageToggle />
+              <LanguageToggle onNavigate={closeMenu} />
             </div>
           </div>
         </SheetContent>
@@ -89,5 +133,3 @@ const MobileMenu = () => {
     </div>
   )
 }
-
-export default MobileMenu

@@ -6,7 +6,7 @@ import { hasLocale } from "next-intl"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { routing } from "@/i18n/routing"
-import { absoluteUrl, getOpenGraphLocale, siteConfig } from "@/lib/site"
+import { absoluteUrl, getOpenGraphLocale, siteConfig } from "@/lib/config/site"
 
 type AboutPageProps = {
   params: Promise<{
