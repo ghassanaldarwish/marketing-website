@@ -266,7 +266,9 @@ export default async function HomePage({ params }: HomePageProps) {
 
         <CoreExpertise />
 
-        <SelectedProjects />
+        <SelectedProjects
+          slugs={["ai-agent-platform", "scalable-backend-platform"]}
+        />
 
         <ArchitectureShowcase />
 

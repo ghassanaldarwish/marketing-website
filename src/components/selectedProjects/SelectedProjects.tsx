@@ -1,87 +1,159 @@
 import { ArrowRight } from "lucide-react"
-import { useTranslations } from "next-intl"
+import { getLocale, getTranslations } from "next-intl/server"
 
 import { Link } from "@/i18n/routing"
+import { getArticle, type AppLocale } from "@/lib/mdx/get-article"
 
-import { Alert } from "../ui/alert"
-import { Badge } from "../ui/badge"
-import { Button } from "../ui/button"
+import { Alert } from "@/components/ui/alert"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 
-type Project = {
-  id: string
-  title: string
-  category: string
-  description: string
-  problem: string
-  stack: string[]
+type SelectedProjectsProps = {
+  /**
+   * Article slugs in the order they should appear.
+   *
+   * Example:
+   * [
+   *   "ai-agent-platform",
+   *   "scalable-backend-platform",
+   * ]
+   */
+  slugs: readonly string[]
 }
 
-export default function SelectedProjects() {
-  const t = useTranslations("home.selectedProjects")
+export default async function SelectedProjects({
+  slugs,
+}: SelectedProjectsProps) {
+  const locale = (await getLocale()) as AppLocale
 
-  const projects = t.raw("projects") as Project[]
+  const t = await getTranslations({
+    locale,
+    namespace: "home.selectedProjects",
+  })
+
+  const articles = await Promise.all(
+    slugs.map(async (slug) => {
+      const article = await getArticle(locale, slug)
+
+      if (!article) {
+        if (process.env.NODE_ENV !== "production") {
+          console.warn(
+            `[SelectedProjects] Article not found: "${locale}/${slug}"`
+          )
+        }
+
+        return null
+      }
+
+      return article
+    })
+  )
+
+  const selectedArticles = articles.filter(
+    (article): article is NonNullable<typeof article> => article !== null
+  )
+
+  if (selectedArticles.length === 0) {
+    return null
+  }
 
   return (
-    <section id="projects" className="relative border-y py-12 lg:py-24">
-      <div className="mx-auto max-w-6xl px-2 lg:px-0">
-        <div className="max-w-3xl">
+    <section
+      id="projects"
+      aria-labelledby="selected-projects-heading"
+      className="relative border-y py-12 lg:py-24"
+    >
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <header className="max-w-3xl">
           <p className="mb-3 text-sm font-medium tracking-widest text-accent-foreground uppercase">
             {t("eyebrow")}
           </p>
 
-          <h2 className="text-4xl font-semibold tracking-tight sm:text-5xl">
+          <h2
+            id="selected-projects-heading"
+            className="text-4xl font-semibold tracking-tight text-balance sm:text-5xl"
+          >
             {t("title")}
           </h2>
 
           <p className="mt-6 text-lg leading-8 text-muted-foreground">
             {t("description")}
           </p>
-        </div>
+        </header>
 
         <div className="mt-12 space-y-8">
-          {projects.map((project) => (
-            <article
-              key={project.id}
-              className="rounded-3xl border bg-background/70 p-6"
-            >
-              <p className="text-sm font-medium text-accent-foreground">
-                {project.category}
-              </p>
+          {selectedArticles.map((article) => {
+            const { slug, metadata } = article
 
-              <h3 className="mt-3 text-3xl font-semibold">{project.title}</h3>
+            const articleHref = `/articles/${slug}` as const
+            const challenge = metadata.challenge ?? metadata.description
 
-              <p className="mt-4 leading-7 text-muted-foreground">
-                {project.description}
-              </p>
+            return (
+              <article
+                key={slug}
+                className="rounded-3xl border border-border bg-background/70 p-6 transition-colors hover:border-foreground/20 sm:p-8"
+              >
+                <div className="flex flex-wrap items-center gap-3">
+                  <p className="text-sm font-medium text-accent-foreground">
+                    {metadata.category}
+                  </p>
 
-              <Alert className="mt-6 bg-foreground/1 p-4">
-                <h4 className="font-medium">{t("challengeTitle")}</h4>
+                  <Badge variant="secondary">{metadata.status}</Badge>
+                </div>
 
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  {project.problem}
-                </p>
-              </Alert>
-
-              <div className="mt-6 flex flex-wrap gap-2">
-                {project.stack.map((technology) => (
-                  <Badge
-                    key={technology}
-                    variant="outline"
-                    className="px-3 py-1 text-xs text-muted-foreground"
+                <h3 className="mt-3 text-3xl font-semibold tracking-tight text-balance">
+                  <Link
+                    href={articleHref}
+                    className="rounded-sm outline-none hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4"
                   >
-                    {technology}
-                  </Badge>
-                ))}
-              </div>
+                    {metadata.title}
+                  </Link>
+                </h3>
 
-              <Button className="mt-6" variant="outline" asChild>
-                <Link href="/articles">
-                  {t("readCaseStudy")}
-                  <ArrowRight className="ms-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </article>
-          ))}
+                <p className="mt-4 max-w-3xl leading-7 text-muted-foreground">
+                  {metadata.description}
+                </p>
+
+                <Alert className="mt-6 bg-foreground/2 p-4 sm:p-5">
+                  <h4 className="font-medium">{t("challengeTitle")}</h4>
+
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                    {challenge}
+                  </p>
+                </Alert>
+
+                {metadata.stack.length > 0 && (
+                  <div
+                    className="mt-6 flex flex-wrap gap-2"
+                    aria-label={t("technologiesLabel", {
+                      title: metadata.title,
+                    })}
+                  >
+                    {metadata.stack.map((technology) => (
+                      <Badge
+                        key={technology}
+                        variant="outline"
+                        className="px-3 py-1 text-xs text-muted-foreground"
+                      >
+                        {technology}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+
+                <Button className="mt-6" variant="outline" asChild>
+                  <Link href={articleHref}>
+                    {t("readCaseStudy")}
+
+                    <ArrowRight
+                      aria-hidden="true"
+                      className="ms-2 h-4 w-4 rtl:rotate-180"
+                    />
+                  </Link>
+                </Button>
+              </article>
+            )
+          })}
         </div>
       </div>
     </section>

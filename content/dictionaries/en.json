@@ -2,7 +2,7 @@
   "brand": {
     "name": "Ghassan Aldarwish",
     "shortName": "Ghassan",
-    "role": "AI Engineer, Backend Engineer, and DevOps Engineer",
+    "role": "AI Engineer, Backend Engineer & DevOps Engineer",
     "location": "Germany"
   },
   "contactModal": {
@@ -141,7 +141,7 @@
       "badge": ["AI Engineer", "DevOps", "Backend"],
       "title": "Building AI Systems",
       "secondaryTitle": "That Scale",
-      "description": "I design and build production-ready AI systems, scalable backend platforms, and cloud infrastructure.",
+      "description": "I design and build production-ready AI systems, scalable backend platforms, and cloud-native infrastructure.",
       "contact": "Contact Me",
       "infiniteMovingCards": [
         "+ Years Experience",
@@ -159,7 +159,7 @@
       "eyebrow": "Engineering Beyond Code",
       "title": "Great software is not just about writing code.",
       "description": "It is about understanding business problems, designing scalable architectures, making thoughtful technical decisions, and building systems that continue to perform as they grow.",
-      "secondaryDescription": "That is the mindset I bring to every project: combining AI, backend engineering, cloud infrastructure, and frontend craftsmanship to create software that works in the real world.",
+      "secondaryDescription": "This is the mindset I bring to every project: combining AI engineering, backend development, cloud infrastructure, and frontend craftsmanship to build software that performs reliably in the real world.",
       "layers": [
         {
           "title": "Users",
@@ -236,46 +236,7 @@
       "description": "Instead of showing only screenshots, I present projects through architecture, trade-offs, implementation decisions, and lessons learned.",
       "challengeTitle": "Engineering Challenge",
       "readCaseStudy": "Read Case Study",
-      "projects": [
-        {
-          "id": "aiTradingAssistant",
-          "title": "AI Trading Assistant",
-          "category": "AI Engineering / Backend",
-          "description": "An AI-powered platform that combines language models, structured workflows, backend APIs, and real-time data processing to support intelligent analysis and decision-making.",
-          "problem": "The challenge was connecting AI reasoning with reliable backend services while keeping the system explainable, scalable, and production-ready.",
-          "stack": [
-            "Python",
-            "TypeScript",
-            "OpenAI",
-            "LangChain",
-            "PostgreSQL",
-            "Docker"
-          ]
-        },
-        {
-          "id": "scalableBackendPlatform",
-          "title": "Scalable Backend Platform",
-          "category": "Backend Architecture",
-          "description": "A distributed backend system designed around microservices, authentication, REST and GraphQL APIs, background jobs, and production deployment workflows.",
-          "problem": "The goal was to keep services maintainable while supporting independent deployments, clean communication, and predictable scaling.",
-          "stack": [
-            "Node.js",
-            "TypeScript",
-            "GraphQL",
-            "Redis",
-            "Docker",
-            "CI/CD"
-          ]
-        },
-        {
-          "id": "aiWorkflowAutomation",
-          "title": "AI Workflow Automation",
-          "category": "AI Agents / DevOps",
-          "description": "Automation pipelines connecting APIs, language models, backend services, and external tools to reduce manual work and improve engineering productivity.",
-          "problem": "The main focus was designing workflows that are useful, repeatable, observable, and safe enough for real-world usage.",
-          "stack": ["Python", "AI Agents", "MCP", "Ollama", "Docker", "Linux"]
-        }
-      ]
+      "technologiesLabel": "Technologies used in {title}"
     },
     "architectureShowcase": {
       "eyebrow": "Architecture Showcase",
@@ -311,7 +272,7 @@
     },
     "finalCTA": {
       "title": "Let’s build something exceptional.",
-      "description": "Whether you are building AI products, scalable backend platforms, or modern cloud infrastructure, I am always interested in meaningful engineering challenges and opportunities."
+      "description": "Whether you're building AI products, scalable backend platforms, or modern cloud infrastructure, I'm always interested in meaningful engineering challenges and new opportunities."
     }
   },
 

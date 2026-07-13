@@ -1,15 +1,15 @@
 ---
-title: "Building a Production AI Agent Platform"
-description: "How I designed an agent platform using Node.js, Python, Redis, PostgreSQL, Docker and Kubernetes."
+title: "Aufbau einer produktionsreifen AI-Agent-Plattform"
+description: "Wie ich eine Agentenplattform mit Node.js, Python, Redis, PostgreSQL, Docker und Kubernetes entworfen habe."
 
 category: "AI Engineering / Backend"
-status: "Case Study"
+status: "Fallstudie"
 
 publishedAt: "2026-07-11"
 updatedAt: "2026-07-11"
 
 coverImage: "/articles/ai-agent-platform/light_logo_500_180.png"
-coverImageAlt: "Architecture of a production AI agent platform"
+coverImageAlt: "Architektur einer produktionsreifen AI-Agent-Plattform"
 
 tags:
   - "AI Engineering"
@@ -29,23 +29,23 @@ featured: false
 order: 1
 ---
 
-Building an AI agent that answers a prompt is relatively easy.
+Einen AI-Agenten zu entwickeln, der auf einen Prompt antwortet, ist vergleichsweise einfach.
 
-Building an AI agent platform that can execute real workloads reliably, recover from failure, call tools safely, preserve state, and scale across multiple workers is a different engineering problem.
+Eine AI-Agent-Plattform zu entwickeln, die reale Workloads zuverlässig ausführt, sich nach Fehlern wiederherstellt, Tools sicher aufruft, Zustände beibehält und über mehrere Worker skaliert, ist eine andere Engineering-Herausforderung.
 
-This case study describes the architecture of a production-oriented AI agent platform built with **TypeScript**, **Python**, **Redis**, **PostgreSQL**, **Docker**, and **Kubernetes**.
+Diese Fallstudie beschreibt die Architektur einer produktionsorientierten AI-Agent-Plattform, die mit **TypeScript**, **Python**, **Redis**, **PostgreSQL**, **Docker** und **Kubernetes** entwickelt wurde.
 
-The goal was not to build another chatbot. The goal was to create a reusable platform for running intelligent, tool-using workflows inside a reliable backend system.
+Das Ziel war nicht, einen weiteren Chatbot zu entwickeln. Stattdessen sollte eine wiederverwendbare Plattform entstehen, auf der intelligente, toolgestützte Workflows innerhalb eines zuverlässigen Backend-Systems ausgeführt werden können.
 
-<Callout title="Core engineering principle">
+<Callout title="Zentrales Engineering-Prinzip">
 
-An AI agent should not be treated as an isolated prompt. It should be treated as a distributed workflow with state, tools, permissions, retries, observability, and clear execution boundaries.
+Ein AI-Agent sollte nicht als isolierter Prompt betrachtet werden. Er sollte als verteilter Workflow mit Zustand, Tools, Berechtigungen, Wiederholungsmechanismen, Observability und klaren Ausführungsgrenzen verstanden werden.
 
 </Callout>
 
-## The problem
+## Das Problem
 
-A simple AI integration often starts with a single API request:
+Eine einfache AI-Integration beginnt häufig mit einer einzelnen API-Anfrage:
 
 ```ts title="simple-completion.ts"
 const response = await openai.responses.create({
@@ -54,113 +54,113 @@ const response = await openai.responses.create({
 })
 ```
 
-This approach works for demonstrations, but production systems quickly introduce more demanding requirements.
+Dieser Ansatz eignet sich für Demonstrationen, doch produktive Systeme stellen schnell deutlich höhere Anforderungen.
 
-The platform needed to support:
+Die Plattform musste Folgendes unterstützen:
 
-- Multiple specialized agents.
-- Long-running workflows.
-- Structured tool calls.
-- Human approval steps.
-- Retryable background jobs.
-- Persistent conversation and workflow state.
-- Local and cloud-hosted language models.
-- Horizontal worker scaling.
-- Per-user permissions and usage limits.
-- Detailed execution logs.
-- Reliable recovery after process or server failures.
+- Mehrere spezialisierte Agenten.
+- Lang laufende Workflows.
+- Strukturierte Tool-Aufrufe.
+- Menschliche Freigabeschritte.
+- Wiederholbare Hintergrundaufgaben.
+- Persistente Konversations- und Workflow-Zustände.
+- Lokale und in der Cloud gehostete Sprachmodelle.
+- Horizontale Skalierung der Worker.
+- Benutzerbezogene Berechtigungen und Nutzungslimits.
+- Detaillierte Ausführungsprotokolle.
+- Zuverlässige Wiederherstellung nach Prozess- oder Serverausfällen.
 
-The central challenge was connecting probabilistic AI reasoning with deterministic backend infrastructure.
+Die zentrale Herausforderung bestand darin, probabilistisches AI-Reasoning mit deterministischer Backend-Infrastruktur zu verbinden.
 
-> Language models are non-deterministic, but production systems cannot be unpredictable about security, state transitions, billing, retries, or data integrity.
+> Sprachmodelle sind nicht deterministisch. Produktive Systeme dürfen bei Sicherheit, Zustandsübergängen, Abrechnung, Wiederholungsversuchen oder Datenintegrität jedoch nicht unvorhersehbar sein.
 
-The architecture therefore had to isolate AI reasoning from the parts of the system that required strict guarantees.
+Die Architektur musste das AI-Reasoning daher von den Systemteilen isolieren, für die strikte Garantien erforderlich waren.
 
-## Design goals
+## Designziele
 
-Before selecting technologies, I defined the primary design goals.
+Vor der Auswahl der Technologien definierte ich die wichtigsten Designziele.
 
-### Reliability
+### Zuverlässigkeit
 
-A failed model request, worker restart, network interruption, or tool timeout should not corrupt the workflow.
+Eine fehlgeschlagene Modellanfrage, ein Neustart eines Workers, eine Netzwerkunterbrechung oder ein Tool-Timeout darf den Workflow nicht beschädigen.
 
 ### Observability
 
-Every workflow step should produce enough information to answer:
+Jeder Workflow-Schritt muss genügend Informationen liefern, um folgende Fragen zu beantworten:
 
-- What happened?
-- Which model was used?
-- Which tool was called?
-- How long did it take?
-- Why did it fail?
-- Can it be retried safely?
+- Was ist passiert?
+- Welches Modell wurde verwendet?
+- Welches Tool wurde aufgerufen?
+- Wie lange dauerte die Ausführung?
+- Warum ist sie fehlgeschlagen?
+- Kann sie sicher wiederholt werden?
 
-### Scalability
+### Skalierbarkeit
 
-API servers, agent workers, and tool workers should scale independently.
+API-Server, Agent-Worker und Tool-Worker müssen unabhängig voneinander skalierbar sein.
 
-### Security
+### Sicherheit
 
-The model should never receive unrestricted access to internal services, databases, files, or user credentials.
+Das Modell darf niemals uneingeschränkten Zugriff auf interne Services, Datenbanken, Dateien oder Benutzerzugangsdaten erhalten.
 
-### Extensibility
+### Erweiterbarkeit
 
-New models, tools, agents, and workflow types should be added without rewriting the entire platform.
+Neue Modelle, Tools, Agenten und Workflow-Typen müssen ergänzt werden können, ohne die gesamte Plattform neu zu implementieren.
 
-### Model independence
+### Modellunabhängigkeit
 
-The application should support cloud providers and local models through a common internal abstraction.
+Die Anwendung muss Cloud-Anbieter und lokale Modelle über eine gemeinsame interne Abstraktion unterstützen.
 
-## High-level architecture
+## Architektur auf hoher Ebene
 
-The platform is divided into several clearly defined layers.
+Die Plattform ist in mehrere klar definierte Ebenen unterteilt.
 
-![AI agent platform architecture](/articles/ai-agent-platform/architecture.png)
+![Architektur der AI-Agent-Plattform](/articles/ai-agent-platform/architecture.png)
 
-| Layer               | Responsibility                                                  | Main technologies            |
-| ------------------- | --------------------------------------------------------------- | ---------------------------- |
-| API layer           | Authentication, validation, rate limiting, and request handling | Node.js, TypeScript, Fastify |
-| Orchestration layer | Workflow state, agent routing, and execution planning           | TypeScript, PostgreSQL       |
-| Agent workers       | Model interaction and reasoning steps                           | Python, OpenAI, Ollama       |
-| Tool workers        | Controlled execution of external actions                        | Python, TypeScript           |
-| Queue layer         | Background work, retries, and worker coordination               | Redis                        |
-| Persistence layer   | Durable workflow and audit data                                 | PostgreSQL                   |
-| Observability layer | Logs, metrics, traces, and execution events                     | OpenTelemetry, Prometheus    |
-| Deployment layer    | Packaging, scaling, and service management                      | Docker, Kubernetes           |
+| Ebene                | Verantwortung                                                      | Haupttechnologien            |
+| -------------------- | ------------------------------------------------------------------ | ---------------------------- |
+| API-Ebene            | Authentifizierung, Validierung, Rate Limiting und Request-Handling | Node.js, TypeScript, Fastify |
+| Orchestrierungsebene | Workflow-Zustand, Agent-Routing und Ausführungsplanung             | TypeScript, PostgreSQL       |
+| Agent-Worker         | Modellinteraktion und Reasoning-Schritte                           | Python, OpenAI, Ollama       |
+| Tool-Worker          | Kontrollierte Ausführung externer Aktionen                         | Python, TypeScript           |
+| Queue-Ebene          | Hintergrundverarbeitung, Wiederholungen und Worker-Koordination    | Redis                        |
+| Persistenzebene      | Dauerhafte Workflow- und Audit-Daten                               | PostgreSQL                   |
+| Observability-Ebene  | Logs, Metriken, Traces und Ausführungsereignisse                   | OpenTelemetry, Prometheus    |
+| Deployment-Ebene     | Paketierung, Skalierung und Serviceverwaltung                      | Docker, Kubernetes           |
 
-This separation prevents the language model from becoming the center of the entire application.
+Diese Trennung verhindert, dass das Sprachmodell zum Zentrum der gesamten Anwendung wird.
 
-The model participates in a workflow, but it does not own the workflow.
+Das Modell nimmt an einem Workflow teil, besitzt den Workflow jedoch nicht.
 
-## Request lifecycle
+## Lebenszyklus einer Anfrage
 
-A typical request moves through the system in the following order:
+Eine typische Anfrage durchläuft das System in folgender Reihenfolge:
 
-1. A client creates an agent run through the API.
-2. The API validates the request and checks permissions.
-3. A durable workflow record is created in PostgreSQL.
-4. A job is added to Redis.
-5. An available agent worker claims the job.
-6. The worker loads the workflow context.
-7. The model decides whether it needs to answer, call a tool, or request approval.
-8. Tool calls are validated and dispatched to isolated workers.
-9. Results are written back to PostgreSQL.
-10. The next workflow step is scheduled.
-11. The client receives updates through polling, Server-Sent Events, or WebSockets.
+1. Ein Client erstellt über die API einen Agent-Run.
+2. Die API validiert die Anfrage und prüft die Berechtigungen.
+3. In PostgreSQL wird ein dauerhafter Workflow-Datensatz erstellt.
+4. In Redis wird ein Job eingereiht.
+5. Ein verfügbarer Agent-Worker übernimmt den Job.
+6. Der Worker lädt den Workflow-Kontext.
+7. Das Modell entscheidet, ob es antworten, ein Tool aufrufen oder eine Freigabe anfordern muss.
+8. Tool-Aufrufe werden validiert und an isolierte Worker weitergeleitet.
+9. Die Ergebnisse werden in PostgreSQL gespeichert.
+10. Der nächste Workflow-Schritt wird geplant.
+11. Der Client erhält Aktualisierungen per Polling, Server-Sent Events oder WebSockets.
 
-This model makes the API request short-lived while the actual agent workflow can continue for seconds or minutes.
+Dadurch bleibt die API-Anfrage kurzlebig, während der eigentliche Agent-Workflow über Sekunden oder Minuten weiterlaufen kann.
 
-## Why I separated the API from agent execution
+## Warum ich API und Agent-Ausführung getrennt habe
 
-Running agent workflows directly inside an HTTP request creates several problems:
+Die direkte Ausführung von Agent-Workflows innerhalb einer HTTP-Anfrage verursacht mehrere Probleme:
 
-- Requests can exceed platform timeouts.
-- A process restart destroys in-memory state.
-- Expensive AI work competes with normal API traffic.
-- Retrying the HTTP request may repeat side effects.
-- Scaling the API also scales expensive agent resources unnecessarily.
+- Anfragen können die Timeouts der Plattform überschreiten.
+- Ein Prozessneustart zerstört den im Arbeitsspeicher gehaltenen Zustand.
+- Rechenintensive AI-Aufgaben konkurrieren mit normalem API-Traffic.
+- Eine Wiederholung der HTTP-Anfrage kann Seiteneffekte erneut ausführen.
+- Die Skalierung der API skaliert unnötig auch die ressourcenintensiven Agent-Komponenten.
 
-Instead, the API creates a durable run and schedules asynchronous work.
+Stattdessen erstellt die API einen dauerhaften Run und plant die asynchrone Verarbeitung.
 
 ```ts title="create-agent-run.ts" showLineNumbers
 type CreateAgentRunInput = {
@@ -201,22 +201,22 @@ export async function createAgentRun(
 }
 ```
 
-The API does not immediately publish directly to Redis inside the transaction. Instead, it stores an outbox event.
+Die API veröffentlicht innerhalb der Transaktion nicht unmittelbar eine Nachricht in Redis. Stattdessen speichert sie ein Outbox-Ereignis.
 
-That distinction matters.
+Dieser Unterschied ist entscheidend.
 
-## The transactional outbox
+## Die transaktionale Outbox
 
-A common failure scenario looks like this:
+Ein typisches Fehlerszenario sieht folgendermaßen aus:
 
-1. PostgreSQL successfully creates a workflow.
-2. The application tries to publish a queue message.
-3. Redis is temporarily unavailable.
-4. The database contains a queued workflow, but no worker knows about it.
+1. PostgreSQL erstellt den Workflow erfolgreich.
+2. Die Anwendung versucht, eine Queue-Nachricht zu veröffentlichen.
+3. Redis ist vorübergehend nicht verfügbar.
+4. Die Datenbank enthält einen eingereihten Workflow, aber kein Worker weiß davon.
 
-The transactional outbox solves this by writing the workflow and the event in the same PostgreSQL transaction.
+Die transaktionale Outbox löst dieses Problem, indem Workflow und Ereignis innerhalb derselben PostgreSQL-Transaktion gespeichert werden.
 
-A separate publisher reads unprocessed outbox events and publishes them to Redis.
+Ein separater Publisher liest unverarbeitete Outbox-Ereignisse und veröffentlicht sie in Redis.
 
 ```ts title="outbox-publisher.ts" showLineNumbers
 export async function publishOutboxBatch() {
@@ -245,19 +245,19 @@ export async function publishOutboxBatch() {
 }
 ```
 
-<Callout title="Why this matters">
+<Callout title="Warum das wichtig ist">
 
-The outbox pattern ensures that a committed workflow cannot silently disappear between the database and the queue.
+Das Outbox-Pattern stellt sicher, dass ein bestätigter Workflow zwischen Datenbank und Queue nicht unbemerkt verloren gehen kann.
 
 </Callout>
 
-## Durable workflow state
+## Dauerhafter Workflow-Zustand
 
-Redis is useful for queues, locks, short-lived caches, and coordination.
+Redis eignet sich für Queues, Locks, kurzlebige Caches und Koordination.
 
-It is not the primary source of truth for agent execution.
+Es ist jedoch nicht die primäre Source of Truth für die Agent-Ausführung.
 
-PostgreSQL stores the durable state of every run.
+PostgreSQL speichert den dauerhaften Zustand jedes Runs.
 
 ```sql title="agent_runs.sql" showLineNumbers
 CREATE TABLE agent_runs (
@@ -276,7 +276,7 @@ CREATE TABLE agent_runs (
 );
 ```
 
-Each individual step is stored separately:
+Jeder einzelne Schritt wird separat gespeichert:
 
 ```sql title="agent_run_steps.sql" showLineNumbers
 CREATE TABLE agent_run_steps (
@@ -298,15 +298,15 @@ CREATE TABLE agent_run_steps (
 );
 ```
 
-This gives the platform an auditable execution history.
+Dadurch erhält die Plattform einen auditierbaren Ausführungsverlauf.
 
-It also means a worker can restart and continue from the last completed step instead of starting the entire workflow again.
+Außerdem kann ein Worker nach einem Neustart ab dem letzten abgeschlossenen Schritt fortfahren, statt den gesamten Workflow erneut zu starten.
 
-## Agent worker design
+## Design des Agent-Workers
 
-The Python worker is responsible for model interaction, structured output, and reasoning-related operations.
+Der Python-Worker ist für die Modellinteraktion, strukturierte Ausgaben und Reasoning-bezogene Operationen verantwortlich.
 
-It is not responsible for unrestricted infrastructure access.
+Er ist nicht für einen uneingeschränkten Zugriff auf die Infrastruktur zuständig.
 
 ```python title="agent_worker.py" showLineNumbers
 from dataclasses import dataclass
@@ -344,15 +344,15 @@ async def process_agent_job(job: AgentJob) -> None:
         raise
 ```
 
-The worker receives a job identifier and reloads the current state from PostgreSQL.
+Der Worker erhält eine Job-ID und lädt den aktuellen Zustand erneut aus PostgreSQL.
 
-This avoids passing large or stale workflow state through the queue.
+Dadurch muss kein großer oder veralteter Workflow-Zustand über die Queue transportiert werden.
 
-## Structured model output
+## Strukturierte Modellausgabe
 
-Free-form model responses are difficult to process safely.
+Frei formulierte Modellantworten lassen sich nur schwer sicher verarbeiten.
 
-The agent therefore produces one of a small number of structured decisions.
+Der Agent erzeugt daher eine von wenigen strukturierten Entscheidungen.
 
 ```ts title="agent-decision.ts" showLineNumbers
 import { z } from "zod"
@@ -386,27 +386,27 @@ export type AgentDecision = z.infer<
 >
 ```
 
-This does not make the model deterministic, but it gives the backend a controlled contract.
+Dadurch wird das Modell nicht deterministisch, das Backend erhält jedoch einen kontrollierten Vertrag.
 
-The system rejects malformed output rather than guessing what the model intended.
+Fehlerhaft formatierte Ausgaben werden vom System abgelehnt, anstatt die Absicht des Modells zu erraten.
 
-## Tool execution boundaries
+## Grenzen der Tool-Ausführung
 
-Tools are among the most powerful and dangerous parts of an agent platform.
+Tools gehören zu den leistungsfähigsten und zugleich riskantesten Komponenten einer Agent-Plattform.
 
-A tool can:
+Ein Tool kann:
 
-- Query internal databases.
-- Send an email.
-- Modify a calendar.
-- Create a support ticket.
-- Execute code.
-- Read a document.
-- Call an external API.
+- Interne Datenbanken abfragen.
+- Eine E-Mail senden.
+- Einen Kalender ändern.
+- Ein Support-Ticket erstellen.
+- Code ausführen.
+- Ein Dokument lesen.
+- Eine externe API aufrufen.
 
-The model never receives direct credentials.
+Das Modell erhält niemals direkte Zugangsdaten.
 
-Instead, it requests a named tool with structured arguments.
+Stattdessen fordert es ein benanntes Tool mit strukturierten Argumenten an.
 
 ```json
 {
@@ -420,14 +420,14 @@ Instead, it requests a named tool with structured arguments.
 }
 ```
 
-The backend then performs several checks:
+Anschließend führt das Backend mehrere Prüfungen durch:
 
-1. Is the tool registered?
-2. Is this agent allowed to use it?
-3. Is this user allowed to trigger it?
-4. Do the arguments match the schema?
-5. Does the action require approval?
-6. Has the same side effect already been executed?
+1. Ist das Tool registriert?
+2. Darf dieser Agent das Tool verwenden?
+3. Darf dieser Benutzer die Aktion auslösen?
+4. Entsprechen die Argumente dem Schema?
+5. Erfordert die Aktion eine Freigabe?
+6. Wurde derselbe Seiteneffekt bereits ausgeführt?
 
 ```ts title="tool-registry.ts" showLineNumbers
 import { z } from "zod"
@@ -453,21 +453,21 @@ export const toolRegistry = {
 }
 ```
 
-<Callout title="Security boundary">
+<Callout title="Sicherheitsgrenze">
 
-The model proposes an action. The application authorizes, validates, executes, and records it.
+Das Modell schlägt eine Aktion vor. Die Anwendung autorisiert, validiert, führt sie aus und protokolliert sie.
 
 </Callout>
 
-## Idempotency and side effects
+## Idempotenz und Seiteneffekte
 
-Retries are unavoidable in distributed systems.
+Wiederholungsversuche sind in verteilten Systemen unvermeidbar.
 
-A worker may complete a tool call and crash before acknowledging the queue message. The queue can then deliver the same job again.
+Ein Worker kann einen Tool-Aufruf abschließen und abstürzen, bevor er die Queue-Nachricht bestätigt. Die Queue kann denselben Job anschließend erneut zustellen.
 
-Without idempotency, the platform might send the same email twice or create duplicate tickets.
+Ohne Idempotenz könnte die Plattform dieselbe E-Mail zweimal senden oder doppelte Tickets erstellen.
 
-Each side-effecting operation receives an idempotency key:
+Jede Operation mit Seiteneffekten erhält einen Idempotenzschlüssel:
 
 ```ts title="execute-tool.ts" showLineNumbers
 type ExecuteToolInput = {
@@ -501,19 +501,19 @@ export async function executeTool(
 }
 ```
 
-This allows the worker to retry safely.
+Dadurch kann der Worker die Ausführung sicher wiederholen.
 
-## Redis responsibilities
+## Aufgaben von Redis
 
-Redis is used for short-lived operational concerns:
+Redis wird für kurzlebige operative Aufgaben eingesetzt:
 
-| Responsibility    | Example                                             |
-| ----------------- | --------------------------------------------------- |
-| Job queues        | Pending agent and tool jobs                         |
-| Distributed locks | Preventing two workers from processing the same run |
-| Rate limits       | Requests per user, agent, or model                  |
-| Temporary cache   | Reusable model or retrieval results                 |
-| Event delivery    | Progress notifications                              |
-| Retry scheduling  | Delayed jobs with exponential backoff               |
+| Verantwortung      | Beispiel                                               |
+| ------------------ | ------------------------------------------------------ |
+| Job-Queues         | Ausstehende Agent- und Tool-Jobs                       |
+| Verteilte Locks    | Verhindern, dass zwei Worker denselben Run verarbeiten |
+| Rate Limits        | Anfragen pro Benutzer, Agent oder Modell               |
+| Temporärer Cache   | Wiederverwendbare Modell- oder Retrieval-Ergebnisse    |
+| Ereigniszustellung | Fortschrittsmeldungen                                  |
+| Retry-Planung      | Verzögerte Jobs mit exponentiellem Backoff             |
 
-Redis is not used as the only storage location for business-critical workflow state.
+Redis wird nicht als einziger Speicherort für geschäftskritische Workflow-Zustände verwendet.

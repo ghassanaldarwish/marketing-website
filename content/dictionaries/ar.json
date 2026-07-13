@@ -236,46 +236,7 @@
       "description": "Instead of showing only screenshots, I present projects through architecture, trade-offs, implementation decisions, and lessons learned.",
       "challengeTitle": "Engineering Challenge",
       "readCaseStudy": "Read Case Study",
-      "projects": [
-        {
-          "id": "aiTradingAssistant",
-          "title": "AI Trading Assistant",
-          "category": "AI Engineering / Backend",
-          "description": "An AI-powered platform that combines language models, structured workflows, backend APIs, and real-time data processing to support intelligent analysis and decision-making.",
-          "problem": "The challenge was connecting AI reasoning with reliable backend services while keeping the system explainable, scalable, and production-ready.",
-          "stack": [
-            "Python",
-            "TypeScript",
-            "OpenAI",
-            "LangChain",
-            "PostgreSQL",
-            "Docker"
-          ]
-        },
-        {
-          "id": "scalableBackendPlatform",
-          "title": "Scalable Backend Platform",
-          "category": "Backend Architecture",
-          "description": "A distributed backend system designed around microservices, authentication, REST and GraphQL APIs, background jobs, and production deployment workflows.",
-          "problem": "The goal was to keep services maintainable while supporting independent deployments, clean communication, and predictable scaling.",
-          "stack": [
-            "Node.js",
-            "TypeScript",
-            "GraphQL",
-            "Redis",
-            "Docker",
-            "CI/CD"
-          ]
-        },
-        {
-          "id": "aiWorkflowAutomation",
-          "title": "AI Workflow Automation",
-          "category": "AI Agents / DevOps",
-          "description": "Automation pipelines connecting APIs, language models, backend services, and external tools to reduce manual work and improve engineering productivity.",
-          "problem": "The main focus was designing workflows that are useful, repeatable, observable, and safe enough for real-world usage.",
-          "stack": ["Python", "AI Agents", "MCP", "Ollama", "Docker", "Linux"]
-        }
-      ]
+      "technologiesLabel": "Technologies used in {title}"
     },
     "architectureShowcase": {
       "eyebrow": "Architecture Showcase",

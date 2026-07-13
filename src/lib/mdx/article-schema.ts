@@ -16,6 +16,14 @@ export const articleMetadataSchema = z.object({
 
   description: z.string().min(1),
 
+  /**
+   * A concise explanation of the main engineering
+   * challenge displayed on project preview cards.
+   *
+   * Falls back to description when omitted.
+   */
+  challenge: z.string().min(1).optional(),
+
   category: z.string().min(1),
 
   status: z.string().min(1).default("Case Study"),
