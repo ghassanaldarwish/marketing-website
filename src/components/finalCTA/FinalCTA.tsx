@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl"
 
-import { ContactModel } from "../contact/Contact"
+import { ContactDialog } from "@/features/contact/contact-dialog"
+
 import { Alert } from "../ui/alert"
 
 export default function FinalCTA() {
@@ -12,13 +13,11 @@ export default function FinalCTA() {
         <h2 className="text-4xl font-semibold tracking-tight sm:text-5xl">
           {t("title")}
         </h2>
-
         <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-muted-foreground">
           {t("description")}
         </p>
-
         <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
-          <ContactModel />
+          <ContactDialog />
         </div>
       </Alert>
     </section>

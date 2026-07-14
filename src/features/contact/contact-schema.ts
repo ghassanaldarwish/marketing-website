@@ -1,5 +1,4 @@
 import { z } from "zod"
-// import { t } from "@/lib/utils" // your translation utility
 
 export const contactFormSchema = z.object({
   name: z.string().trim().min(2, "Name must be at least 2 characters"),

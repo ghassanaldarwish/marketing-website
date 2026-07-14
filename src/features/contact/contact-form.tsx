@@ -1,10 +1,11 @@
 "use client"
 
-import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useTranslations } from "next-intl"
+import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner"
 
+import { submitContactForm, type ContactFormErrorCode } from "@/actions/contact"
 import {
   Field,
   FieldError,
@@ -18,15 +19,16 @@ import {
   InputGroupText,
   InputGroupTextarea,
 } from "@/components/ui/input-group"
-
-import { submitContactForm, type ContactFormErrorCode } from "@/actions/contact"
-import { contactFormSchema, type ContactFormType } from "@/lib/validation"
+import {
+  contactFormSchema,
+  type ContactFormType,
+} from "@/features/contact/contact-schema"
 
 type ContactFormProps = {
-  setIsOpen?: (open: boolean) => void
+  onSuccess?: () => void
 }
 
-export function ContactForm({ setIsOpen }: ContactFormProps) {
+export function ContactForm({ onSuccess }: ContactFormProps) {
   const t = useTranslations("contact.form")
 
   const form = useForm<ContactFormType>({
@@ -42,13 +44,10 @@ export function ContactForm({ setIsOpen }: ContactFormProps) {
     switch (errorCode) {
       case "VALIDATION_ERROR":
         return t("toast.validationError")
-
       case "DELIVERY_ERROR":
         return t("toast.deliveryError")
-
       default: {
         const exhaustiveCheck: never = errorCode
-
         return exhaustiveCheck
       }
     }
@@ -66,9 +65,8 @@ export function ContactForm({ setIsOpen }: ContactFormProps) {
 
       if (result.success) {
         toast.success(t("toast.success"))
-
         form.reset()
-        setIsOpen?.(false)
+        onSuccess?.()
         return
       }
 
@@ -90,7 +88,6 @@ export function ContactForm({ setIsOpen }: ContactFormProps) {
                 <FieldLabel htmlFor="contact-name">
                   {t("fields.name.label")}
                 </FieldLabel>
-
                 <Input
                   {...field}
                   id="contact-name"
@@ -98,7 +95,6 @@ export function ContactForm({ setIsOpen }: ContactFormProps) {
                   autoComplete="name"
                   aria-invalid={fieldState.invalid}
                 />
-
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
                 )}
@@ -114,7 +110,6 @@ export function ContactForm({ setIsOpen }: ContactFormProps) {
                 <FieldLabel htmlFor="contact-email">
                   {t("fields.email.label")}
                 </FieldLabel>
-
                 <Input
                   {...field}
                   id="contact-email"
@@ -123,7 +118,6 @@ export function ContactForm({ setIsOpen }: ContactFormProps) {
                   autoComplete="email"
                   aria-invalid={fieldState.invalid}
                 />
-
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
                 )}
@@ -139,7 +133,6 @@ export function ContactForm({ setIsOpen }: ContactFormProps) {
                 <FieldLabel htmlFor="contact-message">
                   {t("fields.message.label")}
                 </FieldLabel>
-
                 <InputGroup>
                   <InputGroupTextarea
                     {...field}
@@ -150,7 +143,6 @@ export function ContactForm({ setIsOpen }: ContactFormProps) {
                     placeholder={t("fields.message.placeholder")}
                     aria-invalid={fieldState.invalid}
                   />
-
                   <InputGroupAddon align="block-end">
                     <InputGroupText className="tabular-nums">
                       {t("characterCount", {
@@ -160,7 +152,6 @@ export function ContactForm({ setIsOpen }: ContactFormProps) {
                     </InputGroupText>
                   </InputGroupAddon>
                 </InputGroup>
-
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
                 )}

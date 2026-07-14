@@ -1,6 +1,6 @@
 "use server"
 
-import { contactFormSchema } from "@/lib/validation"
+import { contactFormSchema } from "@/features/contact/contact-schema"
 import { sendTelegramMessage } from "@/lib/telegram"
 
 export type ContactFormErrorCode = "VALIDATION_ERROR" | "DELIVERY_ERROR"
