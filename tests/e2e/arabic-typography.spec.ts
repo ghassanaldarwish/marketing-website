@@ -102,7 +102,9 @@ test.describe("Arabic typography", () => {
 
 test.describe("Latin typography regression", () => {
   for (const locale of ["en", "de"] as const) {
-    test(`${locale} keeps the Latin font and LTR direction`, async ({ page }) => {
+    test(`${locale} keeps the Latin font and LTR direction`, async ({
+      page,
+    }) => {
       await page.goto(`/${locale}`)
 
       await expect(page.locator("html")).toHaveAttribute("dir", "ltr")
