@@ -17,11 +17,7 @@ import Footer from "@/components/footer/Footer"
 import Navbar from "@/components/navbar/Navbar"
 import { ThemeProvider } from "@/components/providers/theme-provider"
 import { Toaster } from "@/components/ui/sonner"
-import {
-  getTextDirection,
-  isAppLocale,
-  publishedLocales,
-} from "@/i18n/locale"
+import { getTextDirection, isAppLocale, publishedLocales } from "@/i18n/locale"
 import { createLocalizedPath } from "@/i18n/paths"
 import {
   absoluteUrl,
