@@ -47,20 +47,24 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
   const [announcement, setAnnouncement] =
     useState<SubmissionAnnouncement | null>(null)
 
-  const validationMessages = {
-    nameMin: t("validation.nameMin"),
-    emailInvalid: t("validation.emailInvalid"),
-    messageMin: t("validation.messageMin"),
-    messageMax: t("validation.messageMax"),
-  }
+  const nameMinMessage = t("validation.nameMin")
+  const emailInvalidMessage = t("validation.emailInvalid")
+  const messageMinMessage = t("validation.messageMin")
+  const messageMaxMessage = t("validation.messageMax")
 
   const localizedSchema = useMemo(
-    () => createContactFormSchema(validationMessages),
+    () =>
+      createContactFormSchema({
+        nameMin: nameMinMessage,
+        emailInvalid: emailInvalidMessage,
+        messageMin: messageMinMessage,
+        messageMax: messageMaxMessage,
+      }),
     [
-      validationMessages.emailInvalid,
-      validationMessages.messageMax,
-      validationMessages.messageMin,
-      validationMessages.nameMin,
+      emailInvalidMessage,
+      messageMaxMessage,
+      messageMinMessage,
+      nameMinMessage,
     ]
   )
 
@@ -79,13 +83,13 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
   ): string {
     switch (field) {
       case "name":
-        return validationMessages.nameMin
+        return nameMinMessage
       case "email":
-        return validationMessages.emailInvalid
+        return emailInvalidMessage
       case "message":
         return codes.includes("TOO_LONG")
-          ? validationMessages.messageMax
-          : validationMessages.messageMin
+          ? messageMaxMessage
+          : messageMinMessage
       default: {
         const exhaustiveCheck: never = field
         return exhaustiveCheck
