@@ -8,7 +8,7 @@ const telegramErrorResponseSchema = z.object({
   ok: z.literal(false),
 })
 
-function getTelegramDeliveryErrorMessage(code, status) {
+function getTelegramDeliveryErrorMessage(code: string, status?: number) {
   switch (code) {
     case "HTTP_ERROR":
       return status
@@ -28,7 +28,10 @@ function getTelegramDeliveryErrorMessage(code, status) {
 }
 
 export class TelegramDeliveryError extends Error {
-  constructor(code, status) {
+  code: string
+  status?: number
+
+  constructor(code: string, status?: number) {
     super(getTelegramDeliveryErrorMessage(code, status))
     this.name = "TelegramDeliveryError"
     this.code = code
@@ -36,11 +39,12 @@ export class TelegramDeliveryError extends Error {
   }
 }
 
-function createTelegramEndpoint(botToken) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function createTelegramEndpoint(botToken: any) {
   return `https://api.telegram.org/bot${botToken}/sendMessage`
 }
 
-async function parseTelegramResponse(response) {
+async function parseTelegramResponse(response: Response) {
   try {
     return await response.json()
   } catch {
@@ -48,8 +52,16 @@ async function parseTelegramResponse(response) {
   }
 }
 
-export function createTelegramSender(configuration, fetchImplementation = fetch) {
-  return async function sendTelegramMessage(message) {
+export function createTelegramSender(
+  configuration: {
+    botToken: string
+    chatId: string | number
+    requestTimeoutMs: number
+  },
+  fetchImplementation = fetch
+) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return async function sendTelegramMessage(message: any) {
     const abortController = new AbortController()
     const timeout = setTimeout(() => {
       abortController.abort()
@@ -96,7 +108,7 @@ export function createTelegramSender(configuration, fetchImplementation = fetch)
     const errorResult = telegramErrorResponseSchema.safeParse(responseBody)
 
     if (errorResult.success) {
-      throw new TelegramDeliveryError("API_REJECTED")
+      throw new TelegramDeliveryError("API_REJECTED", undefined)
     }
 
     throw new TelegramDeliveryError("MALFORMED_RESPONSE")

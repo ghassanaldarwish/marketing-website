@@ -1,10 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import {
-  createTelegramSender,
-  TelegramDeliveryError,
-} from "./telegram-client.mjs"
+import { createTelegramSender, TelegramDeliveryError } from "./telegram-client"
 
 const configuration = {
   botToken: "test-token",
@@ -12,7 +9,10 @@ const configuration = {
   requestTimeoutMs: 1_000,
 }
 
-function jsonResponse(body, status = 200) {
+function jsonResponse(
+  body: { ok: boolean; error_code?: number },
+  status = 200
+) {
   return new Response(JSON.stringify(body), {
     status,
     headers: { "Content-Type": "application/json" },
@@ -33,7 +33,8 @@ test("resolves only after a successful Telegram response", async () => {
 test("sends plain text without parse_mode", async () => {
   let requestBody
   const sender = createTelegramSender(configuration, async (_url, init) => {
-    requestBody = JSON.parse(String(init.body))
+    const initBody = (init as RequestInit | undefined)?.body
+    requestBody = JSON.parse(String(initBody))
     return jsonResponse({ ok: true })
   })
 
@@ -69,6 +70,7 @@ test("rejects network failures with a typed redacted error", async () => {
   })
 
   await assert.rejects(sender("private visitor content"), (error) => {
+    assert.ok(error instanceof TelegramDeliveryError)
     assert.equal(error.code, "NETWORK_ERROR")
     assert.doesNotMatch(error.message, /test-token|private visitor content/)
     return true
@@ -91,7 +93,8 @@ test("rejects timeout failures", async () => {
     { ...configuration, requestTimeoutMs: 5 },
     async (_url, init) =>
       new Promise((_resolve, reject) => {
-        init.signal.addEventListener(
+        // init and init.signal are provided by the sender; assert non-null for TS
+        (init as RequestInit).signal!.addEventListener(
           "abort",
           () => reject(new DOMException("Aborted", "AbortError")),
           { once: true }

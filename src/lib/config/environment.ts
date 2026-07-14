@@ -26,7 +26,7 @@ const rawServerEnvironmentSchema = z.object({
 export class ServerEnvironmentError extends Error {
   code = "INVALID_SERVER_ENVIRONMENT"
 
-  constructor(missingVariables) {
+  constructor(missingVariables: string[]) {
     super(
       `Invalid Telegram server configuration. Missing required environment variables: ${missingVariables.join(
         ", "
@@ -36,7 +36,7 @@ export class ServerEnvironmentError extends Error {
   }
 }
 
-export function parseTelegramEnvironment(environment) {
+export function parseTelegramEnvironment(environment: unknown) {
   const parsedEnvironment = rawServerEnvironmentSchema.parse(environment)
   const missingVariables = []
 

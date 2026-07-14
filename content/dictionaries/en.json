@@ -326,6 +326,33 @@
       "description": "Have a project, job opportunity, or technical question? Send me a message and tell me how I can help.",
       "formHeading": "Contact form",
       "sendMessage": "Send Message"
+    },
+
+    "form": {
+      "fields": {
+        "name": { "label": "Full Name", "placeholder": "John Doe" },
+        "email": {
+          "label": "Email Address",
+          "placeholder": "john@example.com"
+        },
+        "message": {
+          "label": "Message",
+          "placeholder": "Tell me about your project, idea, or opportunity..."
+        }
+      },
+      "toast": {
+        "success": "Message sent successfully!",
+        "validationError": "Please check the form fields and try again.",
+        "deliveryError": "Your message could not be sent. Please try again in a few minutes.",
+        "unexpectedError": "An unexpected error occurred. Please check your connection and try again."
+      },
+      "validation": {
+        "nameMin": "Name must be at least 2 characters.",
+        "emailInvalid": "Please enter a valid email address.",
+        "messageMin": "Message must be at least 10 characters.",
+        "messageMax": "Message must be less than 5000 characters."
+      },
+      "characterCount": "{current}/{maximum}"
     }
   },
 

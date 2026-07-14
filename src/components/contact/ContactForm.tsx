@@ -2,6 +2,7 @@
 
 import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useTranslations } from "next-intl"
 import { toast } from "sonner"
 
 import {
@@ -18,15 +19,16 @@ import {
   InputGroupTextarea,
 } from "@/components/ui/input-group"
 
-import type { ContactFormType } from "@/lib/validation"
-import { contactFormSchema } from "@/lib/validation"
-import { submitContactForm } from "@/actions/contact"
+import { submitContactForm, type ContactFormErrorCode } from "@/actions/contact"
+import { contactFormSchema, type ContactFormType } from "@/lib/validation"
 
 type ContactFormProps = {
   setIsOpen?: (open: boolean) => void
 }
 
 export function ContactForm({ setIsOpen }: ContactFormProps) {
+  const t = useTranslations("contact.form")
+
   const form = useForm<ContactFormType>({
     resolver: zodResolver(contactFormSchema),
     defaultValues: {
@@ -36,22 +38,43 @@ export function ContactForm({ setIsOpen }: ContactFormProps) {
     },
   })
 
+  function getBackendErrorMessage(errorCode: ContactFormErrorCode): string {
+    switch (errorCode) {
+      case "VALIDATION_ERROR":
+        return t("toast.validationError")
+
+      case "DELIVERY_ERROR":
+        return t("toast.deliveryError")
+
+      default: {
+        const exhaustiveCheck: never = errorCode
+
+        return exhaustiveCheck
+      }
+    }
+  }
+
   async function onSubmit(data: ContactFormType) {
-    console.log(data)
-    const formData = new FormData()
-    Object.entries(data).forEach(([key, value]) => {
-      formData.append(key, value)
-    })
+    try {
+      const formData = new FormData()
 
-    const result = await submitContactForm(formData)
+      Object.entries(data).forEach(([key, value]) => {
+        formData.append(key, value)
+      })
 
-    if ("success" in result) {
-      toast.success("Message sent successfully!")
+      const result = await submitContactForm(formData)
 
-      form.reset()
-      setIsOpen?.(false)
-    } else {
-      toast.error("Error" + result.error)
+      if (result.success) {
+        toast.success(t("toast.success"))
+
+        form.reset()
+        setIsOpen?.(false)
+        return
+      }
+
+      toast.error(getBackendErrorMessage(result.errorCode))
+    } catch {
+      toast.error(t("toast.unexpectedError"))
     }
   }
 
@@ -64,12 +87,14 @@ export function ContactForm({ setIsOpen }: ContactFormProps) {
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="contact-name">Full Name</FieldLabel>
+                <FieldLabel htmlFor="contact-name">
+                  {t("fields.name.label")}
+                </FieldLabel>
 
                 <Input
                   {...field}
                   id="contact-name"
-                  placeholder="John Doe"
+                  placeholder={t("fields.name.placeholder")}
                   autoComplete="name"
                   aria-invalid={fieldState.invalid}
                 />
@@ -86,13 +111,15 @@ export function ContactForm({ setIsOpen }: ContactFormProps) {
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="contact-email">Email Address</FieldLabel>
+                <FieldLabel htmlFor="contact-email">
+                  {t("fields.email.label")}
+                </FieldLabel>
 
                 <Input
                   {...field}
                   id="contact-email"
                   type="email"
-                  placeholder="john@example.com"
+                  placeholder={t("fields.email.placeholder")}
                   autoComplete="email"
                   aria-invalid={fieldState.invalid}
                 />
@@ -109,7 +136,9 @@ export function ContactForm({ setIsOpen }: ContactFormProps) {
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="contact-message">Message</FieldLabel>
+                <FieldLabel htmlFor="contact-message">
+                  {t("fields.message.label")}
+                </FieldLabel>
 
                 <InputGroup>
                   <InputGroupTextarea
@@ -118,13 +147,16 @@ export function ContactForm({ setIsOpen }: ContactFormProps) {
                     rows={8}
                     maxLength={5000}
                     className="min-h-40 resize-none"
-                    placeholder="Tell me about your project, idea, or opportunity..."
+                    placeholder={t("fields.message.placeholder")}
                     aria-invalid={fieldState.invalid}
                   />
 
                   <InputGroupAddon align="block-end">
                     <InputGroupText className="tabular-nums">
-                      {field.value.length}/5000
+                      {t("characterCount", {
+                        current: field.value.length,
+                        maximum: 5000,
+                      })}
                     </InputGroupText>
                   </InputGroupAddon>
                 </InputGroup>

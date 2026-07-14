@@ -2,7 +2,7 @@
   "brand": {
     "name": "Ghassan Aldarwish",
     "shortName": "Ghassan",
-    "role": "AI Engineer, Backend Engineer, and DevOps Engineer",
+    "role": "AI Engineer, Backend Engineer & DevOps Engineer",
     "location": "Germany"
   },
   "contactModal": {
@@ -141,7 +141,7 @@
       "badge": ["AI Engineer", "DevOps", "Backend"],
       "title": "Building AI Systems",
       "secondaryTitle": "That Scale",
-      "description": "I design and build production-ready AI systems, scalable backend platforms, and cloud infrastructure.",
+      "description": "I design and build production-ready AI systems, scalable backend platforms, and cloud-native infrastructure.",
       "contact": "Contact Me",
       "infiniteMovingCards": [
         "+ Years Experience",
@@ -159,7 +159,7 @@
       "eyebrow": "Engineering Beyond Code",
       "title": "Great software is not just about writing code.",
       "description": "It is about understanding business problems, designing scalable architectures, making thoughtful technical decisions, and building systems that continue to perform as they grow.",
-      "secondaryDescription": "That is the mindset I bring to every project: combining AI, backend engineering, cloud infrastructure, and frontend craftsmanship to create software that works in the real world.",
+      "secondaryDescription": "This is the mindset I bring to every project: combining AI engineering, backend development, cloud infrastructure, and frontend craftsmanship to build software that performs reliably in the real world.",
       "layers": [
         {
           "title": "Users",
@@ -272,7 +272,7 @@
     },
     "finalCTA": {
       "title": "Let’s build something exceptional.",
-      "description": "Whether you are building AI products, scalable backend platforms, or modern cloud infrastructure, I am always interested in meaningful engineering challenges and opportunities."
+      "description": "Whether you're building AI products, scalable backend platforms, or modern cloud infrastructure, I'm always interested in meaningful engineering challenges and new opportunities."
     }
   },
 
@@ -326,6 +326,33 @@
       "description": "Have a project, job opportunity, or technical question? Send me a message and tell me how I can help.",
       "formHeading": "Contact form",
       "sendMessage": "Send Message"
+    },
+
+    "form": {
+      "fields": {
+        "name": { "label": "Full Name", "placeholder": "John Doe" },
+        "email": {
+          "label": "Email Address",
+          "placeholder": "john@example.com"
+        },
+        "message": {
+          "label": "Message",
+          "placeholder": "Tell me about your project, idea, or opportunity..."
+        }
+      },
+      "toast": {
+        "success": "Message sent successfully!",
+        "validationError": "Please check the form fields and try again.",
+        "deliveryError": "Your message could not be sent. Please try again in a few minutes.",
+        "unexpectedError": "An unexpected error occurred. Please check your connection and try again."
+      },
+      "validation": {
+        "nameMin": "Name must be at least 2 characters.",
+        "emailInvalid": "Please enter a valid email address.",
+        "messageMin": "Message must be at least 10 characters.",
+        "messageMax": "Message must be less than 5000 characters."
+      },
+      "characterCount": "{current}/{maximum}"
     }
   },
 

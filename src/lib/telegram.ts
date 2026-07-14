@@ -1,7 +1,7 @@
 import "server-only"
 
 import { getTelegramEnvironment } from "@/lib/config/server-environment"
-import { createTelegramSender } from "@/lib/telegram-client.mjs"
+import { createTelegramSender } from "@/lib/telegram-client"
 
 export async function sendTelegramMessage(message: string): Promise<void> {
   const environment = getTelegramEnvironment()
@@ -11,9 +11,9 @@ export async function sendTelegramMessage(message: string): Promise<void> {
   }
 
   const sendMessage = createTelegramSender({
-    botToken: environment.botToken,
-    chatId: environment.chatId,
-    requestTimeoutMs: environment.requestTimeoutMs,
+    botToken: environment.botToken!,
+    chatId: environment.chatId!,
+    requestTimeoutMs: environment.requestTimeoutMs!,
   })
 
   await sendMessage(message)

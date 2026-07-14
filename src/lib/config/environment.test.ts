@@ -1,10 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import {
-  parseTelegramEnvironment,
-  ServerEnvironmentError,
-} from "./environment.mjs"
+import { parseTelegramEnvironment, ServerEnvironmentError } from "./environment"
 
 test("development uses a no-op adapter without credentials", () => {
   assert.deepEqual(parseTelegramEnvironment({ NODE_ENV: "development" }), {
