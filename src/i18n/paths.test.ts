@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { createArticlePath, createLocalizedPath } from "@/i18n/paths"
+import { createArticlePath, createLocalizedPath } from "./paths"
 
 describe("createLocalizedPath", () => {
   it.each([
