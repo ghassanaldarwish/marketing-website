@@ -17,23 +17,23 @@ describe("locale configuration", () => {
     expect(defaultLocale).toBe("en")
   })
 
-  it.each([
-    ["en", true],
-    ["de", true],
-    ["ar", true],
-    ["fr", false],
-    ["", false],
-    [undefined, false],
-    [null, false],
-  ])("validates %j", (value, expected) => {
-    expect(isAppLocale(value)).toBe(expected)
+  it("accepts every published locale", () => {
+    for (const locale of publishedLocales) {
+      expect(isAppLocale(locale)).toBe(true)
+    }
   })
 
-  it.each([
-    ["en", "ltr"],
-    ["de", "ltr"],
-    ["ar", "rtl"],
-  ] as const)("returns the direction for %s", (locale, direction) => {
-    expect(getTextDirection(locale)).toBe(direction)
+  it("rejects unsupported and malformed locale values", () => {
+    const unsupportedValues: unknown[] = ["fr", "", undefined, null, 42]
+
+    for (const value of unsupportedValues) {
+      expect(isAppLocale(value)).toBe(false)
+    }
+  })
+
+  it("returns the configured text direction", () => {
+    expect(getTextDirection("en")).toBe("ltr")
+    expect(getTextDirection("de")).toBe("ltr")
+    expect(getTextDirection("ar")).toBe("rtl")
   })
 })
