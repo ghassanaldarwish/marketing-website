@@ -1,0 +1,84 @@
+html[data-locale="ar"] {
+  --font-heading: var(--font-arabic);
+  --font-sans: var(--font-arabic);
+}
+
+html[data-locale="ar"] body {
+  font-family: var(--font-arabic), sans-serif;
+  font-weight: 400;
+  line-height: 1.75;
+}
+
+html[data-locale="ar"] :where(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--font-arabic), sans-serif;
+  line-height: 1.35;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+html[data-locale="ar"] :where(.uppercase) {
+  text-transform: none;
+}
+
+html[data-locale="ar"] :where([class*="tracking-"]) {
+  letter-spacing: normal;
+}
+
+html[data-locale="ar"] :where(p, li, blockquote, dd, dt, label, input, textarea) {
+  text-align: start;
+}
+
+html[data-locale="ar"] :where(.prose, [data-article-prose]) {
+  line-height: 1.9;
+  text-align: start;
+}
+
+html[data-locale="ar"] :where(ul, ol) {
+  padding-inline-start: 1.5rem;
+  padding-inline-end: 0;
+}
+
+html[data-locale="ar"] :where(blockquote) {
+  border-inline-start-width: 2px;
+  border-inline-end-width: 0;
+  padding-inline-start: 1.5rem;
+  padding-inline-end: 0;
+}
+
+html[data-locale="ar"] :where(th, td) {
+  text-align: start;
+}
+
+html[data-locale="ar"] :where(
+    code,
+    pre,
+    kbd,
+    samp,
+    var,
+    [data-bidi-isolate],
+    a[href^="http://"],
+    a[href^="https://"],
+    a[href^="mailto:"],
+    a[href^="tel:"]
+  ) {
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: start;
+}
+
+html[data-locale="ar"] :where(pre, [data-rehype-pretty-code-figure]) {
+  direction: ltr;
+}
+
+html[data-locale="ar"] :where(img, svg, canvas, video) {
+  direction: ltr;
+}
+
+html[data-locale="ar"] :where(input[type="email"], input[type="url"], input[type="tel"]) {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+html[data-locale="ar"] :where(.font-mono, code, pre, kbd, samp) {
+  font-family: var(--font-geist-mono), monospace;
+}
