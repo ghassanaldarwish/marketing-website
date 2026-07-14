@@ -24,6 +24,7 @@ jobs:
 
     env:
       CI: true
+      E2E_DISABLE_TELEGRAM_DELIVERY: true
       NEXT_TELEMETRY_DISABLED: 1
       NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3100
       MDX_CONTENT_SOURCE: local

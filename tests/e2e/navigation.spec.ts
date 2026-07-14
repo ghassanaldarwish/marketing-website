@@ -1,7 +1,14 @@
 import { expect, test } from "@playwright/test"
 
-test("language switching preserves the logical route", async ({ page }) => {
+test("language switching preserves the logical route", async ({
+  page,
+  isMobile,
+}) => {
   await page.goto("/en/about?source=e2e")
+
+  if (isMobile) {
+    await page.getByRole("button", { name: /open.*menu/i }).click()
+  }
 
   await page
     .getByRole("button", { name: /german|deutsch/i })

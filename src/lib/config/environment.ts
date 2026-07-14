@@ -11,8 +11,28 @@ const optionalTrimmedStringSchema = z.preprocess((value) => {
   return trimmedValue.length === 0 ? undefined : trimmedValue
 }, z.string().min(1).optional())
 
+const booleanEnvironmentSchema = z.preprocess((value) => {
+  if (typeof value !== "string") {
+    return value
+  }
+
+  const normalizedValue = value.trim().toLowerCase()
+
+  if (normalizedValue === "true") {
+    return true
+  }
+
+  if (normalizedValue === "false" || normalizedValue.length === 0) {
+    return false
+  }
+
+  return value
+}, z.boolean().default(false))
+
 const rawServerEnvironmentSchema = z.object({
   NODE_ENV: nodeEnvironmentSchema.default("development"),
+  CI: optionalTrimmedStringSchema,
+  E2E_DISABLE_TELEGRAM_DELIVERY: booleanEnvironmentSchema,
   TELEGRAM_BOT_TOKEN: optionalTrimmedStringSchema,
   GROUP_CHAT_ID: optionalTrimmedStringSchema,
   TELEGRAM_REQUEST_TIMEOUT_MS: z.coerce
@@ -38,6 +58,18 @@ export class ServerEnvironmentError extends Error {
 
 export function parseTelegramEnvironment(environment: unknown) {
   const parsedEnvironment = rawServerEnvironmentSchema.parse(environment)
+  const deliveryDisabledForE2E =
+    parsedEnvironment.CI === "true" &&
+    parsedEnvironment.E2E_DISABLE_TELEGRAM_DELIVERY
+
+  if (deliveryDisabledForE2E) {
+    return {
+      enabled: false,
+      nodeEnv: parsedEnvironment.NODE_ENV,
+      requestTimeoutMs: parsedEnvironment.TELEGRAM_REQUEST_TIMEOUT_MS,
+    }
+  }
+
   const missingVariables = []
 
   if (!parsedEnvironment.TELEGRAM_BOT_TOKEN) {

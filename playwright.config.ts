@@ -53,6 +53,8 @@ export default defineConfig({
     timeout: 180_000,
     env: {
       ...process.env,
+      CI: "true",
+      E2E_DISABLE_TELEGRAM_DELIVERY: "true",
       NEXT_PUBLIC_SITE_URL: baseURL,
       MDX_CONTENT_SOURCE: "local",
       TELEGRAM_BOT_TOKEN: "",
