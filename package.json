@@ -12,10 +12,14 @@
     "lint:ci": "eslint . --max-warnings=0",
     "format": "prettier --write \"**/*.{js,mjs,ts,tsx}\"",
     "format:check": "prettier --check \"**/*.{js,mjs,ts,tsx}\"",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "test": "vitest run --exclude \"tests/e2e/**\"",
+    "test:watch": "vitest --exclude \"tests/e2e/**\"",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:report": "playwright show-report",
     "typecheck": "tsc --noEmit",
-    "check": "pnpm format:check && pnpm lint:ci && pnpm typecheck && pnpm build"
+    "check": "pnpm format:check && pnpm lint:ci && pnpm typecheck && pnpm test && pnpm build"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
@@ -52,6 +56,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@playwright/test": "1.55.0",
     "@tailwindcss/postcss": "^4",
     "@tailwindcss/typography": "^0.5.20",
     "@types/mdx": "^2.0.14",

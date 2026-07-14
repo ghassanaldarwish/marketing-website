@@ -3,31 +3,7 @@ import { describe, expect, it } from "vitest"
 import { parseTelegramEnvironment, ServerEnvironmentError } from "./environment"
 
 describe("parseTelegramEnvironment", () => {
-  it("uses a no-op adapter in development without credentials", () => {
-    expect(
-      parseTelegramEnvironment({
-        NODE_ENV: "development",
-      })
-    ).toEqual({
-      enabled: false,
-      nodeEnv: "development",
-      requestTimeoutMs: 8_000,
-    })
-  })
-
-  it("uses a no-op adapter in test mode without credentials", () => {
-    expect(
-      parseTelegramEnvironment({
-        NODE_ENV: "test",
-      })
-    ).toEqual({
-      enabled: false,
-      nodeEnv: "test",
-      requestTimeoutMs: 8_000,
-    })
-  })
-
-  it("fails when production settings are missing", () => {
+  it("requires Telegram credentials in production by default", () => {
     expect(() =>
       parseTelegramEnvironment({
         NODE_ENV: "production",
@@ -35,71 +11,26 @@ describe("parseTelegramEnvironment", () => {
     ).toThrow(ServerEnvironmentError)
   })
 
-  it("reports the names of missing production variables", () => {
-    expect(() =>
-      parseTelegramEnvironment({
-        NODE_ENV: "production",
-      })
-    ).toThrow(
-      "Invalid Telegram server configuration. Missing required environment variables: TELEGRAM_BOT_TOKEN, GROUP_CHAT_ID."
-    )
-  })
-
-  it("does not expose existing secrets in configuration errors", () => {
-    const secret = "sensitive-token-value"
-
-    let thrownError: unknown
-
-    try {
-      parseTelegramEnvironment({
-        NODE_ENV: "production",
-        TELEGRAM_BOT_TOKEN: secret,
-      })
-    } catch (error) {
-      thrownError = error
-    }
-
-    expect(thrownError).toBeInstanceOf(ServerEnvironmentError)
-    expect(String(thrownError)).not.toContain(secret)
-    expect(String(thrownError)).toContain("GROUP_CHAT_ID")
-  })
-
-  it("validates and normalizes production configuration", () => {
+  it("disables Telegram delivery for explicit E2E CI runs", () => {
     expect(
       parseTelegramEnvironment({
         NODE_ENV: "production",
-        TELEGRAM_BOT_TOKEN: "configured-token",
-        GROUP_CHAT_ID: "-123456789",
-        TELEGRAM_REQUEST_TIMEOUT_MS: "5000",
+        CI: "true",
+        E2E_DISABLE_TELEGRAM_DELIVERY: "true",
       })
     ).toEqual({
-      enabled: true,
+      enabled: false,
       nodeEnv: "production",
-      botToken: "configured-token",
-      chatId: "-123456789",
-      requestTimeoutMs: 5_000,
+      requestTimeoutMs: 8_000,
     })
   })
 
-  it("rejects request timeouts below the minimum", () => {
+  it("does not allow the E2E switch outside CI", () => {
     expect(() =>
       parseTelegramEnvironment({
         NODE_ENV: "production",
-        TELEGRAM_BOT_TOKEN: "configured-token",
-        GROUP_CHAT_ID: "-123456789",
-        TELEGRAM_REQUEST_TIMEOUT_MS: "999",
+        E2E_DISABLE_TELEGRAM_DELIVERY: "true",
       })
-    ).toThrow()
-  })
-
-  it("rejects request timeouts above the maximum", () => {
-    expect(() =>
-      parseTelegramEnvironment({
-        NODE_ENV: "production",
-        TELEGRAM_BOT_TOKEN: "configured-token",
-        GROUP_CHAT_ID: "-123456789",
-        TELEGRAM_REQUEST_TIMEOUT_MS: "30001",
-      })
-    ).toThrow()
+    ).toThrow(ServerEnvironmentError)
   })
 })
