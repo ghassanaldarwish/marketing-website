@@ -8,7 +8,7 @@ type CalloutProps = {
 
 function Callout({ title = "Note", children }: CalloutProps) {
   return (
-    <aside className="my-8 rounded-xl border border-primary/25 bg-primary/5 p-5">
+    <aside className="my-8 rounded-xl border border-primary/25 bg-primary/5 p-5 text-start">
       <p className="m-0 font-semibold text-foreground">{title}</p>
 
       <div className="mt-2 text-muted-foreground">{children}</div>
@@ -54,64 +54,66 @@ export const mdxComponents = {
   img: MdxImage,
   Callout,
   h1: ({ children }) => (
-    <h1 className="mt-10 text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
+    <h1 className="mt-10 text-start text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
       {children}
     </h1>
   ),
 
   h2: ({ children }) => (
-    <h2 className="mt-16 pt-10 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+    <h2 className="mt-16 pt-10 text-start text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
       {children}
     </h2>
   ),
 
   h3: ({ children }) => (
-    <h3 className="mt-10 text-2xl font-semibold tracking-tight text-foreground">
+    <h3 className="mt-10 text-start text-2xl font-semibold tracking-tight text-foreground">
       {children}
     </h3>
   ),
   blockquote: ({ children }) => (
-    <blockquote className="my-8 border-l-2 border-blue-500 pl-6 text-lg leading-8 text-muted-foreground italic">
+    <blockquote className="my-8 border-s-2 border-blue-500 ps-6 text-start text-lg leading-8 text-muted-foreground italic">
       {children}
     </blockquote>
   ),
 
   table: ({ children }) => (
     <div className="my-8 overflow-x-auto rounded-2xl border border-border">
-      <table className="w-full min-w-xl border-collapse text-sm">
+      <table className="w-full min-w-xl border-collapse text-start text-sm">
         {children}
       </table>
     </div>
   ),
 
   th: ({ children }) => (
-    <th className="border-b border-border bg-muted/50 px-4 py-3 text-left font-medium text-foreground">
+    <th className="border-b border-border bg-muted/50 px-4 py-3 text-start font-medium text-foreground">
       {children}
     </th>
   ),
 
   td: ({ children }) => (
-    <td className="border-b border-border px-4 py-3 text-muted-foreground">
+    <td className="border-b border-border px-4 py-3 text-start text-muted-foreground">
       {children}
     </td>
   ),
   p: ({ children }) => (
-    <p className="mt-5 text-lg leading-8 text-muted-foreground">{children}</p>
+    <p className="mt-5 text-start text-lg leading-8 text-muted-foreground">
+      {children}
+    </p>
   ),
 
   ul: ({ children }) => (
-    <ul className="mt-6 list-disc space-y-3 pl-6 text-muted-foreground">
+    <ul className="mt-6 list-disc space-y-3 ps-6 text-start text-muted-foreground">
       {children}
     </ul>
   ),
 
   ol: ({ children }) => (
-    <ol className="mt-6 list-decimal space-y-3 pl-6 text-muted-foreground">
+    <ol className="mt-6 list-decimal space-y-3 ps-6 text-start text-muted-foreground">
       {children}
     </ol>
   ),
 
-  li: ({ children }) => <li className="pl-2 leading-8">{children}</li>,
+  li: ({ children }) => <li className="ps-2 leading-8">{children}</li>,
 } satisfies MDXComponents
 
 /**
