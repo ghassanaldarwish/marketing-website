@@ -14,5 +14,7 @@ test("theme choice persists across navigation", async ({ page }) => {
 
   await expect(page).toHaveURL(/\/en\/about$/)
   await expect(page.locator("html")).toHaveClass(/dark/)
-  await expect.poll(() => page.evaluate(() => localStorage.getItem("theme"))).toBe("dark")
+  await expect
+    .poll(() => page.evaluate(() => localStorage.getItem("theme")))
+    .toBe("dark")
 })

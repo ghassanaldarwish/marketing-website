@@ -7,7 +7,10 @@ for (const locale of publishedLocales) {
     for (const path of ["", "/about", "/articles", "/contact"]) {
       const response = await page.goto(`/${locale}${path}`)
 
-      expect(response?.status(), `/${locale}${path} should render`).toBeLessThan(400)
+      expect(
+        response?.status(),
+        `/${locale}${path} should render`
+      ).toBeLessThan(400)
       await expect(page.locator("html")).toHaveAttribute("lang", locale)
       await expect(page.locator("main")).toBeVisible()
     }
@@ -16,7 +19,10 @@ for (const locale of publishedLocales) {
   test(`${locale} article list navigates to an article`, async ({ page }) => {
     await page.goto(`/${locale}/articles`)
 
-    const articleLink = page.locator(`main a[href^="/${locale}/articles/"]`).first()
+    const articleLink = page
+      .locator(`main a[href^="/${locale}/articles/"]`)
+      .first()
+
     await expect(articleLink).toBeVisible()
     await articleLink.click()
 

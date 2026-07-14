@@ -18,7 +18,11 @@ test("mobile menu opens, navigates, and closes", async ({ page, isMobile }) => {
   const closeButton = page.getByRole("button", { name: /close.*menu/i })
   await expect(closeButton).toBeVisible()
 
-  await page.getByRole("navigation").last().getByRole("link", { name: /about/i }).click()
+  await page
+    .getByRole("navigation")
+    .last()
+    .getByRole("link", { name: /about/i })
+    .click()
 
   await expect(page).toHaveURL(/\/en\/about$/)
   await expect(closeButton).toHaveCount(0)
