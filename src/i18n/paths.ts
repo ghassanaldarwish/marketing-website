@@ -1,4 +1,4 @@
-import type { AppLocale } from "@/i18n/locale"
+import type { AppLocale } from "./locale"
 
 function normalizePath(path: string): string {
   if (path === "" || path === "/") {
