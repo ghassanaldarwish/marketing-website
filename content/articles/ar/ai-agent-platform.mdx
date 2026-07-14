@@ -1,0 +1,519 @@
+---
+title: "بناء منصة وكلاء ذكاء اصطناعي جاهزة للإنتاج"
+description: "كيف صممت منصة للوكلاء باستخدام Node.js وPython وRedis وPostgreSQL وDocker وKubernetes."
+
+category: "هندسة الذكاء الاصطناعي / الأنظمة الخلفية"
+status: "دراسة حالة"
+
+publishedAt: "2026-07-11"
+updatedAt: "2026-07-11"
+
+coverImage: "/articles/ai-agent-platform/cover.png"
+coverImageAlt: "معمارية منصة وكلاء ذكاء اصطناعي جاهزة للإنتاج"
+
+tags:
+  - "هندسة الذكاء الاصطناعي"
+  - "وكلاء الذكاء الاصطناعي"
+  - "تصميم الأنظمة"
+
+stack:
+  - "Python"
+  - "TypeScript"
+  - "OpenAI"
+  - "PostgreSQL"
+  - "Redis"
+  - "Docker"
+
+draft: false
+featured: false
+order: 1
+---
+
+---
+
+يُعد بناء وكيل ذكاء اصطناعي يجيب عن مطالبة نصية أمرًا سهلًا نسبيًا.
+
+أما بناء منصة لوكلاء الذكاء الاصطناعي تستطيع تنفيذ أعباء عمل حقيقية بموثوقية، والتعافي من الأعطال، واستدعاء الأدوات بأمان، والحفاظ على الحالة، والتوسع عبر عدة عمّال، فهو تحدٍّ هندسي مختلف.
+
+تصف دراسة الحالة هذه معمارية منصة وكلاء ذكاء اصطناعي موجهة لبيئات الإنتاج، بُنيت باستخدام **TypeScript** و**Python** و**Redis** و**PostgreSQL** و**Docker** و**Kubernetes**.
+
+لم يكن الهدف بناء روبوت محادثة آخر، بل إنشاء منصة قابلة لإعادة الاستخدام لتشغيل تدفقات عمل ذكية تستخدم الأدوات داخل نظام خلفي موثوق.
+
+<Callout title="المبدأ الهندسي الأساسي">
+
+لا ينبغي التعامل مع وكيل الذكاء الاصطناعي بوصفه مطالبة نصية معزولة، بل بوصفه تدفق عمل موزعًا يتضمن حالة وأدوات وصلاحيات ومحاولات إعادة تنفيذ وقابلية للمراقبة وحدود تنفيذ واضحة.
+
+</Callout>
+
+## المشكلة
+
+غالبًا ما يبدأ دمج بسيط للذكاء الاصطناعي بطلب واحد إلى واجهة API:
+
+```ts title="simple-completion.ts"
+const response = await openai.responses.create({
+  model: "gpt-5",
+  input: "Analyze this customer request.",
+})
+```
+
+ينجح هذا الأسلوب في العروض التجريبية، لكن أنظمة الإنتاج سرعان ما تفرض متطلبات أكثر تعقيدًا.
+
+كان على المنصة دعم ما يلي:
+
+- عدة وكلاء متخصصين.
+- تدفقات عمل طويلة التنفيذ.
+- استدعاءات أدوات ذات بنية محددة.
+- خطوات موافقة بشرية.
+- مهام خلفية قابلة لإعادة المحاولة.
+- حالة دائمة للمحادثات وتدفقات العمل.
+- نماذج لغوية محلية وأخرى مستضافة سحابيًا.
+- التوسع الأفقي للعمّال.
+- صلاحيات وحدود استخدام خاصة بكل مستخدم.
+- سجلات تنفيذ تفصيلية.
+- تعافٍ موثوق بعد تعطل عملية أو خادم.
+
+تمثل التحدي الأساسي في ربط استدلال الذكاء الاصطناعي الاحتمالي ببنية خلفية حتمية.
+
+> النماذج اللغوية غير حتمية، لكن أنظمة الإنتاج لا يمكن أن تكون غير متوقعة فيما يتعلق بالأمان، وانتقالات الحالة، والفوترة، ومحاولات إعادة التنفيذ، أو سلامة البيانات.
+
+لذلك كان على المعمارية عزل استدلال الذكاء الاصطناعي عن أجزاء النظام التي تتطلب ضمانات صارمة.
+
+## أهداف التصميم
+
+قبل اختيار التقنيات، حددت أهداف التصميم الأساسية.
+
+### الموثوقية
+
+يجب ألا يؤدي فشل طلب إلى النموذج، أو إعادة تشغيل عامل، أو انقطاع الشبكة، أو انتهاء مهلة أداة إلى إفساد تدفق العمل.
+
+### قابلية المراقبة
+
+يجب أن تنتج كل خطوة في تدفق العمل معلومات كافية للإجابة عن الأسئلة التالية:
+
+- ماذا حدث؟
+- ما النموذج الذي استُخدم؟
+- ما الأداة التي استُدعيت؟
+- كم استغرق التنفيذ؟
+- لماذا فشل؟
+- هل يمكن إعادة المحاولة بأمان؟
+
+### قابلية التوسع
+
+يجب أن يكون من الممكن توسيع خوادم API وعمّال الوكلاء وعمّال الأدوات بصورة مستقلة.
+
+### الأمان
+
+يجب ألا يحصل النموذج مطلقًا على وصول غير مقيد إلى الخدمات الداخلية أو قواعد البيانات أو الملفات أو بيانات اعتماد المستخدمين.
+
+### قابلية التمديد
+
+يجب أن يكون من الممكن إضافة نماذج وأدوات ووكلاء وأنواع جديدة من تدفقات العمل دون إعادة كتابة المنصة بأكملها.
+
+### الاستقلال عن النموذج
+
+يجب أن يدعم التطبيق مزودي الخدمات السحابية والنماذج المحلية من خلال طبقة تجريد داخلية مشتركة.
+
+## المعمارية عالية المستوى
+
+تنقسم المنصة إلى عدة طبقات محددة بوضوح.
+
+| الطبقة           | المسؤولية                                                           | التقنيات الرئيسية            |
+| ---------------- | ------------------------------------------------------------------- | ---------------------------- |
+| طبقة API         | المصادقة، والتحقق من المدخلات، وتحديد معدل الطلبات، ومعالجة الطلبات | Node.js، TypeScript، Fastify |
+| طبقة التنسيق     | حالة تدفق العمل، وتوجيه الوكلاء، وتخطيط التنفيذ                     | TypeScript، PostgreSQL       |
+| عمّال الوكلاء    | التفاعل مع النموذج وخطوات الاستدلال                                 | Python، OpenAI، Ollama       |
+| عمّال الأدوات    | التنفيذ المتحكم فيه للإجراءات الخارجية                              | Python، TypeScript           |
+| طبقة الطوابير    | المهام الخلفية، وإعادة المحاولة، وتنسيق العمّال                     | Redis                        |
+| طبقة الاستمرارية | بيانات تدفق العمل والتدقيق الدائمة                                  | PostgreSQL                   |
+| طبقة المراقبة    | السجلات، والمقاييس، وآثار التتبع، وأحداث التنفيذ                    | OpenTelemetry، Prometheus    |
+| طبقة النشر       | الحزم، والتوسع، وإدارة الخدمات                                      | Docker، Kubernetes           |
+
+يمنع هذا الفصل النموذج اللغوي من أن يصبح مركز التطبيق بأكمله.
+
+يشارك النموذج في تدفق العمل، لكنه لا يمتلك تدفق العمل ولا يتحكم فيه.
+
+## دورة حياة الطلب
+
+يمر الطلب النموذجي عبر النظام بالترتيب التالي:
+
+1. ينشئ العميل عملية تشغيل للوكيل من خلال API.
+2. تتحقق API من الطلب وتفحص الصلاحيات.
+3. يُنشأ سجل دائم لتدفق العمل في PostgreSQL.
+4. تُضاف مهمة إلى Redis.
+5. يتولى أحد عمّال الوكلاء المتاحين المهمة.
+6. يحمّل العامل سياق تدفق العمل.
+7. يقرر النموذج ما إذا كان يحتاج إلى تقديم إجابة، أو استدعاء أداة، أو طلب موافقة.
+8. يُتحقق من استدعاءات الأدوات ثم تُرسل إلى عمّال معزولين.
+9. تُكتب النتائج مرة أخرى في PostgreSQL.
+10. تُجدول الخطوة التالية من تدفق العمل.
+11. يتلقى العميل التحديثات عبر الاستطلاع، أو Server-Sent Events، أو WebSockets.
+
+يجعل هذا النموذج طلب API قصير العمر، بينما يستطيع تدفق عمل الوكيل الفعلي الاستمرار لثوانٍ أو دقائق.
+
+## لماذا فصلت API عن تنفيذ الوكيل
+
+يؤدي تشغيل تدفقات عمل الوكلاء مباشرة داخل طلب HTTP إلى عدة مشكلات:
+
+- قد تتجاوز الطلبات حدود المهلة الزمنية للمنصة.
+- تؤدي إعادة تشغيل العملية إلى فقدان الحالة المخزنة في الذاكرة.
+- تتنافس عمليات الذكاء الاصطناعي مرتفعة التكلفة مع حركة API الاعتيادية.
+- قد تؤدي إعادة محاولة طلب HTTP إلى تكرار الآثار الجانبية.
+- يؤدي توسيع API كذلك إلى توسيع موارد الوكلاء المكلفة دون حاجة.
+
+بدلًا من ذلك، تنشئ API عملية تشغيل دائمة وتجدول عملًا غير متزامن.
+
+```ts title="create-agent-run.ts" showLineNumbers
+type CreateAgentRunInput = {
+  userId: string
+  agentType: string
+  message: string
+}
+
+export async function createAgentRun(
+  input: CreateAgentRunInput
+) {
+  const run = await database.transaction(async (transaction) => {
+    const createdRun = await transaction.agentRun.create({
+      data: {
+        userId: input.userId,
+        agentType: input.agentType,
+        status: "queued",
+        input: {
+          message: input.message,
+        },
+      },
+    })
+
+    await transaction.outboxEvent.create({
+      data: {
+        type: "agent.run.created",
+        aggregateId: createdRun.id,
+        payload: {
+          runId: createdRun.id,
+        },
+      },
+    })
+
+    return createdRun
+  })
+
+  return run
+}
+```
+
+لا تنشر API رسالة مباشرة إلى Redis داخل المعاملة، بل تخزن حدثًا في صندوق الصادر.
+
+وهذا الفرق مهم.
+
+## صندوق الصادر المعاملي
+
+يبدو أحد سيناريوهات الفشل الشائعة كما يلي:
+
+1. ينشئ PostgreSQL تدفق العمل بنجاح.
+2. يحاول التطبيق نشر رسالة في الطابور.
+3. يكون Redis غير متاح مؤقتًا.
+4. تحتوي قاعدة البيانات على تدفق عمل في حالة الانتظار، لكن لا يعرف أي عامل بوجوده.
+
+يحل نمط صندوق الصادر المعاملي هذه المشكلة من خلال كتابة تدفق العمل والحدث ضمن معاملة PostgreSQL نفسها.
+
+تقرأ عملية نشر منفصلة أحداث صندوق الصادر التي لم تُعالج بعد وتنشرها إلى Redis.
+
+```ts title="outbox-publisher.ts" showLineNumbers
+export async function publishOutboxBatch() {
+  const events = await database.outboxEvent.findMany({
+    where: {
+      processedAt: null,
+    },
+    orderBy: {
+      createdAt: "asc",
+    },
+    take: 100,
+  })
+
+  for (const event of events) {
+    await queue.publish(event.type, event.payload)
+
+    await database.outboxEvent.update({
+      where: {
+        id: event.id,
+      },
+      data: {
+        processedAt: new Date(),
+      },
+    })
+  }
+}
+```
+
+<Callout title="لماذا يُعد ذلك مهمًا">
+
+يضمن نمط صندوق الصادر ألا يختفي تدفق عمل تم تثبيته في قاعدة البيانات بصمت في المسافة بين قاعدة البيانات والطابور.
+
+</Callout>
+
+## الحالة الدائمة لتدفق العمل
+
+يُعد Redis مناسبًا للطوابير، والأقفال، والتخزين المؤقت قصير العمر، والتنسيق.
+
+لكنه ليس المصدر الأساسي للحقيقة فيما يتعلق بتنفيذ الوكلاء.
+
+يخزن PostgreSQL الحالة الدائمة لكل عملية تشغيل.
+
+```sql title="agent_runs.sql" showLineNumbers
+CREATE TABLE agent_runs (
+  id UUID PRIMARY KEY,
+  user_id UUID NOT NULL,
+  agent_type TEXT NOT NULL,
+  status TEXT NOT NULL,
+  input JSONB NOT NULL,
+  output JSONB,
+  current_step INTEGER NOT NULL DEFAULT 0,
+  version INTEGER NOT NULL DEFAULT 1,
+  started_at TIMESTAMPTZ,
+  completed_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+```
+
+تُخزن كل خطوة منفردة بصورة مستقلة:
+
+```sql title="agent_run_steps.sql" showLineNumbers
+CREATE TABLE agent_run_steps (
+  id UUID PRIMARY KEY,
+  run_id UUID NOT NULL REFERENCES agent_runs(id),
+  step_number INTEGER NOT NULL,
+  step_type TEXT NOT NULL,
+  status TEXT NOT NULL,
+  model TEXT,
+  tool_name TEXT,
+  input JSONB,
+  output JSONB,
+  error JSONB,
+  started_at TIMESTAMPTZ,
+  completed_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+  UNIQUE (run_id, step_number)
+);
+```
+
+يمنح هذا المنصة سجل تنفيذ قابلًا للتدقيق.
+
+ويعني أيضًا أن العامل يستطيع إعادة التشغيل والمتابعة من آخر خطوة مكتملة بدلًا من بدء تدفق العمل بالكامل من جديد.
+
+## تصميم عامل الوكيل
+
+يتولى عامل Python مسؤولية التفاعل مع النموذج، والمخرجات المنظمة، والعمليات المرتبطة بالاستدلال.
+
+ولا يتحمل مسؤولية الوصول غير المقيد إلى البنية التحتية.
+
+```python title="agent_worker.py" showLineNumbers
+from dataclasses import dataclass
+from typing import Any
+
+@dataclass
+class AgentJob:
+    run_id: str
+    agent_type: str
+    input: dict[str, Any]
+
+async def process_agent_job(job: AgentJob) -> None:
+    run = await workflow_repository.get_run(job.run_id)
+
+    if run.status in {"completed", "cancelled"}:
+        return
+
+    await workflow_repository.mark_running(job.run_id)
+
+    try:
+        context = await context_builder.build(run)
+        decision = await agent_runtime.execute(context)
+
+        await workflow_engine.apply_decision(
+            run_id=job.run_id,
+            decision=decision,
+        )
+
+    except Exception as error:
+        await workflow_repository.record_failure(
+            run_id=job.run_id,
+            error=str(error),
+        )
+
+        raise
+```
+
+يتلقى العامل معرّف المهمة ثم يعيد تحميل الحالة الحالية من PostgreSQL.
+
+يمنع ذلك تمرير حالة كبيرة أو قديمة لتدفق العمل عبر الطابور.
+
+## المخرجات المنظمة للنموذج
+
+يصعب التعامل بأمان مع استجابات النموذج ذات النص الحر.
+
+لذلك ينتج الوكيل واحدًا من عدد محدود من القرارات المنظمة.
+
+```ts title="agent-decision.ts" showLineNumbers
+import { z } from "zod"
+
+export const agentDecisionSchema = z.discriminatedUnion("type", [
+  z.object({
+    type: z.literal("final_answer"),
+    content: z.string().min(1),
+  }),
+
+  z.object({
+    type: z.literal("tool_call"),
+    tool: z.string().min(1),
+    arguments: z.record(z.unknown()),
+  }),
+
+  z.object({
+    type: z.literal("request_approval"),
+    reason: z.string().min(1),
+    proposedAction: z.record(z.unknown()),
+  }),
+
+  z.object({
+    type: z.literal("continue"),
+    reason: z.string().min(1),
+  }),
+])
+
+export type AgentDecision = z.infer<
+  typeof agentDecisionSchema
+>
+```
+
+لا يجعل ذلك النموذج حتميًا، لكنه يمنح النظام الخلفي عقدًا مضبوطًا يمكن الاعتماد عليه.
+
+يرفض النظام المخرجات غير المطابقة للبنية بدلًا من محاولة تخمين ما قصده النموذج.
+
+## حدود تنفيذ الأدوات
+
+تُعد الأدوات من أقوى أجزاء منصة الوكلاء وأكثرها خطورة.
+
+يمكن للأداة أن:
+
+- تستعلم من قواعد البيانات الداخلية.
+- ترسل رسالة بريد إلكتروني.
+- تعدّل تقويمًا.
+- تنشئ تذكرة دعم.
+- تنفذ شيفرة برمجية.
+- تقرأ مستندًا.
+- تستدعي API خارجية.
+
+لا يتلقى النموذج بيانات اعتماد مباشرة مطلقًا.
+
+بدلًا من ذلك، يطلب أداة مسماة مع وسائط منظمة.
+
+```json
+{
+  "type": "tool_call",
+  "tool": "create_support_ticket",
+  "arguments": {
+    "customerId": "cus_123",
+    "subject": "Payment issue",
+    "priority": "high"
+  }
+}
+```
+
+ينفذ النظام الخلفي بعد ذلك عدة فحوصات:
+
+1. هل الأداة مسجلة؟
+2. هل يُسمح لهذا الوكيل باستخدامها؟
+3. هل يُسمح لهذا المستخدم بتشغيلها؟
+4. هل تتطابق الوسائط مع المخطط؟
+5. هل يتطلب الإجراء موافقة؟
+6. هل نُفذ الأثر الجانبي نفسه من قبل؟
+
+```ts title="tool-registry.ts" showLineNumbers
+import { z } from "zod"
+
+const createTicketInputSchema = z.object({
+  customerId: z.string().min(1),
+  subject: z.string().min(3),
+  priority: z.enum(["low", "normal", "high"]),
+})
+
+export const toolRegistry = {
+  create_support_ticket: {
+    inputSchema: createTicketInputSchema,
+    requiresApproval: true,
+
+    execute: async (input: unknown) => {
+      const validatedInput =
+        createTicketInputSchema.parse(input)
+
+      return supportClient.createTicket(validatedInput)
+    },
+  },
+}
+```
+
+<Callout title="الحد الأمني">
+
+يقترح النموذج إجراءً، بينما يتولى التطبيق التفويض والتحقق والتنفيذ والتسجيل.
+
+</Callout>
+
+## عدم التكرار والآثار الجانبية
+
+لا يمكن تجنب محاولات إعادة التنفيذ في الأنظمة الموزعة.
+
+قد يكمل العامل استدعاء أداة ثم يتعطل قبل تأكيد معالجة رسالة الطابور، وعندها قد يسلّم الطابور المهمة نفسها مرة أخرى.
+
+من دون ضمان عدم التكرار، قد ترسل المنصة رسالة البريد الإلكتروني نفسها مرتين أو تنشئ تذاكر مكررة.
+
+تحصل كل عملية تُحدث أثرًا جانبيًا على مفتاح عدم تكرار:
+
+```ts title="execute-tool.ts" showLineNumbers
+type ExecuteToolInput = {
+  runId: string
+  stepId: string
+  toolName: string
+  arguments: unknown
+}
+
+export async function executeTool(
+  input: ExecuteToolInput
+) {
+  const idempotencyKey =
+    `${input.runId}:${input.stepId}:${input.toolName}`
+
+  const existingExecution =
+    await database.toolExecution.findUnique({
+      where: {
+        idempotencyKey,
+      },
+    })
+
+  if (existingExecution?.status === "completed") {
+    return existingExecution.result
+  }
+
+  return toolExecutionService.execute({
+    ...input,
+    idempotencyKey,
+  })
+}
+```
+
+يسمح ذلك للعامل بإعادة المحاولة بأمان.
+
+## مسؤوليات Redis
+
+يُستخدم Redis للاحتياجات التشغيلية قصيرة العمر:
+
+| المسؤولية            | المثال                                              |
+| -------------------- | --------------------------------------------------- |
+| طوابير المهام        | مهام الوكلاء والأدوات قيد الانتظار                  |
+| الأقفال الموزعة      | منع عاملين من معالجة عملية التشغيل نفسها            |
+| حدود معدل الطلبات    | عدد الطلبات لكل مستخدم أو وكيل أو نموذج             |
+| التخزين المؤقت       | نتائج النماذج أو الاسترجاع القابلة لإعادة الاستخدام |
+| توصيل الأحداث        | إشعارات تقدم التنفيذ                                |
+| جدولة إعادة المحاولة | مهام مؤجلة تستخدم تراجعًا أسيًا                     |
+
+لا يُستخدم Redis بوصفه موقع التخزين الوحيد لحالة تدفق العمل الحساسة للأعمال.

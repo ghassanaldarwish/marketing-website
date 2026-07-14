@@ -1,122 +1,123 @@
 {
   "brand": {
-    "name": "Ghassan Aldarwish",
-    "shortName": "Ghassan",
-    "role": "AI Engineer, Backend Engineer & DevOps Engineer",
-    "location": "Germany"
+    "name": "غسان الدرويش",
+    "shortName": "غسان",
+    "role": "مهندس ذكاء اصطناعي، ومهندس أنظمة خلفية، ومهندس DevOps",
+    "location": "ألمانيا"
   },
   "contactModal": {
-    "trigger": "Contact Me",
-    "title": "Get in Touch",
-    "description": "Have a project, job opportunity, or technical question? Send me a message.",
-    "cancel": "Cancel",
-    "submit": "Send Message"
+    "trigger": "تواصل معي",
+    "title": "ابقَ على تواصل",
+    "description": "هل لديك مشروع، أو فرصة عمل، أو سؤال تقني؟ أرسل لي رسالة.",
+    "cancel": "إلغاء",
+    "submit": "إرسال الرسالة"
   },
   "navbar": {
-    "brandLinkLabel": "Go to homepage",
-    "desktopNavigationLabel": "Primary navigation",
-    "mobileNavigationLabel": "Mobile navigation",
-    "openMenu": "Open navigation menu",
-    "closeMenu": "Close navigation menu",
-    "disabledLabel": "Unavailable",
+    "brandLinkLabel": "الانتقال إلى الصفحة الرئيسية",
+    "desktopNavigationLabel": "التنقل الرئيسي",
+    "mobileNavigationLabel": "التنقل على الهاتف",
+    "openMenu": "فتح قائمة التنقل",
+    "closeMenu": "إغلاق قائمة التنقل",
+    "disabledLabel": "غير متاح",
     "pages": {
-      "home": "Home",
-      "about": "About",
-      "articles": "Articles",
-      "contact": "Contact",
-      "labs": "Labs"
+      "home": "الرئيسية",
+      "about": "نبذة عني",
+      "articles": "المقالات",
+      "contact": "التواصل",
+      "labs": "المختبر"
     },
     "theme": {
-      "toggle": "Change color theme",
-      "light": "Light",
-      "dark": "Dark",
-      "system": "System"
+      "toggle": "تغيير سمة الألوان",
+      "light": "فاتح",
+      "dark": "داكن",
+      "system": "النظام"
     },
     "language": {
-      "selectorLabel": "Choose language",
-      "switchToGerman": "Switch language to German",
-      "switchToEnglish": "Switch language to English",
-      "currentLanguage": "Current language"
+      "selectorLabel": "اختيار اللغة",
+      "switchToGerman": "تغيير اللغة إلى الألمانية",
+      "switchToEnglish": "تغيير اللغة إلى الإنجليزية",
+      "currentLanguage": "اللغة الحالية"
     }
   },
   "footer": {
-    "copyright": "© Ghassan Aldarwish 2026",
+    "copyright": "© غسان الدرويش 2026",
     "social": {
-      "title": "Social media"
+      "title": "وسائل التواصل الاجتماعي"
     }
   },
   "notFound": {
-    "eyebrow": "Page not found",
-    "title": "This route leads nowhere.",
-    "description": "The page may have been moved, renamed, or never existed. Return to the homepage or continue exploring my engineering work.",
-    "home": "Back to home",
-    "engineering": "Explore engineering",
-    "hint": "Error code: 404"
+    "eyebrow": "الصفحة غير موجودة",
+    "title": "هذا المسار لا يؤدي إلى أي مكان.",
+    "description": "ربما نُقلت الصفحة أو أُعيدت تسميتها أو لم تكن موجودة أصلًا. عُد إلى الصفحة الرئيسية أو واصل استكشاف أعمالي الهندسية.",
+    "home": "العودة إلى الرئيسية",
+    "engineering": "استكشاف الأعمال الهندسية",
+    "hint": "رمز الخطأ: 404"
   },
   "metadata": {
-    "defaultTitle": "Ghassan — AI Engineer & Backend Engineer",
-    "titleTemplate": "{title} | Ghassan",
-    "description": "AI Engineer and Backend Engineer building production AI systems, scalable backend platforms, microservices, and cloud-native applications.",
-    "category": "Technology",
-    "socialImageAlt": "Ghassan Aldarwish — AI Engineer and Backend Engineer"
+    "defaultTitle": "غسان — مهندس ذكاء اصطناعي ومهندس أنظمة خلفية",
+    "titleTemplate": "{title} | غسان",
+    "description": "مهندس ذكاء اصطناعي ومهندس أنظمة خلفية يبني أنظمة ذكاء اصطناعي جاهزة للإنتاج، ومنصات خلفية قابلة للتوسع، وخدمات مصغرة، وتطبيقات سحابية أصلية.",
+    "category": "التقنية",
+    "socialImageAlt": "غسان الدرويش — مهندس ذكاء اصطناعي ومهندس أنظمة خلفية"
   },
   "home": {
     "metadata": {
-      "title": "Ghassan — AI Engineer & Backend Engineer",
-      "description": "Ghassan Aldarwish is an AI Engineer and Backend Engineer building production AI systems, scalable backend platforms, distributed architectures, automation workflows, and cloud-native applications.",
-      "headline": "Building intelligent systems that scale.",
-      "shortDescription": "Production AI systems, scalable backend architecture, and cloud-native software.",
-      "category": "Technology",
+      "title": "غسان — مهندس ذكاء اصطناعي ومهندس أنظمة خلفية",
+      "description": "غسان الدرويش مهندس ذكاء اصطناعي ومهندس أنظمة خلفية يبني أنظمة ذكاء اصطناعي جاهزة للإنتاج، ومنصات خلفية قابلة للتوسع، ومعماريات موزعة، وتدفقات عمل مؤتمتة، وتطبيقات سحابية أصلية.",
+      "headline": "بناء أنظمة ذكية قابلة للتوسع.",
+      "shortDescription": "أنظمة ذكاء اصطناعي للإنتاج، ومعماريات خلفية قابلة للتوسع، وبرمجيات سحابية أصلية.",
+      "category": "التقنية",
       "socialImage": {
-        "alt": "Ghassan Aldarwish — AI Engineer and Backend Engineer",
-        "availability": "Available for opportunities in Germany",
-        "expertise": "AI Engineering · Backend Systems",
-        "role": "AI Engineer · Backend Engineer · Software Architecture",
-        "twitterRole": "AI Engineer · Backend Engineer",
-        "openGraphAction": "Explore my engineering →",
-        "twitterAction": "View my work →"
+        "alt": "غسان الدرويش — مهندس ذكاء اصطناعي ومهندس أنظمة خلفية",
+        "availability": "متاح لفرص العمل في ألمانيا",
+        "expertise": "هندسة الذكاء الاصطناعي · الأنظمة الخلفية",
+        "role": "مهندس ذكاء اصطناعي · مهندس أنظمة خلفية · معماري برمجيات",
+        "twitterRole": "مهندس ذكاء اصطناعي · مهندس أنظمة خلفية",
+        "openGraphAction": "استكشف أعمالي الهندسية ←",
+        "twitterAction": "اطّلع على أعمالي ←"
       },
       "keywords": [
-        "Ghassan Aldarwish",
-        "AI Engineer",
-        "Backend Engineer",
-        "Senior Software Engineer",
-        "Software Engineer Germany",
-        "AI Engineer Germany",
-        "Backend Engineer Germany",
-        "Production AI Systems",
-        "AI Agents",
-        "Large Language Models",
-        "RAG Systems",
-        "Model Context Protocol",
-        "MCP Servers",
+        "غسان الدرويش",
+        "مهندس ذكاء اصطناعي",
+        "مهندس أنظمة خلفية",
+        "مهندس برمجيات أول",
+        "مهندس برمجيات في ألمانيا",
+        "مهندس ذكاء اصطناعي في ألمانيا",
+        "مهندس أنظمة خلفية في ألمانيا",
+        "أنظمة ذكاء اصطناعي للإنتاج",
+        "وكلاء الذكاء الاصطناعي",
+        "النماذج اللغوية الكبيرة",
+        "أنظمة RAG",
+        "بروتوكول سياق النموذج",
+        "خوادم MCP",
         "Node.js",
         "TypeScript",
         "Python",
         "FastAPI",
-        "Microservices",
-        "Distributed Systems",
-        "Software Architecture",
+        "الخدمات المصغرة",
+        "الأنظمة الموزعة",
+        "معمارية البرمجيات",
         "Docker",
         "Kubernetes",
         "DevOps",
-        "Cloud Engineering"
+        "الهندسة السحابية"
       ],
-
       "structuredData": {
-        "personDescription": "AI Engineer and Backend Engineer focused on production AI systems, distributed backend architecture, cloud infrastructure, DevOps, and modern web development.",
-
-        "jobTitles": ["AI Engineer", "Backend Engineer", "Software Engineer"],
-
+        "personDescription": "مهندس ذكاء اصطناعي ومهندس أنظمة خلفية يركز على أنظمة الذكاء الاصطناعي الجاهزة للإنتاج، ومعمارية الأنظمة الخلفية الموزعة، والبنية التحتية السحابية، وDevOps، وتطوير الويب الحديث.",
+        "jobTitles": [
+          "مهندس ذكاء اصطناعي",
+          "مهندس أنظمة خلفية",
+          "مهندس برمجيات"
+        ],
         "knowsAbout": [
-          "Artificial Intelligence",
-          "Large Language Models",
-          "AI Agents",
-          "Retrieval-Augmented Generation",
-          "Model Context Protocol",
-          "Backend Engineering",
-          "Distributed Systems",
-          "Microservices",
+          "الذكاء الاصطناعي",
+          "النماذج اللغوية الكبيرة",
+          "وكلاء الذكاء الاصطناعي",
+          "التوليد المعزز بالاسترجاع",
+          "بروتوكول سياق النموذج",
+          "هندسة الأنظمة الخلفية",
+          "الأنظمة الموزعة",
+          "الخدمات المصغرة",
           "Node.js",
           "TypeScript",
           "Python",
@@ -126,267 +127,256 @@
           "Docker",
           "Kubernetes",
           "CI/CD",
-          "Cloud Infrastructure",
+          "البنية التحتية السحابية",
           "Next.js",
           "React"
         ],
-
         "pages": {
-          "engineering": "Engineering",
-          "contact": "Contact"
+          "engineering": "الهندسة",
+          "contact": "التواصل"
         }
       }
     },
     "hero": {
-      "badge": ["AI Engineer", "DevOps", "Backend"],
-      "title": "Building AI Systems",
-      "secondaryTitle": "That Scale",
-      "description": "I design and build production-ready AI systems, scalable backend platforms, and cloud-native infrastructure.",
-      "contact": "Contact Me",
+      "badge": ["مهندس ذكاء اصطناعي", "DevOps", "أنظمة خلفية"],
+      "title": "بناء أنظمة ذكاء اصطناعي",
+      "secondaryTitle": "قابلة للتوسع",
+      "description": "أصمم وأبني أنظمة ذكاء اصطناعي جاهزة للإنتاج، ومنصات خلفية قابلة للتوسع، وبنية تحتية سحابية أصلية.",
+      "contact": "تواصل معي",
       "infiniteMovingCards": [
-        "+ Years Experience",
-        "Berlin, Germany",
-        "AI Engineering",
-        "Production Backend Systems",
-        "Cloud & DevOps"
+        "+ سنوات من الخبرة",
+        "برلين، ألمانيا",
+        "هندسة الذكاء الاصطناعي",
+        "أنظمة خلفية للإنتاج",
+        "السحابة وDevOps"
       ]
     },
     "technologies": {
-      "title": "Trusted Technologies",
-      "description": "Technologies I’ve used to build scalable software and AI solutions in production."
+      "title": "تقنيات موثوقة",
+      "description": "تقنيات استخدمتها لبناء برمجيات قابلة للتوسع وحلول ذكاء اصطناعي تعمل في بيئات الإنتاج."
     },
     "engineeringBeyondCode": {
-      "eyebrow": "Engineering Beyond Code",
-      "title": "Great software is not just about writing code.",
-      "description": "It is about understanding business problems, designing scalable architectures, making thoughtful technical decisions, and building systems that continue to perform as they grow.",
-      "secondaryDescription": "This is the mindset I bring to every project: combining AI engineering, backend development, cloud infrastructure, and frontend craftsmanship to build software that performs reliably in the real world.",
+      "eyebrow": "الهندسة أبعد من كتابة الشيفرة",
+      "title": "البرمجيات الممتازة لا تتمحور حول كتابة الشيفرة فقط.",
+      "description": "بل تتمحور حول فهم مشكلات العمل، وتصميم معماريات قابلة للتوسع، واتخاذ قرارات تقنية مدروسة، وبناء أنظمة تحافظ على أدائها مع نموها.",
+      "secondaryDescription": "هذه هي العقلية التي أحملها إلى كل مشروع: الجمع بين هندسة الذكاء الاصطناعي، وتطوير الأنظمة الخلفية، والبنية التحتية السحابية، وحرفية تطوير الواجهات لبناء برمجيات تعمل بموثوقية في العالم الحقيقي.",
       "layers": [
         {
-          "title": "Users",
-          "description": "Product experience and user value"
+          "title": "المستخدمون",
+          "description": "تجربة المنتج والقيمة المقدمة للمستخدم"
+        },
+        { "title": "بوابة API", "description": "نقاط دخول آمنة وموثقة" },
+        {
+          "title": "الخدمات",
+          "description": "حدود واضحة للنطاقات ومنطق العمل"
         },
         {
-          "title": "API Gateway",
-          "description": "Secure and documented entry points"
+          "title": "طبقة الذكاء الاصطناعي",
+          "description": "النماذج اللغوية والوكلاء والأدوات والذاكرة والاسترجاع"
         },
         {
-          "title": "Services",
-          "description": "Clear domain boundaries and business logic"
+          "title": "البيانات",
+          "description": "التخزين العلائقي والمؤقت والطوابير وقواعد البيانات المتجهية"
         },
         {
-          "title": "AI Layer",
-          "description": "LLMs, agents, tools, memory, and retrieval"
-        },
-        {
-          "title": "Data",
-          "description": "Relational, cache, queue, and vector storage"
-        },
-        {
-          "title": "Observability",
-          "description": "Logs, metrics, monitoring, and alerts"
+          "title": "قابلية المراقبة",
+          "description": "السجلات والمقاييس والمراقبة والتنبيهات"
         }
       ]
     },
     "coreExpertise": {
-      "eyebrow": "Core Expertise",
-      "title": "The areas where I create the most value.",
-      "description": "My work sits at the intersection of AI engineering, backend architecture, cloud infrastructure, and modern frontend development.",
+      "eyebrow": "مجالات الخبرة الأساسية",
+      "title": "المجالات التي أحقق فيها أكبر قيمة.",
+      "description": "يقع عملي عند تقاطع هندسة الذكاء الاصطناعي، ومعمارية الأنظمة الخلفية، والبنية التحتية السحابية، وتطوير الواجهات الحديثة.",
       "items": [
         {
           "id": "aiEngineering",
-          "title": "AI Engineering",
-          "description": "Production-ready AI systems using LLMs, AI agents, RAG pipelines, MCP servers, vector databases, and intelligent automation.",
+          "title": "هندسة الذكاء الاصطناعي",
+          "description": "أنظمة ذكاء اصطناعي جاهزة للإنتاج باستخدام النماذج اللغوية الكبيرة، ووكلاء الذكاء الاصطناعي، وخطوط RAG، وخوادم MCP، وقواعد البيانات المتجهية، والأتمتة الذكية.",
           "points": [
-            "LLM Applications",
-            "AI Agents",
+            "تطبيقات النماذج اللغوية",
+            "وكلاء الذكاء الاصطناعي",
             "RAG",
             "MCP",
-            "Vector Search"
+            "البحث المتجهي"
           ]
         },
         {
           "id": "backendEngineering",
-          "title": "Backend Engineering",
-          "description": "Scalable backend platforms built with Node.js, TypeScript, Python, REST APIs, GraphQL, gRPC, and event-driven architecture.",
+          "title": "هندسة الأنظمة الخلفية",
+          "description": "منصات خلفية قابلة للتوسع مبنية باستخدام Node.js وTypeScript وPython وواجهات REST وGraphQL وgRPC والمعمارية القائمة على الأحداث.",
           "points": [
-            "Microservices",
-            "REST APIs",
+            "الخدمات المصغرة",
+            "واجهات REST",
             "GraphQL",
             "gRPC",
-            "Scalability"
+            "قابلية التوسع"
           ]
         },
         {
           "id": "cloudDevOps",
-          "title": "Cloud & DevOps",
-          "description": "Reliable cloud infrastructure with Docker, Kubernetes, Linux, CI/CD pipelines, monitoring, automation, and production deployments.",
-          "points": ["Docker", "Kubernetes", "CI/CD", "Linux", "Monitoring"]
+          "title": "السحابة وDevOps",
+          "description": "بنية تحتية سحابية موثوقة باستخدام Docker وKubernetes وLinux وخطوط CI/CD والمراقبة والأتمتة وعمليات النشر الإنتاجية.",
+          "points": ["Docker", "Kubernetes", "CI/CD", "Linux", "المراقبة"]
         },
         {
           "id": "modernFrontend",
-          "title": "Modern Frontend",
-          "description": "Polished frontend experiences using React, Next.js, TypeScript, responsive layouts, animations, and performance-focused UI architecture.",
-          "points": ["React", "Next.js", "TypeScript", "UX", "Performance"]
+          "title": "تطوير الواجهات الحديثة",
+          "description": "تجارب واجهات مصقولة باستخدام React وNext.js وTypeScript والتخطيطات المتجاوبة والحركات ومعمارية واجهات تركز على الأداء.",
+          "points": [
+            "React",
+            "Next.js",
+            "TypeScript",
+            "تجربة المستخدم",
+            "الأداء"
+          ]
         }
       ]
     },
     "selectedProjects": {
-      "eyebrow": "Selected Projects",
-      "title": "Case studies focused on engineering decisions.",
-      "description": "Instead of showing only screenshots, I present projects through architecture, trade-offs, implementation decisions, and lessons learned.",
-      "challengeTitle": "Engineering Challenge",
-      "readCaseStudy": "Read Case Study",
-      "technologiesLabel": "Technologies used in {title}"
+      "eyebrow": "مشروعات مختارة",
+      "title": "دراسات حالة تركز على القرارات الهندسية.",
+      "description": "بدلًا من عرض لقطات الشاشة فقط، أقدم المشروعات من خلال المعمارية، والمفاضلات، وقرارات التنفيذ، والدروس المستفادة.",
+      "challengeTitle": "التحدي الهندسي",
+      "readCaseStudy": "قراءة دراسة الحالة",
+      "technologiesLabel": "التقنيات المستخدمة في {title}"
     },
     "architectureShowcase": {
-      "eyebrow": "Architecture Showcase",
-      "title": "Every scalable application begins with thoughtful architecture.",
-      "description": "I use diagrams to explain how systems are structured: AI agents, APIs, services, queues, databases, observability, infrastructure, and deployment workflows.",
-      "button": "Explore Architecture",
+      "eyebrow": "استعراض المعمارية",
+      "title": "يبدأ كل تطبيق قابل للتوسع بمعمارية مدروسة.",
+      "description": "أستخدم المخططات لشرح بنية الأنظمة، بما يشمل وكلاء الذكاء الاصطناعي، وواجهات API، والخدمات، والطوابير، وقواعد البيانات، وقابلية المراقبة، والبنية التحتية، وتدفقات النشر.",
+      "button": "استكشاف المعمارية",
       "layers": [
-        {
-          "id": "clientApp",
-          "label": "Client App"
-        },
-        {
-          "id": "apiLayer",
-          "label": "API Layer"
-        },
-        {
-          "id": "aiAgent",
-          "label": "AI Agent"
-        },
-        {
-          "id": "vectorDatabase",
-          "label": "Vector DB"
-        },
-        {
-          "id": "services",
-          "label": "Services"
-        },
-        {
-          "id": "cloudDeploy",
-          "label": "Cloud Deploy"
-        }
+        { "id": "clientApp", "label": "تطبيق العميل" },
+        { "id": "apiLayer", "label": "طبقة API" },
+        { "id": "aiAgent", "label": "وكيل الذكاء الاصطناعي" },
+        { "id": "vectorDatabase", "label": "قاعدة بيانات متجهية" },
+        { "id": "services", "label": "الخدمات" },
+        { "id": "cloudDeploy", "label": "النشر السحابي" }
       ]
     },
     "finalCTA": {
-      "title": "Let’s build something exceptional.",
-      "description": "Whether you're building AI products, scalable backend platforms, or modern cloud infrastructure, I'm always interested in meaningful engineering challenges and new opportunities."
+      "title": "لنبنِ شيئًا استثنائيًا.",
+      "description": "سواء كنت تبني منتجات ذكاء اصطناعي، أو منصات خلفية قابلة للتوسع، أو بنية تحتية سحابية حديثة، فأنا مهتم دائمًا بالتحديات الهندسية ذات القيمة والفرص الجديدة."
     }
   },
-
   "contact": {
     "metadata": {
-      "title": "Contact",
-      "description": "Contact Ghassan Aldarwish about AI engineering, backend development, software architecture, consulting, collaboration, or job opportunities in Germany.",
+      "title": "التواصل",
+      "description": "تواصل مع غسان الدرويش بشأن هندسة الذكاء الاصطناعي، أو تطوير الأنظمة الخلفية، أو معمارية البرمجيات، أو الاستشارات، أو التعاون، أو فرص العمل في ألمانيا.",
       "keywords": [
-        "Contact Ghassan Aldarwish",
-        "Hire AI Engineer",
-        "Hire Backend Engineer",
-        "Software Engineer Germany",
-        "AI Engineering Consultant",
-        "Backend Development",
-        "Software Architecture",
-        "Node.js Engineer",
-        "TypeScript Engineer",
-        "Python Engineer"
+        "التواصل مع غسان الدرويش",
+        "توظيف مهندس ذكاء اصطناعي",
+        "توظيف مهندس أنظمة خلفية",
+        "مهندس برمجيات في ألمانيا",
+        "مستشار هندسة ذكاء اصطناعي",
+        "تطوير الأنظمة الخلفية",
+        "معمارية البرمجيات",
+        "مهندس Node.js",
+        "مهندس TypeScript",
+        "مهندس Python"
       ],
       "structuredData": {
-        "pageName": "Contact Ghassan Aldarwish",
-        "personDescription": "AI Engineer and Backend Engineer focused on production AI systems, distributed backend architecture, cloud infrastructure, DevOps, and modern web development.",
-        "jobTitles": ["AI Engineer", "Backend Engineer", "Software Engineer"],
+        "pageName": "التواصل مع غسان الدرويش",
+        "personDescription": "مهندس ذكاء اصطناعي ومهندس أنظمة خلفية يركز على أنظمة الذكاء الاصطناعي الجاهزة للإنتاج، ومعمارية الأنظمة الخلفية الموزعة، والبنية التحتية السحابية، وDevOps، وتطوير الويب الحديث.",
+        "jobTitles": [
+          "مهندس ذكاء اصطناعي",
+          "مهندس أنظمة خلفية",
+          "مهندس برمجيات"
+        ],
         "knowsAbout": [
-          "Artificial Intelligence",
-          "AI Agents",
-          "Large Language Models",
-          "Backend Engineering",
-          "Distributed Systems",
-          "Microservices",
+          "الذكاء الاصطناعي",
+          "وكلاء الذكاء الاصطناعي",
+          "النماذج اللغوية الكبيرة",
+          "هندسة الأنظمة الخلفية",
+          "الأنظمة الموزعة",
+          "الخدمات المصغرة",
           "Node.js",
           "TypeScript",
           "Python",
           "Docker",
           "Kubernetes",
-          "Software Architecture"
+          "معمارية البرمجيات"
         ]
       },
       "socialImage": {
-        "alt": "Contact Ghassan Aldarwish — AI Engineer and Backend Engineer",
-        "badge": "Contact",
-        "headline": "Let’s build something meaningful.",
-        "description": "Get in touch about AI engineering, backend systems, software architecture, or opportunities in Germany.",
-        "role": "AI Engineer · Backend Engineer",
-        "action": "Start a conversation →"
+        "alt": "التواصل مع غسان الدرويش — مهندس ذكاء اصطناعي ومهندس أنظمة خلفية",
+        "badge": "التواصل",
+        "headline": "لنبنِ شيئًا ذا قيمة.",
+        "description": "تواصل معي بشأن هندسة الذكاء الاصطناعي، أو الأنظمة الخلفية، أو معمارية البرمجيات، أو الفرص المتاحة في ألمانيا.",
+        "role": "مهندس ذكاء اصطناعي · مهندس أنظمة خلفية",
+        "action": "ابدأ محادثة ←"
       }
     },
     "content": {
-      "eyebrow": "Contact",
-      "title": "Get in Touch",
-      "description": "Have a project, job opportunity, or technical question? Send me a message and tell me how I can help.",
-      "formHeading": "Contact form",
-      "sendMessage": "Send Message"
+      "eyebrow": "التواصل",
+      "title": "ابقَ على تواصل",
+      "description": "هل لديك مشروع، أو فرصة عمل، أو سؤال تقني؟ أرسل لي رسالة وأخبرني كيف يمكنني مساعدتك.",
+      "formHeading": "نموذج التواصل",
+      "sendMessage": "إرسال الرسالة"
     },
-
     "form": {
       "fields": {
-        "name": { "label": "Full Name", "placeholder": "John Doe" },
+        "name": { "label": "الاسم الكامل", "placeholder": "أحمد محمد" },
         "email": {
-          "label": "Email Address",
-          "placeholder": "john@example.com"
+          "label": "البريد الإلكتروني",
+          "placeholder": "[john@example.com](mailto:john@example.com)"
         },
         "message": {
-          "label": "Message",
-          "placeholder": "Tell me about your project, idea, or opportunity..."
+          "label": "الرسالة",
+          "placeholder": "أخبرني عن مشروعك أو فكرتك أو الفرصة المتاحة..."
         }
       },
       "toast": {
-        "success": "Message sent successfully!",
-        "validationError": "Please check the form fields and try again.",
-        "deliveryError": "Your message could not be sent. Please try again in a few minutes.",
-        "unexpectedError": "An unexpected error occurred. Please check your connection and try again."
+        "success": "أُرسلت الرسالة بنجاح!",
+        "validationError": "يرجى التحقق من حقول النموذج والمحاولة مرة أخرى.",
+        "deliveryError": "تعذر إرسال رسالتك. يرجى المحاولة مرة أخرى بعد بضع دقائق.",
+        "unexpectedError": "حدث خطأ غير متوقع. يرجى التحقق من اتصالك والمحاولة مرة أخرى."
       },
       "validation": {
-        "nameMin": "Name must be at least 2 characters.",
-        "emailInvalid": "Please enter a valid email address.",
-        "messageMin": "Message must be at least 10 characters.",
-        "messageMax": "Message must be less than 5000 characters."
+        "nameMin": "يجب ألا يقل الاسم عن حرفين.",
+        "emailInvalid": "يرجى إدخال عنوان بريد إلكتروني صالح.",
+        "messageMin": "يجب ألا تقل الرسالة عن 10 أحرف.",
+        "messageMax": "يجب أن تقل الرسالة عن 5000 حرف."
       },
       "characterCount": "{current}/{maximum}"
     }
   },
-
   "about": {
     "metadata": {
-      "title": "About Me",
-      "description": "Learn about Ghassan Aldarwish, an AI Engineer and Backend Engineer with experience in production AI systems, distributed backend architecture, DevOps, cloud infrastructure, and modern web development.",
+      "title": "نبذة عني",
+      "description": "تعرّف إلى غسان الدرويش، مهندس ذكاء اصطناعي ومهندس أنظمة خلفية يتمتع بخبرة في أنظمة الذكاء الاصطناعي الجاهزة للإنتاج، ومعمارية الأنظمة الخلفية الموزعة، وDevOps، والبنية التحتية السحابية، وتطوير الويب الحديث.",
       "keywords": [
-        "Ghassan Aldarwish",
-        "AI Engineer",
-        "Backend Engineer",
-        "Software Engineer Germany",
-        "Node.js Engineer",
-        "TypeScript Engineer",
-        "Python Engineer",
-        "AI Systems",
-        "Backend Architecture",
-        "Distributed Systems",
-        "DevOps Engineer",
-        "Cloud Engineering"
+        "غسان الدرويش",
+        "مهندس ذكاء اصطناعي",
+        "مهندس أنظمة خلفية",
+        "مهندس برمجيات في ألمانيا",
+        "مهندس Node.js",
+        "مهندس TypeScript",
+        "مهندس Python",
+        "أنظمة الذكاء الاصطناعي",
+        "معمارية الأنظمة الخلفية",
+        "الأنظمة الموزعة",
+        "مهندس DevOps",
+        "الهندسة السحابية"
       ],
       "structuredData": {
-        "pageName": "About Ghassan Aldarwish",
-        "personDescription": "AI Engineer and Backend Engineer focused on production AI systems, distributed backend architecture, cloud infrastructure, DevOps, and modern web development.",
-        "jobTitles": ["AI Engineer", "Backend Engineer", "Software Engineer"],
+        "pageName": "نبذة عن غسان الدرويش",
+        "personDescription": "مهندس ذكاء اصطناعي ومهندس أنظمة خلفية يركز على أنظمة الذكاء الاصطناعي الجاهزة للإنتاج، ومعمارية الأنظمة الخلفية الموزعة، والبنية التحتية السحابية، وDevOps، وتطوير الويب الحديث.",
+        "jobTitles": [
+          "مهندس ذكاء اصطناعي",
+          "مهندس أنظمة خلفية",
+          "مهندس برمجيات"
+        ],
         "knowsAbout": [
-          "Artificial Intelligence",
-          "Large Language Models",
-          "AI Agents",
-          "Retrieval-Augmented Generation",
-          "Model Context Protocol",
-          "Backend Engineering",
-          "Distributed Systems",
-          "Microservices",
+          "الذكاء الاصطناعي",
+          "النماذج اللغوية الكبيرة",
+          "وكلاء الذكاء الاصطناعي",
+          "التوليد المعزز بالاسترجاع",
+          "بروتوكول سياق النموذج",
+          "هندسة الأنظمة الخلفية",
+          "الأنظمة الموزعة",
+          "الخدمات المصغرة",
           "Node.js",
           "TypeScript",
           "Python",
@@ -395,128 +385,126 @@
           "Docker",
           "Kubernetes",
           "CI/CD",
-          "Cloud Infrastructure",
+          "البنية التحتية السحابية",
           "Next.js",
           "React"
         ],
-        "educationName": "Physics"
+        "educationName": "الفيزياء"
       },
       "socialImage": {
-        "alt": "Ghassan Aldarwish — AI Engineer and Backend Engineer",
-        "badge": "About Me",
-        "headline": "Ghassan Aldarwish",
-        "role": "AI Engineer · Backend Engineer",
-        "description": "Building production AI systems, scalable backend platforms, and cloud-native software.",
-        "technologies": "Node.js · TypeScript · Python · AI Systems",
-        "action": "Explore my journey →"
+        "alt": "غسان الدرويش — مهندس ذكاء اصطناعي ومهندس أنظمة خلفية",
+        "badge": "نبذة عني",
+        "headline": "غسان الدرويش",
+        "role": "مهندس ذكاء اصطناعي · مهندس أنظمة خلفية",
+        "description": "بناء أنظمة ذكاء اصطناعي جاهزة للإنتاج، ومنصات خلفية قابلة للتوسع، وبرمجيات سحابية أصلية.",
+        "technologies": "Node.js · TypeScript · Python · أنظمة الذكاء الاصطناعي",
+        "action": "استكشف مسيرتي ←"
       }
     },
     "intro": {
-      "eyebrow": "Who I Am",
-      "title": "An engineer focused on systems, not just code.",
+      "eyebrow": "من أنا",
+      "title": "مهندس يركز على الأنظمة، وليس على الشيفرة فقط.",
       "paragraphs": [
-        "My work sits at the intersection of AI engineering, backend systems, DevOps, and modern web development. I enjoy building software that is not only functional, but also scalable, reliable, observable, and maintainable.",
-        "Most of my strongest work is behind the scenes: backend services, APIs, infrastructure, automation, AI workflows, deployment systems, and architecture decisions. These are not always visible in a user interface, but they are the foundation that makes serious software work.",
-        "At the same time, I care about frontend quality. A strong product needs clean interfaces, good performance, thoughtful UX, and clear communication. That is why I also build polished React and Next.js experiences that reflect the quality of the systems behind them."
+        "يقع عملي عند تقاطع هندسة الذكاء الاصطناعي، والأنظمة الخلفية، وDevOps، وتطوير الويب الحديث. أستمتع ببناء برمجيات لا تؤدي وظائفها فحسب، بل تكون أيضًا قابلة للتوسع وموثوقة وقابلة للمراقبة والصيانة.",
+        "توجد معظم أعمالي الأقوى خلف الكواليس: الخدمات الخلفية، وواجهات API، والبنية التحتية، والأتمتة، وتدفقات عمل الذكاء الاصطناعي، وأنظمة النشر، والقرارات المعمارية. قد لا تظهر هذه العناصر دائمًا في واجهة المستخدم، لكنها الأساس الذي يجعل البرمجيات الجادة تعمل.",
+        "وفي الوقت نفسه، أهتم بجودة الواجهات الأمامية. يحتاج المنتج القوي إلى واجهات نظيفة، وأداء جيد، وتجربة مستخدم مدروسة، وتواصل واضح. لذلك أبني أيضًا تجارب مصقولة باستخدام React وNext.js تعكس جودة الأنظمة التي تقف خلفها."
       ]
     },
     "journey": {
-      "eyebrow": "Engineering Journey",
-      "title": "From analytical thinking to production AI systems.",
-      "description": "My path combines scientific thinking, backend engineering, cloud infrastructure, and modern AI development.",
-      "stageLabel": "Stage",
+      "eyebrow": "المسيرة الهندسية",
+      "title": "من التفكير التحليلي إلى أنظمة الذكاء الاصطناعي الإنتاجية.",
+      "description": "تجمع مسيرتي بين التفكير العلمي، وهندسة الأنظمة الخلفية، والبنية التحتية السحابية، وتطوير الذكاء الاصطناعي الحديث.",
+      "stageLabel": "المرحلة",
       "timeline": [
         {
           "id": "physics",
-          "stage": "Foundation",
-          "title": "Physics Background",
-          "description": "My academic background in Physics shaped the way I approach engineering: analytical thinking, problem decomposition, systems understanding, and curiosity about how complex things work."
+          "stage": "الأساس",
+          "title": "خلفية في الفيزياء",
+          "description": "شكّلت خلفيتي الأكاديمية في الفيزياء أسلوبي في التعامل مع الهندسة، من خلال التفكير التحليلي، وتفكيك المشكلات، وفهم الأنظمة، والفضول تجاه كيفية عمل الأشياء المعقدة."
         },
         {
           "id": "softwareEngineering",
           "stage": "2017+",
-          "title": "Software Engineering",
-          "description": "I started building production software with a strong focus on backend development, APIs, databases, and scalable application architecture."
+          "title": "هندسة البرمجيات",
+          "description": "بدأت ببناء برمجيات إنتاجية مع تركيز قوي على تطوير الأنظمة الخلفية، وواجهات API، وقواعد البيانات، ومعمارية التطبيقات القابلة للتوسع."
         },
         {
           "id": "backend",
-          "stage": "Backend",
-          "title": "Distributed Systems & APIs",
-          "description": "Over the years, I worked deeply with Node.js, TypeScript, Python, REST APIs, GraphQL, gRPC, microservices, event-driven systems, and production backend platforms."
+          "stage": "الأنظمة الخلفية",
+          "title": "الأنظمة الموزعة وواجهات API",
+          "description": "عملت على مدار السنوات بصورة متعمقة مع Node.js وTypeScript وPython وواجهات REST وGraphQL وgRPC والخدمات المصغرة والأنظمة القائمة على الأحداث والمنصات الخلفية الإنتاجية."
         },
         {
           "id": "devops",
           "stage": "DevOps",
-          "title": "Cloud, Containers & Automation",
-          "description": "I expanded into Docker, Kubernetes, Linux, CI/CD, infrastructure automation, and production deployment workflows to understand how software runs beyond the codebase."
+          "title": "السحابة والحاويات والأتمتة",
+          "description": "توسعت خبرتي لتشمل Docker وKubernetes وLinux وCI/CD وأتمتة البنية التحتية وتدفقات النشر الإنتاجية لفهم كيفية تشغيل البرمجيات خارج قاعدة الشيفرة."
         },
         {
           "id": "ai",
-          "stage": "AI",
-          "title": "Production AI Engineering",
-          "description": "My recent focus is building AI systems with LLMs, AI agents, MCP servers, RAG pipelines, vector databases, OpenAI, Ollama, LangChain, Python, and TypeScript services."
+          "stage": "الذكاء الاصطناعي",
+          "title": "هندسة الذكاء الاصطناعي للإنتاج",
+          "description": "ينصب تركيزي مؤخرًا على بناء أنظمة ذكاء اصطناعي باستخدام النماذج اللغوية الكبيرة، ووكلاء الذكاء الاصطناعي، وخوادم MCP، وخطوط RAG، وقواعد البيانات المتجهية، وOpenAI، وOllama، وLangChain، وخدمات Python وTypeScript."
         }
       ]
     }
   },
-
   "articles": {
     "metadata": {
-      "title": "Engineering",
-      "description": "Explore software systems, AI platforms, backend architectures, automation workflows, and cloud infrastructure designed by Ghassan Aldarwish.",
+      "title": "الهندسة",
+      "description": "استكشف أنظمة البرمجيات، ومنصات الذكاء الاصطناعي، ومعماريات الأنظمة الخلفية، وتدفقات الأتمتة، والبنية التحتية السحابية التي صممها غسان الدرويش.",
       "keywords": [
-        "Ghassan Aldarwish Projects",
-        "Software Engineering Projects",
-        "AI Engineering Projects",
-        "Backend Architecture",
-        "Distributed Systems",
-        "AI Agents",
-        "Microservices",
+        "مشروعات غسان الدرويش",
+        "مشروعات هندسة البرمجيات",
+        "مشروعات هندسة الذكاء الاصطناعي",
+        "معمارية الأنظمة الخلفية",
+        "الأنظمة الموزعة",
+        "وكلاء الذكاء الاصطناعي",
+        "الخدمات المصغرة",
         "Node.js",
         "TypeScript",
         "Python",
         "DevOps",
-        "Cloud Infrastructure",
-        "System Design"
+        "البنية التحتية السحابية",
+        "تصميم الأنظمة"
       ],
       "structuredData": {
-        "pageName": "Engineering systems and projects by Ghassan Aldarwish"
+        "pageName": "الأنظمة والمشروعات الهندسية التي صممها غسان الدرويش"
       },
       "socialImage": {
-        "alt": "Engineering systems and projects by Ghassan Aldarwish",
-        "badge": "Engineering",
-        "headline": "Systems built beyond the code.",
-        "description": "AI platforms, backend architectures, automation workflows, and cloud infrastructure designed for production.",
-        "role": "AI Engineer · Backend Engineer",
-        "action": "Explore the systems →"
+        "alt": "الأنظمة والمشروعات الهندسية التي صممها غسان الدرويش",
+        "badge": "الهندسة",
+        "headline": "أنظمة بُنيت بما يتجاوز الشيفرة.",
+        "description": "منصات ذكاء اصطناعي، ومعماريات خلفية، وتدفقات أتمتة، وبنية تحتية سحابية مصممة للإنتاج.",
+        "role": "مهندس ذكاء اصطناعي · مهندس أنظمة خلفية",
+        "action": "استكشف الأنظمة ←"
       }
     },
     "content": {
-      "eyebrow": "Engineering",
-      "title": "Systems, products, and architectures built for real-world use.",
-      "description": "Explore a selection of AI platforms, backend systems, automation workflows, cloud infrastructure, and product experiences I designed with maintainability, scalability, and production readiness in mind.",
-      "readArticleLabel": "Read {title}",
-      "technologiesLabel": "Technologies used in {title}",
-      "viewCaseStudy": "View case study",
-      "emptyTitle": "No published articles yet",
-      "emptyDescription": "Published engineering case studies will appear here."
+      "eyebrow": "الهندسة",
+      "title": "أنظمة ومنتجات ومعماريات مصممة للاستخدام في العالم الحقيقي.",
+      "description": "استكشف مجموعة مختارة من منصات الذكاء الاصطناعي، والأنظمة الخلفية، وتدفقات الأتمتة، والبنية التحتية السحابية، وتجارب المنتجات التي صممتها مع التركيز على قابلية الصيانة والتوسع والجاهزية للإنتاج.",
+      "readArticleLabel": "قراءة {title}",
+      "technologiesLabel": "التقنيات المستخدمة في {title}",
+      "viewCaseStudy": "عرض دراسة الحالة",
+      "emptyTitle": "لا توجد مقالات منشورة بعد",
+      "emptyDescription": "ستظهر دراسات الحالة الهندسية المنشورة هنا."
     }
   },
-
   "article": {
     "metadata": {
-      "defaultCategory": "Software Engineering",
+      "defaultCategory": "هندسة البرمجيات",
       "defaultKeywords": [
-        "Ghassan Aldarwish",
-        "AI Engineering",
-        "Backend Engineering"
+        "غسان الدرويش",
+        "هندسة الذكاء الاصطناعي",
+        "هندسة الأنظمة الخلفية"
       ],
-      "socialImageAlt": "Article by Ghassan Aldarwish"
+      "socialImageAlt": "مقال بقلم غسان الدرويش"
     },
     "content": {
-      "authorPrefix": "By",
-      "updatedPrefix": "Updated",
-      "coverImageAlt": "{title} — article by {author}"
+      "authorPrefix": "بقلم",
+      "updatedPrefix": "آخر تحديث",
+      "coverImageAlt": "{title} — مقال بقلم {author}"
     }
   }
 }
