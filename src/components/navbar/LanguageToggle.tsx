@@ -5,7 +5,11 @@ import { useSearchParams } from "next/navigation"
 import { useLocale, useTranslations } from "next-intl"
 import { useTransition } from "react"
 
-import { isAppLocale, type AppLocale } from "@/i18n/locale"
+import { isAppLocale, publishedLocales, type AppLocale } from "@/i18n/locale"
+import {
+  createLocaleSwitchHref,
+  getLocalizedLanguageName,
+} from "@/i18n/language-navigation"
 import { usePathname, useRouter } from "@/i18n/routing"
 import { cn } from "@/lib/utils"
 
@@ -13,7 +17,29 @@ type LanguageToggleProps = {
   onNavigate?: () => void
 }
 
-type SelectableLocale = Extract<AppLocale, "en" | "de">
+type LanguageOption = {
+  id: AppLocale
+  image?: string
+  imageAlt?: string
+  glyph?: string
+}
+
+const languages = [
+  {
+    id: "de",
+    image: "/de.svg",
+    imageAlt: "German flag",
+  },
+  {
+    id: "en",
+    image: "/gb.svg",
+    imageAlt: "British flag",
+  },
+  {
+    id: "ar",
+    glyph: "ع",
+  },
+] satisfies LanguageOption[]
 
 export default function LanguageToggle({ onNavigate }: LanguageToggleProps) {
   const runtimeLocale = useLocale()
@@ -24,13 +50,12 @@ export default function LanguageToggle({ onNavigate }: LanguageToggleProps) {
   const t = useTranslations("navbar.language")
   const [isPending, startTransition] = useTransition()
 
-  function changeLocale(nextLocale: SelectableLocale) {
+  function changeLocale(nextLocale: AppLocale) {
     if (nextLocale === locale || isPending) {
       return
     }
 
-    const queryString = searchParams.toString()
-    const href = queryString ? `${pathname}?${queryString}` : pathname
+    const href = createLocaleSwitchHref(pathname, searchParams)
 
     startTransition(() => {
       router.replace(href, {
@@ -41,26 +66,6 @@ export default function LanguageToggle({ onNavigate }: LanguageToggleProps) {
     })
   }
 
-  const languages = [
-    {
-      id: "de",
-      image: "/de.svg",
-      alt: "German flag",
-      label: t("switchToGerman"),
-    },
-    {
-      id: "en",
-      image: "/gb.svg",
-      alt: "British flag",
-      label: t("switchToEnglish"),
-    },
-  ] satisfies Array<{
-    id: SelectableLocale
-    image: string
-    alt: string
-    label: string
-  }>
-
   return (
     <div
       role="group"
@@ -69,6 +74,12 @@ export default function LanguageToggle({ onNavigate }: LanguageToggleProps) {
     >
       {languages.map((language) => {
         const isCurrent = locale === language.id
+        const displayLocale = locale ?? publishedLocales[0]
+        const languageName = getLocalizedLanguageName(
+          displayLocale,
+          language.id
+        )
+        const languageLabel = `${t("selectorLabel")}: ${languageName}`
 
         return (
           <button
@@ -77,8 +88,8 @@ export default function LanguageToggle({ onNavigate }: LanguageToggleProps) {
             disabled={isCurrent || isPending}
             aria-label={
               isCurrent
-                ? `${language.label}. ${t("currentLanguage")}`
-                : language.label
+                ? `${languageLabel}. ${t("currentLanguage")}`
+                : languageLabel
             }
             aria-pressed={isCurrent}
             onClick={() => changeLocale(language.id)}
@@ -93,14 +104,25 @@ export default function LanguageToggle({ onNavigate }: LanguageToggleProps) {
               isPending && "cursor-wait opacity-50"
             )}
           >
-            <Image
-              src={language.image}
-              width={24}
-              height={18}
-              alt={language.alt}
-              loading="eager"
-              className="h-auto w-6"
-            />
+            {language.image ? (
+              <Image
+                src={language.image}
+                width={24}
+                height={18}
+                alt={language.imageAlt ?? ""}
+                loading="eager"
+                className="h-auto w-6"
+              />
+            ) : (
+              <span
+                aria-hidden="true"
+                lang="ar"
+                dir="rtl"
+                className="inline-flex size-6 items-center justify-center rounded-sm border border-border bg-background font-arabic text-sm font-semibold leading-none"
+              >
+                {language.glyph}
+              </span>
+            )}
           </button>
         )
       })}
