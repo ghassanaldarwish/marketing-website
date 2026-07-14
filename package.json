@@ -14,8 +14,12 @@
     "format:check": "prettier --check \"**/*.{js,mjs,ts,tsx}\"",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:report": "playwright show-report",
     "typecheck": "tsc --noEmit",
-    "check": "pnpm format:check && pnpm lint:ci && pnpm typecheck && pnpm build"
+    "check": "pnpm format:check && pnpm lint:ci && pnpm typecheck && pnpm test && pnpm build"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
