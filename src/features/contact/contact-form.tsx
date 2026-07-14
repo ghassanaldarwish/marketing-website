@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useTranslations } from "next-intl"
+import { useMemo, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner"
 
@@ -21,10 +22,11 @@ import {
 import {
   type ContactField,
   type ContactFieldErrors,
+  type ContactValidationErrorCode,
   type SubmitContactFormResult,
 } from "@/features/contact/contact-result"
 import {
-  contactFormSchema,
+  createContactFormSchema,
   type ContactFormType,
 } from "@/features/contact/contact-schema"
 import { submitContactForm } from "@/features/contact/server/submit-contact-form"
@@ -33,13 +35,37 @@ type ContactFormProps = {
   onSuccess?: () => void
 }
 
+type SubmissionAnnouncement = {
+  kind: "success" | "error"
+  message: string
+}
+
 const contactFields: ContactField[] = ["name", "email", "message"]
 
 export function ContactForm({ onSuccess }: ContactFormProps) {
   const t = useTranslations("contact.form")
+  const [announcement, setAnnouncement] =
+    useState<SubmissionAnnouncement | null>(null)
+
+  const validationMessages = {
+    nameMin: t("validation.nameMin"),
+    emailInvalid: t("validation.emailInvalid"),
+    messageMin: t("validation.messageMin"),
+    messageMax: t("validation.messageMax"),
+  }
+
+  const localizedSchema = useMemo(
+    () => createContactFormSchema(validationMessages),
+    [
+      validationMessages.emailInvalid,
+      validationMessages.messageMax,
+      validationMessages.messageMin,
+      validationMessages.nameMin,
+    ]
+  )
 
   const form = useForm<ContactFormType>({
-    resolver: zodResolver(contactFormSchema),
+    resolver: zodResolver(localizedSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -47,38 +73,76 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
     },
   })
 
+  function getServerFieldErrorMessage(
+    field: ContactField,
+    codes: ContactValidationErrorCode[]
+  ): string {
+    switch (field) {
+      case "name":
+        return validationMessages.nameMin
+      case "email":
+        return validationMessages.emailInvalid
+      case "message":
+        return codes.includes("TOO_LONG")
+          ? validationMessages.messageMax
+          : validationMessages.messageMin
+      default: {
+        const exhaustiveCheck: never = field
+        return exhaustiveCheck
+      }
+    }
+  }
+
   function applyServerFieldErrors(fieldErrors: ContactFieldErrors): void {
+    let firstInvalidField: ContactField | undefined
+
     for (const field of contactFields) {
-      if (!fieldErrors[field]?.length) {
+      const codes = fieldErrors[field]
+
+      if (!codes?.length) {
         continue
       }
 
+      firstInvalidField ??= field
       form.setError(field, {
         type: "server",
-        message: t("toast.validationError"),
+        message: getServerFieldErrorMessage(field, codes),
       })
     }
+
+    if (firstInvalidField) {
+      form.setFocus(firstInvalidField)
+    }
+  }
+
+  function announceError(message: string): void {
+    setAnnouncement({ kind: "error", message })
+    toast.error(message)
   }
 
   function handleSubmissionResult(result: SubmitContactFormResult): void {
     switch (result.status) {
-      case "success":
-        toast.success(t("toast.success"))
+      case "success": {
+        const message = t("toast.success")
+
+        setAnnouncement({ kind: "success", message })
+        toast.success(message)
         form.reset()
         onSuccess?.()
         return
+      }
 
       case "validation_error":
         applyServerFieldErrors(result.fieldErrors)
-        toast.error(t("toast.validationError"))
+        announceError(t("toast.validationError"))
         return
 
       case "delivery_error":
-        toast.error(t("toast.deliveryError"))
+        announceError(t("toast.deliveryError"))
         return
 
       case "unexpected_error":
-        toast.error(t("toast.unexpectedError"))
+        announceError(t("toast.unexpectedError"))
         return
 
       default: {
@@ -89,17 +153,23 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
   }
 
   async function onSubmit(data: ContactFormType) {
+    setAnnouncement(null)
+
     try {
       const result = await submitContactForm(data)
       handleSubmissionResult(result)
     } catch {
-      toast.error(t("toast.unexpectedError"))
+      announceError(t("toast.unexpectedError"))
     }
   }
 
   return (
     <div className="w-full">
-      <form id="contact-form" onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        id="contact-form"
+        noValidate
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <FieldGroup>
           <Controller
             name="name"
@@ -180,6 +250,17 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
             )}
           />
         </FieldGroup>
+
+        {announcement && (
+          <p
+            className="sr-only"
+            role={announcement.kind === "error" ? "alert" : "status"}
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            {announcement.message}
+          </p>
+        )}
       </form>
     </div>
   )
