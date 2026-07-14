@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "name": {
+      "label": "Vollständiger Name",
+      "placeholder": "Max Mustermann"
+    },
+    "email": {
+      "label": "E-Mail-Adresse",
+      "placeholder": "max.mustermann@example.com"
+    },
+    "message": {
+      "label": "Nachricht",
+      "placeholder": "Erzählen Sie mir von Ihrem Projekt, Ihrer Idee oder Ihrer Gelegenheit..."
+    }
+  },
+  "toast": {
+    "success": "Ihre Nachricht wurde erfolgreich gesendet.",
+    "validationError": "Bitte überprüfen Sie die Formularfelder und versuchen Sie es erneut.",
+    "deliveryError": "Ihre Nachricht konnte nicht gesendet werden. Bitte versuchen Sie es in einigen Minuten erneut.",
+    "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten. Bitte überprüfen Sie Ihre Verbindung und versuchen Sie es erneut."
+  },
+  "validation": {
+    "nameMin": "Der Name muss mindestens 2 Zeichen lang sein.",
+    "emailInvalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+    "messageMin": "Die Nachricht muss mindestens 10 Zeichen lang sein.",
+    "messageMax": "Die Nachricht darf höchstens 5000 Zeichen lang sein."
+  },
+  "characterCount": "{current}/{maximum}"
+}
