@@ -43,9 +43,18 @@ for (const locale of publishedLocales) {
   })
 }
 
-test("Arabic is not publicly advertised before GH-022", async ({ page }) => {
+test("Arabic is publicly advertised after GH-022", async ({ page }) => {
   await page.goto("/en")
 
-  await expect(page.locator('a[href^="/ar"]')).toHaveCount(0)
-  await expect(page.getByRole("button", { name: /arabic/i })).toHaveCount(0)
+  const arabicLanguageButton = page.getByRole("button", {
+    name: /arabic/i,
+  })
+
+  await expect(arabicLanguageButton).toBeVisible()
+  await arabicLanguageButton.click()
+
+  await expect(page).toHaveURL(/\/ar(?:[/?#]|$)/)
+  await expect(page.locator("html")).toHaveAttribute("lang", "ar")
+  await expect(page.locator("html")).toHaveAttribute("dir", "rtl")
+  await expect(page.locator("main")).toBeVisible()
 })
