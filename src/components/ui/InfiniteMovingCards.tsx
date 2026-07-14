@@ -41,8 +41,7 @@ export default function InfiniteMovingCards({
     "--animation-duration": animationDurationBySpeed[speed],
   }
 
-  const listClassName =
-    "flex shrink-0 flex-nowrap items-center gap-8 py-4"
+  const listClassName = "flex shrink-0 flex-nowrap items-center gap-8 py-4"
 
   return (
     <div
