@@ -454,6 +454,15 @@ function mergeArticles({
   return Array.from(articlesBySlug.values()).sort(sortArticles)
 }
 
+function createArticleSummary(article: Article): ArticleSummary {
+  return {
+    slug: article.slug,
+    locale: article.locale,
+    source: article.source,
+    metadata: article.metadata,
+  }
+}
+
 async function loadArticles(locale: AppLocale): Promise<ArticleSummary[]> {
   const {
     MDX_CONTENT_SOURCE: contentSource,
@@ -502,7 +511,7 @@ async function loadArticles(locale: AppLocale): Promise<ArticleSummary[]> {
     }
   }
 
-  return articles.map(({ body: _body, ...summary }) => summary)
+  return articles.map(createArticleSummary)
 }
 
 async function loadArticle(
