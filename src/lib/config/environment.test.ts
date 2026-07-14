@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import {
-  parseTelegramEnvironment,
-  ServerEnvironmentError,
-} from "./environment"
+import { parseTelegramEnvironment, ServerEnvironmentError } from "./environment"
 
 describe("parseTelegramEnvironment", () => {
   it("requires Telegram credentials in production by default", () => {
