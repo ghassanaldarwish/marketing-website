@@ -14,13 +14,13 @@ permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  group: ${{ github.workflow }}-pr-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
   quality:
     if: github.event.pull_request.draft == false
-    name: Format, lint, types, and build
+    name: Format, lint, types, tests, and build
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -50,6 +50,9 @@ jobs:
 
       - name: Type-check
         run: pnpm typecheck
+
+      - name: Run tests
+        run: pnpm test
 
       - name: Build production application
         run: pnpm build
