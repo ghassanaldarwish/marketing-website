@@ -5,7 +5,7 @@ import {
   getTextDirection,
   isAppLocale,
   publishedLocales,
-} from "@/i18n/locale"
+} from "./locale"
 
 describe("locale configuration", () => {
   it("defines the published locales once", () => {
