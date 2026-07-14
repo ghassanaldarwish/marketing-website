@@ -10,16 +10,17 @@
     "start": "next start",
     "lint": "eslint .",
     "lint:ci": "eslint . --max-warnings=0",
-    "format": "prettier --write \"**/*.{js,mjs,ts,tsx}\"",
-    "format:check": "prettier --check \"**/*.{js,mjs,ts,tsx}\"",
-    "test": "vitest run --exclude \"tests/e2e/**\"",
-    "test:watch": "vitest --exclude \"tests/e2e/**\"",
+    "format": "prettier --write \"**/*.{js,mjs,ts,tsx,mts}\"",
+    "format:check": "prettier --check \"**/*.{js,mjs,ts,tsx,mts}\"",
+    "test": "vitest run",
+    "test:ci": "vitest run --reporter=default",
+    "test:watch": "vitest",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:debug": "playwright test --debug",
     "test:e2e:report": "playwright show-report",
     "typecheck": "tsc --noEmit",
-    "check": "pnpm format:check && pnpm lint:ci && pnpm typecheck && pnpm test && pnpm build"
+    "check": "pnpm format:check && pnpm lint:ci && pnpm typecheck && pnpm test:ci && pnpm build"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
