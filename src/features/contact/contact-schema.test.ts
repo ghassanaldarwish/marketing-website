@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest"
 
-import { contactFormSchema } from "@/features/contact/contact-schema"
+import {
+  contactFormSchema,
+  createContactFormSchema,
+} from "@/features/contact/contact-schema"
 
 const validContactInput = {
   name: "Test User",
@@ -71,5 +74,41 @@ describe("contactFormSchema", () => {
         message: [],
       }).success
     ).toBe(false)
+  })
+
+  it("creates independent localized schemas", () => {
+    const englishSchema = createContactFormSchema({
+      nameMin: "Name must be at least 2 characters.",
+      emailInvalid: "Please enter a valid email address.",
+      messageMin: "Message must be at least 10 characters.",
+      messageMax: "Message must be less than 5000 characters.",
+    })
+    const germanSchema = createContactFormSchema({
+      nameMin: "Der Name muss mindestens 2 Zeichen lang sein.",
+      emailInvalid: "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+      messageMin: "Die Nachricht muss mindestens 10 Zeichen lang sein.",
+      messageMax: "Die Nachricht darf höchstens 5000 Zeichen lang sein.",
+    })
+
+    const englishResult = englishSchema.safeParse({
+      ...validContactInput,
+      name: "A",
+    })
+    const germanResult = germanSchema.safeParse({
+      ...validContactInput,
+      name: "A",
+    })
+
+    expect(englishResult.success).toBe(false)
+    expect(germanResult.success).toBe(false)
+
+    if (!englishResult.success && !germanResult.success) {
+      expect(englishResult.error.issues[0]?.message).toBe(
+        "Name must be at least 2 characters."
+      )
+      expect(germanResult.error.issues[0]?.message).toBe(
+        "Der Name muss mindestens 2 Zeichen lang sein."
+      )
+    }
   })
 })
