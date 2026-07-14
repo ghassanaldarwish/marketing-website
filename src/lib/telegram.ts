@@ -1,22 +1,20 @@
-import axios from "axios"
-import { NODE_ENV, GROUP_CHAT_ID, TELEGRAM_BOT_TOKEN } from "./config/config"
+import "server-only"
 
-export async function sendTelegramMessage(message: string) {
-  try {
-    if (NODE_ENV === "development") {
-      console.log("Telegram message (development):", message)
-      return
-    }
+import { getTelegramEnvironment } from "@/lib/config/server-environment"
+import { createTelegramSender } from "@/lib/telegram-client.mjs"
 
-    await axios.post(
-      `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
-      {
-        chat_id: GROUP_CHAT_ID,
-        text: message,
-        parse_mode: "Markdown",
-      }
-    )
-  } catch (error) {
-    console.error("Failed to send Telegram message:", error)
+export async function sendTelegramMessage(message: string): Promise<void> {
+  const environment = getTelegramEnvironment()
+
+  if (!environment.enabled) {
+    return
   }
+
+  const sendMessage = createTelegramSender({
+    botToken: environment.botToken,
+    chatId: environment.chatId,
+    requestTimeoutMs: environment.requestTimeoutMs,
+  })
+
+  await sendMessage(message)
 }
