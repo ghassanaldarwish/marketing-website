@@ -41,7 +41,18 @@ jobs:
         run: pnpm format:check
 
       - name: Lint without warnings
-        run: pnpm lint:ci
+        run: |
+          set -o pipefail
+          pnpm lint:ci 2>&1 | tee lint-output.txt
+
+      - name: Upload lint diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-diagnostics
+          path: lint-output.txt
+          if-no-files-found: error
+          retention-days: 1
 
       - name: Type-check
         run: pnpm typecheck
