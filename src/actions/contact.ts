@@ -1,30 +1,54 @@
-// src/actions/register-child.ts
 "use server"
+
 import { contactFormSchema } from "@/lib/validation"
 import { sendTelegramMessage } from "@/lib/telegram"
 
-export async function submitContactForm(formData: FormData) {
-  try {
-    const values = Object.fromEntries(formData.entries())
+export type ContactFormErrorCode = "VALIDATION_ERROR" | "DELIVERY_ERROR"
 
-    const parsed = contactFormSchema.safeParse({
-      ...values,
-    })
-
-    if (!parsed.success) {
-      console.error("Validation error", parsed.error.flatten().fieldErrors)
-      return { error:"Validation error"}
+export type SubmitContactFormResult =
+  | {
+      success: true
+    }
+  | {
+      success: false
+      errorCode: ContactFormErrorCode
     }
 
-        const message = `✅ *New Message From Website*
-     *Name:* ${parsed.data.name}
-     *Email:* ${parsed.data.email}
-     *Message* ${parsed.data.message}`;
+export async function submitContactForm(
+  formData: FormData
+): Promise<SubmitContactFormResult> {
+  const values = Object.fromEntries(formData.entries())
+  const parsed = contactFormSchema.safeParse(values)
 
-    await sendTelegramMessage(message);
-    return { success: true }
-  } catch (e) {
-    console.error("Upload failed:", e)
-    return { error: "Error" }
+  if (!parsed.success) {
+    return {
+      success: false,
+      errorCode: "VALIDATION_ERROR",
+    }
+  }
+
+  try {
+    const message = [
+      "New message from ghassan.de",
+      "",
+      `Name: ${parsed.data.name}`,
+      `Email: ${parsed.data.email}`,
+      "",
+      "Message:",
+      parsed.data.message,
+    ].join("\n")
+
+    await sendTelegramMessage(message)
+
+    return {
+      success: true,
+    }
+  } catch {
+    console.error("Contact form delivery failed.")
+
+    return {
+      success: false,
+      errorCode: "DELIVERY_ERROR",
+    }
   }
 }
