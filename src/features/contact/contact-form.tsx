@@ -165,11 +165,7 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
 
   return (
     <div className="w-full">
-      <form
-        id="contact-form"
-        noValidate
-        onSubmit={form.handleSubmit(onSubmit)}
-      >
+      <form id="contact-form" noValidate onSubmit={form.handleSubmit(onSubmit)}>
         <FieldGroup>
           <Controller
             name="name"

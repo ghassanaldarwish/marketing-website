@@ -7,9 +7,7 @@ export type ContactValidationMessages = {
   messageMax: string
 }
 
-export function createContactFormSchema(
-  messages: ContactValidationMessages
-) {
+export function createContactFormSchema(messages: ContactValidationMessages) {
   return z.object({
     name: z.string().trim().min(2, messages.nameMin),
     email: z.string().trim().email(messages.emailInvalid),

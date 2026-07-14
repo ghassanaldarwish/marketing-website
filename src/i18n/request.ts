@@ -5,9 +5,8 @@ import { defaultLocale, isAppLocale } from "@/i18n/locale"
 export default getRequestConfig(async ({ requestLocale }) => {
   const requestedLocale = await requestLocale
   const locale = isAppLocale(requestedLocale) ? requestedLocale : defaultLocale
-  const messages = (
-    await import(`../../content/dictionaries/${locale}.json`)
-  ).default
+  const messages = (await import(`../../content/dictionaries/${locale}.json`))
+    .default
 
   if (locale === "de") {
     const contactForm = (
