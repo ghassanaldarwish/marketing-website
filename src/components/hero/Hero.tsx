@@ -1,21 +1,22 @@
 import Image from "next/image"
-import { useTranslations } from "next-intl"
-import { TechBadge } from "./TechBadge"
-import { Terminal } from "../ui/Terminal"
-import InfiniteMovingCards from "../ui/InfiniteMovingCards"
-import { ContactModel } from "../contact/Contact"
-import { Icons } from "../ui/icons"
 import Link from "next/link"
+import { useTranslations } from "next-intl"
+
+import { ContactDialog } from "@/features/contact/contact-dialog"
 import { siteConfig } from "@/lib/config/site"
+
+import { TechBadge } from "./TechBadge"
+import InfiniteMovingCards from "../ui/InfiniteMovingCards"
+import { Terminal } from "../ui/Terminal"
+import { Icons } from "../ui/icons"
 
 export default function Hero() {
   const t = useTranslations("home")
   const title = t("hero.title")
   const description = t("hero.description")
-
   const secondaryTitle = t("hero.secondaryTitle")
-
   const infiniteMovingCards = t.raw("hero.infiniteMovingCards")
+
   return (
     <div className="relative px-2 lg:mb-24 lg:px-0">
       <div className="relative m-auto flex h-full max-w-6xl flex-col pt-12 md:mt-0 lg:flex-row">
@@ -27,19 +28,22 @@ export default function Hero() {
           </h1>
 
           <p className="min-h-30 text-xl md:min-h-10">{description}</p>
+
           <div className="flex items-center justify-start gap-8">
-            <ContactModel />
+            <ContactDialog />
 
             <div className="flex items-center gap-4">
               <Link href={siteConfig.socialLinks.github} target="_blank">
                 <Icons.gitHub className="h-10 w-10 text-foreground/60 transition-colors hover:text-foreground/80" />
               </Link>
+
               <Link href={siteConfig.socialLinks.linkedin} target="_blank">
                 <Icons.linkedin className="h-10 w-10 text-foreground/60 transition-colors hover:text-foreground/80" />
-              </Link>{" "}
+              </Link>
             </div>
           </div>
         </div>
+
         <div className="relative">
           <Image
             src="/hero.png"
@@ -51,14 +55,16 @@ export default function Hero() {
           />
         </div>
       </div>
+
       <div className="relative m-auto max-w-6xl items-end justify-between md:flex">
         <div className="flex lg:w-[59%]">
           <InfiniteMovingCards className="bg-background/10 text-lg leading-8 text-muted-foreground backdrop-blur-xs">
-            {infiniteMovingCards.map((i: string, idx: number) => (
-              <p key={idx}>{i}</p>
+            {infiniteMovingCards.map((item: string, index: number) => (
+              <p key={index}>{item}</p>
             ))}
           </InfiniteMovingCards>
         </div>
+
         <Terminal
           initialDelay={800}
           className="h-62 sm:w-full lg:w-[41%]"
@@ -75,7 +81,7 @@ export default function Hero() {
           typingSpeed={45}
           delayBetweenCommands={1000}
         />
-      </div>{" "}
+      </div>
     </div>
   )
 }

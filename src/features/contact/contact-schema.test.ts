@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { contactFormSchema } from "@/lib/validation"
+import { contactFormSchema } from "@/features/contact/contact-schema"
 
 const validContactInput = {
   name: "Test User",
@@ -54,12 +54,12 @@ describe("contactFormSchema", () => {
   })
 
   it("rejects a message longer than five thousand characters", () => {
-    const result = contactFormSchema.safeParse({
-      ...validContactInput,
-      message: "a".repeat(5001),
-    })
-
-    expect(result.success).toBe(false)
+    expect(
+      contactFormSchema.safeParse({
+        ...validContactInput,
+        message: "a".repeat(5001),
+      }).success
+    ).toBe(false)
   })
 
   it("rejects missing and non-string fields", () => {
