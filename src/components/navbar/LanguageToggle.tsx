@@ -21,7 +21,6 @@ type LanguageOption = {
   id: AppLocale
   image?: string
   imageAlt?: string
-  glyph?: string
 }
 
 const languages = [
@@ -37,7 +36,8 @@ const languages = [
   },
   {
     id: "ar",
-    glyph: "ع",
+    image: "/ar.svg",
+    imageAlt: "Saudi Arabia flag",
   },
 ] satisfies LanguageOption[]
 
@@ -104,25 +104,14 @@ export default function LanguageToggle({ onNavigate }: LanguageToggleProps) {
               isPending && "cursor-wait opacity-50"
             )}
           >
-            {language.image ? (
-              <Image
-                src={language.image}
-                width={24}
-                height={18}
-                alt={language.imageAlt ?? ""}
-                loading="eager"
-                className="h-auto w-6"
-              />
-            ) : (
-              <span
-                aria-hidden="true"
-                lang="ar"
-                dir="rtl"
-                className="inline-flex size-6 items-center justify-center rounded-sm border border-border bg-background font-arabic text-sm font-semibold leading-none"
-              >
-                {language.glyph}
-              </span>
-            )}
+            <Image
+              src={language.image}
+              width={24}
+              height={18}
+              alt={language.imageAlt ?? ""}
+              loading="eager"
+              className="h-auto w-6"
+            />
           </button>
         )
       })}
