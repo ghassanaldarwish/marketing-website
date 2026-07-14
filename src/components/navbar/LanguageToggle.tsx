@@ -5,31 +5,31 @@ import { useSearchParams } from "next/navigation"
 import { useLocale, useTranslations } from "next-intl"
 import { useTransition } from "react"
 
+import { isAppLocale, type AppLocale } from "@/i18n/locale"
 import { usePathname, useRouter } from "@/i18n/routing"
-import { LOCALE } from "@/lib/types"
 import { cn } from "@/lib/utils"
 
 type LanguageToggleProps = {
   onNavigate?: () => void
 }
 
-type SupportedLocale = LOCALE.en | LOCALE.de
+type SelectableLocale = Extract<AppLocale, "en" | "de">
 
 export default function LanguageToggle({ onNavigate }: LanguageToggleProps) {
-  const locale = useLocale() as SupportedLocale
+  const runtimeLocale = useLocale()
+  const locale = isAppLocale(runtimeLocale) ? runtimeLocale : null
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const router = useRouter()
   const t = useTranslations("navbar.language")
   const [isPending, startTransition] = useTransition()
 
-  function changeLocale(nextLocale: SupportedLocale) {
+  function changeLocale(nextLocale: SelectableLocale) {
     if (nextLocale === locale || isPending) {
       return
     }
 
     const queryString = searchParams.toString()
-
     const href = queryString ? `${pathname}?${queryString}` : pathname
 
     startTransition(() => {
@@ -37,26 +37,25 @@ export default function LanguageToggle({ onNavigate }: LanguageToggleProps) {
         locale: nextLocale,
         scroll: false,
       })
-
       onNavigate?.()
     })
   }
 
   const languages = [
     {
-      id: LOCALE.de,
+      id: "de",
       image: "/de.svg",
       alt: "German flag",
       label: t("switchToGerman"),
     },
     {
-      id: LOCALE.en,
+      id: "en",
       image: "/gb.svg",
       alt: "British flag",
       label: t("switchToEnglish"),
     },
   ] satisfies Array<{
-    id: SupportedLocale
+    id: SelectableLocale
     image: string
     alt: string
     label: string

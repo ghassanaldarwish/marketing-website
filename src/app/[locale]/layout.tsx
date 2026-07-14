@@ -4,14 +4,12 @@ import type { ReactNode } from "react"
 import { Geist_Mono, Inter } from "next/font/google"
 import { notFound } from "next/navigation"
 
-import { hasLocale, NextIntlClientProvider } from "next-intl"
+import { NextIntlClientProvider } from "next-intl"
 import {
   getMessages,
   getTranslations,
   setRequestLocale,
 } from "next-intl/server"
-
-import { isRtlLang } from "rtl-detect"
 
 import "../../styles/globals.css"
 
@@ -19,8 +17,8 @@ import Footer from "@/components/footer/Footer"
 import Navbar from "@/components/navbar/Navbar"
 import { ThemeProvider } from "@/components/providers/theme-provider"
 import { Toaster } from "@/components/ui/sonner"
-
-import { routing } from "@/i18n/routing"
+import { getTextDirection, isAppLocale, publishedLocales } from "@/i18n/locale"
+import { createLocalizedPath } from "@/i18n/paths"
 import {
   absoluteUrl,
   getOpenGraphLocale,
@@ -49,7 +47,7 @@ type LocaleLayoutProps = Readonly<{
 }>
 
 export function generateStaticParams() {
-  return routing.locales.map((locale) => ({
+  return publishedLocales.map((locale) => ({
     locale,
   }))
 }
@@ -59,7 +57,7 @@ export async function generateMetadata({
 }: LocaleLayoutProps): Promise<Metadata> {
   const { locale } = await params
 
-  if (!hasLocale(routing.locales, locale)) {
+  if (!isAppLocale(locale)) {
     return {}
   }
 
@@ -87,7 +85,7 @@ export async function generateMetadata({
     authors: [
       {
         name: siteConfig.fullName,
-        url: absoluteUrl(`/${locale}/about`),
+        url: absoluteUrl(createLocalizedPath(locale, "/about")),
       },
     ],
 
@@ -103,18 +101,6 @@ export async function generateMetadata({
       telephone: false,
     },
 
-    /**
-     * The page-level metadata should provide:
-     * - canonical URL
-     * - hreflang alternatives
-     * - Open Graph URL
-     * - page-specific title
-     * - page-specific description
-     *
-     * Images are generated automatically by:
-     * - app/[locale]/opengraph-image.tsx
-     * - app/[locale]/twitter-image.tsx
-     */
     openGraph: {
       type: "website",
       title: defaultTitle,
@@ -122,7 +108,7 @@ export async function generateMetadata({
       siteName: siteConfig.name,
       locale: getOpenGraphLocale(locale),
 
-      alternateLocale: routing.locales
+      alternateLocale: publishedLocales
         .filter((supportedLocale) => supportedLocale !== locale)
         .map(getOpenGraphLocale),
     },
@@ -173,21 +159,17 @@ export default async function LocaleLayout({
 }: LocaleLayoutProps) {
   const { locale } = await params
 
-  if (!hasLocale(routing.locales, locale)) {
+  if (!isAppLocale(locale)) {
     notFound()
   }
 
-  /**
-   * Makes the route locale available to next-intl and supports
-   * static rendering for localized routes.
-   */
   setRequestLocale(locale)
 
   const messages = await getMessages({
     locale,
   })
 
-  const direction = isRtlLang(locale) ? "rtl" : "ltr"
+  const direction = getTextDirection(locale)
 
   return (
     <html
