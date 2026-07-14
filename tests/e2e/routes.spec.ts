@@ -43,12 +43,19 @@ for (const locale of publishedLocales) {
   })
 }
 
-test("Arabic is publicly advertised after GH-022", async ({ page }) => {
+test("Arabic is publicly advertised after GH-022", async ({
+  page,
+  isMobile,
+}) => {
   await page.goto("/en")
 
-  const arabicLanguageButton = page.getByRole("button", {
-    name: /arabic/i,
-  })
+  if (isMobile) {
+    await page.getByRole("button", { name: /open.*menu/i }).click()
+  }
+
+  const arabicLanguageButton = page
+    .getByRole("button", { name: /arabic/i })
+    .first()
 
   await expect(arabicLanguageButton).toBeVisible()
   await arabicLanguageButton.click()
