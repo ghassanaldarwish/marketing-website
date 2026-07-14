@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl"
 import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner"
 
-import { submitContactForm, type ContactFormErrorCode } from "@/actions/contact"
 import {
   Field,
   FieldError,
@@ -20,13 +19,21 @@ import {
   InputGroupTextarea,
 } from "@/components/ui/input-group"
 import {
+  type ContactField,
+  type ContactFieldErrors,
+  type SubmitContactFormResult,
+} from "@/features/contact/contact-result"
+import {
   contactFormSchema,
   type ContactFormType,
 } from "@/features/contact/contact-schema"
+import { submitContactForm } from "@/features/contact/server/submit-contact-form"
 
 type ContactFormProps = {
   onSuccess?: () => void
 }
+
+const contactFields: ContactField[] = ["name", "email", "message"]
 
 export function ContactForm({ onSuccess }: ContactFormProps) {
   const t = useTranslations("contact.form")
@@ -40,14 +47,42 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
     },
   })
 
-  function getBackendErrorMessage(errorCode: ContactFormErrorCode): string {
-    switch (errorCode) {
-      case "VALIDATION_ERROR":
-        return t("toast.validationError")
-      case "DELIVERY_ERROR":
-        return t("toast.deliveryError")
+  function applyServerFieldErrors(fieldErrors: ContactFieldErrors): void {
+    for (const field of contactFields) {
+      if (!fieldErrors[field]?.length) {
+        continue
+      }
+
+      form.setError(field, {
+        type: "server",
+        message: t("toast.validationError"),
+      })
+    }
+  }
+
+  function handleSubmissionResult(result: SubmitContactFormResult): void {
+    switch (result.status) {
+      case "success":
+        toast.success(t("toast.success"))
+        form.reset()
+        onSuccess?.()
+        return
+
+      case "validation_error":
+        applyServerFieldErrors(result.fieldErrors)
+        toast.error(t("toast.validationError"))
+        return
+
+      case "delivery_error":
+        toast.error(t("toast.deliveryError"))
+        return
+
+      case "unexpected_error":
+        toast.error(t("toast.unexpectedError"))
+        return
+
       default: {
-        const exhaustiveCheck: never = errorCode
+        const exhaustiveCheck: never = result
         return exhaustiveCheck
       }
     }
@@ -55,22 +90,8 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
 
   async function onSubmit(data: ContactFormType) {
     try {
-      const formData = new FormData()
-
-      Object.entries(data).forEach(([key, value]) => {
-        formData.append(key, value)
-      })
-
-      const result = await submitContactForm(formData)
-
-      if (result.success) {
-        toast.success(t("toast.success"))
-        form.reset()
-        onSuccess?.()
-        return
-      }
-
-      toast.error(getBackendErrorMessage(result.errorCode))
+      const result = await submitContactForm(data)
+      handleSubmissionResult(result)
     } catch {
       toast.error(t("toast.unexpectedError"))
     }
