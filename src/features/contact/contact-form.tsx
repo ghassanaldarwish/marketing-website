@@ -60,12 +60,7 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
         messageMin: messageMinMessage,
         messageMax: messageMaxMessage,
       }),
-    [
-      emailInvalidMessage,
-      messageMaxMessage,
-      messageMinMessage,
-      nameMinMessage,
-    ]
+    [emailInvalidMessage, messageMaxMessage, messageMinMessage, nameMinMessage]
   )
 
   const form = useForm<ContactFormType>({
