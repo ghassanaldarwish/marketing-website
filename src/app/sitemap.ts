@@ -1,9 +1,11 @@
 import type { MetadataRoute } from "next"
 
+import { publishedLocales, type AppLocale } from "@/i18n/locale"
+import { createArticlePath, createLocalizedPath } from "@/i18n/paths"
 import { routing } from "@/i18n/routing"
-import type { ArticleSummary } from "@/lib/mdx/article-schema"
-import { getArticles, type AppLocale } from "@/lib/mdx/get-article"
 import { absoluteUrl } from "@/lib/config/site"
+import type { ArticleSummary } from "@/lib/mdx/article-schema"
+import { getArticles } from "@/lib/mdx/get-article"
 
 type SitemapEntry = MetadataRoute.Sitemap[number]
 
@@ -20,13 +22,6 @@ type LocalizedArticle = {
   article: ArticleSummary
 }
 
-/**
- * Recreate the sitemap periodically when articles can come
- * from a remote or hybrid content source.
- *
- * For completely local MDX content, this is harmless because
- * deployments also regenerate the sitemap.
- */
 export const revalidate = 3600
 
 const staticRoutes: readonly StaticRoute[] = [
@@ -52,21 +47,9 @@ const staticRoutes: readonly StaticRoute[] = [
   },
 ]
 
-function isAppLocale(locale: string): locale is AppLocale {
-  return routing.locales.includes(locale as (typeof routing.locales)[number])
-}
-
-function createLocalizedPath(locale: string, path: string): string {
-  return `/${locale}${path}`
-}
-
-function createArticlePath(locale: string, slug: string): string {
-  return `/${locale}/articles/${slug}`
-}
-
 function createStaticLanguageAlternates(path: string): Record<string, string> {
   const languages: Record<string, string> = Object.fromEntries(
-    routing.locales.map((locale) => [
+    publishedLocales.map((locale) => [
       locale,
       absoluteUrl(createLocalizedPath(locale, path)),
     ])
@@ -128,13 +111,10 @@ function removeDuplicateEntries(
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const sitemapEntries: MetadataRoute.Sitemap = []
 
-  /*
-   * Add all static pages for every supported locale.
-   */
   for (const route of staticRoutes) {
     const languageAlternates = createStaticLanguageAlternates(route.path)
 
-    for (const locale of routing.locales) {
+    for (const locale of publishedLocales) {
       sitemapEntries.push({
         url: absoluteUrl(createLocalizedPath(locale, route.path)),
 
@@ -148,15 +128,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
-  /*
-   * Load published articles for every supported locale.
-   */
   const articleCollections = await Promise.all(
-    routing.locales.map(async (locale) => {
-      if (!isAppLocale(locale)) {
-        return []
-      }
-
+    publishedLocales.map(async (locale) => {
       const articles = await getArticles(locale)
 
       return articles.map((article): LocalizedArticle => ({
@@ -178,30 +151,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return a.locale.localeCompare(b.locale)
   })
 
-  /*
-   * Group translations together.
-   *
-   * translationKey allows translated articles to have
-   * different slugs while remaining hreflang alternatives.
-   *
-   * When translationKey is absent, the filename-derived slug
-   * becomes the translation group identifier.
-   */
   const articleGroups = new Map<string, LocalizedArticle[]>()
 
   for (const localizedArticle of localizedArticles) {
     const groupKey = getArticleGroupKey(localizedArticle.article)
-
     const group = articleGroups.get(groupKey) ?? []
 
     group.push(localizedArticle)
     articleGroups.set(groupKey, group)
   }
 
-  /*
-   * Add each localized article and only the translations
-   * that actually exist.
-   */
   for (const articles of articleGroups.values()) {
     if (articles.length === 0) {
       continue
