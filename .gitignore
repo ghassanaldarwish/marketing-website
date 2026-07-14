@@ -1,6 +1,6 @@
 # dependencies
 /node_modules
-/playwright-report
+
 /.pnp
 .pnp.*
 .yarn/*
@@ -35,3 +35,7 @@ pnpm-debug.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+# ignore playwright-report
+/playwright-report
