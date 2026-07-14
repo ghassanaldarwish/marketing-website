@@ -2,7 +2,9 @@
 
 import type { CSSProperties, ReactNode } from "react"
 
-import useTextDirection from "@/hooks/useTextDirection"
+import { useLocale } from "next-intl"
+
+import { getTextDirection, isAppLocale } from "@/i18n/locale"
 import { cn } from "@/lib/utils"
 
 type InfiniteMovingCardsProps = {
@@ -34,7 +36,8 @@ export default function InfiniteMovingCards({
   pauseOnHover = true,
   className,
 }: InfiniteMovingCardsProps) {
-  const textDirection = useTextDirection()
+  const locale = useLocale()
+  const textDirection = isAppLocale(locale) ? getTextDirection(locale) : "ltr"
 
   const scrollerStyle: ScrollerStyle = {
     "--animation-direction": direction === "left" ? "forwards" : "reverse",
