@@ -17,8 +17,6 @@ import {
 
 export type AppLocale = (typeof routing.locales)[number]
 
-type ContentSource = "local" | "remote" | "hybrid"
-
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
 const articleFilePattern = /^[a-z0-9]+(?:-[a-z0-9]+)*\.(?:md|mdx)$/
