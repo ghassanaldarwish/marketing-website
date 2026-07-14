@@ -1,7 +1,7 @@
 You have access to:
 
 - Live website: `https://ghassan.de`
-- GitHub repository: `github.com/ghassanaldarwish/marketing-website`
+- GitHub repository: `https://github.com/ghassanaldarwish/marketing-website`
 - My private Notion database/board: **marketing-website**
 
 Your goal is to understand the complete project and prepare the Notion board so I can later ask you to implement any ticket as real production code.
