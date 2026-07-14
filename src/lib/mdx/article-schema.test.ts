@@ -92,8 +92,7 @@ describe("articleMetadataSchema", () => {
     "rejects invalid order value %s",
     (order) => {
       expect(
-        articleMetadataSchema.safeParse(buildArticleMetadata({ order }))
-          .success
+        articleMetadataSchema.safeParse(buildArticleMetadata({ order })).success
       ).toBe(false)
     }
   )
