@@ -3,7 +3,10 @@ import { expect, test } from "@playwright/test"
 test("language switching preserves the logical route", async ({ page }) => {
   await page.goto("/en/about?source=e2e")
 
-  await page.getByRole("button", { name: /german|deutsch/i }).first().click()
+  await page
+    .getByRole("button", { name: /german|deutsch/i })
+    .first()
+    .click()
 
   await expect(page).toHaveURL(/\/de\/about\?source=e2e$/)
   await expect(page.locator("html")).toHaveAttribute("lang", "de")
