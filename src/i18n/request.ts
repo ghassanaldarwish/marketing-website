@@ -1,17 +1,10 @@
-// i18n/request.ts
-
 import { getRequestConfig } from "next-intl/server"
-import { routing } from "./routing"
-import { LOCALE } from "@/lib/types"
+
+import { defaultLocale, isAppLocale } from "@/i18n/locale"
 
 export default getRequestConfig(async ({ requestLocale }) => {
-  // This typically corresponds to the `[locale]` segment
-  let locale = await requestLocale
-
-  // Ensure that a valid locale is used
-  if (!locale || !routing.locales.includes(locale as LOCALE)) {
-    locale = routing.defaultLocale
-  }
+  const requestedLocale = await requestLocale
+  const locale = isAppLocale(requestedLocale) ? requestedLocale : defaultLocale
 
   return {
     locale,
