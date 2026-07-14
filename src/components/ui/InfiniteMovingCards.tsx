@@ -1,8 +1,31 @@
 "use client"
 
+import type { CSSProperties, ReactNode } from "react"
+
 import useTextDirection from "@/hooks/useTextDirection"
 import { cn } from "@/lib/utils"
-import React, { useEffect, useState } from "react"
+
+type InfiniteMovingCardsProps = {
+  children: ReactNode
+  direction?: "left" | "right"
+  speed?: "fast" | "normal" | "slow"
+  pauseOnHover?: boolean
+  className?: string
+}
+
+type ScrollerStyle = CSSProperties & {
+  "--animation-direction": "forwards" | "reverse"
+  "--animation-duration": string
+}
+
+const animationDurationBySpeed: Record<
+  NonNullable<InfiniteMovingCardsProps["speed"]>,
+  string
+> = {
+  fast: "20s",
+  normal: "40s",
+  slow: "80s",
+}
 
 export default function InfiniteMovingCards({
   children,
@@ -10,85 +33,36 @@ export default function InfiniteMovingCards({
   speed = "normal",
   pauseOnHover = true,
   className,
-}: {
-  children: React.ReactNode
-  direction?: "left" | "right"
-  speed?: "fast" | "normal" | "slow"
-  pauseOnHover?: boolean
-  className?: string
-}) {
-  const directionLang = useTextDirection()
-  const containerRef = React.useRef<HTMLDivElement>(null)
-  const scrollerRef = React.useRef<HTMLUListElement>(null)
+}: InfiniteMovingCardsProps) {
+  const textDirection = useTextDirection()
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/immutability
-    addAnimation()
-  }, [])
-  const [start, setStart] = useState(false)
-  function addAnimation() {
-    if (containerRef.current && scrollerRef.current) {
-      const scrollerContent = Array.from(scrollerRef.current.children)
+  const scrollerStyle: ScrollerStyle = {
+    "--animation-direction": direction === "left" ? "forwards" : "reverse",
+    "--animation-duration": animationDurationBySpeed[speed],
+  }
 
-      scrollerContent.forEach((item) => {
-        const duplicatedItem = item.cloneNode(true)
-        if (scrollerRef.current) {
-          scrollerRef.current.appendChild(duplicatedItem)
-        }
-      })
+  const listClassName = "flex shrink-0 flex-nowrap items-center gap-8 py-4"
 
-      getDirection()
-      getSpeed()
-      setStart(true)
-    }
-  }
-  const getDirection = () => {
-    if (containerRef.current) {
-      if (direction === "left") {
-        containerRef.current.style.setProperty(
-          "--animation-direction",
-          "forwards"
-        )
-      } else {
-        containerRef.current.style.setProperty(
-          "--animation-direction",
-          "reverse"
-        )
-      }
-    }
-  }
-  const getSpeed = () => {
-    if (containerRef.current) {
-      if (speed === "fast") {
-        containerRef.current.style.setProperty("--animation-duration", "20s")
-      } else if (speed === "normal") {
-        containerRef.current.style.setProperty("--animation-duration", "40s")
-      } else {
-        containerRef.current.style.setProperty("--animation-duration", "80s")
-      }
-    }
-  }
   return (
     <div
-      ref={containerRef}
       className={cn(
         "scroller relative z-20 m-auto max-w-6xl overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)]",
         className
       )}
+      style={scrollerStyle}
     >
-      <ul
-        ref={scrollerRef}
+      <div
         className={cn(
-          "flex w-max min-w-full shrink-0 flex-nowrap items-center gap-8 py-4",
-          start && directionLang === "rtl"
-            ? "animate-scroll-rtl"
-            : "animate-scroll",
-
+          "flex w-max min-w-full shrink-0 flex-nowrap items-center gap-8",
+          textDirection === "rtl" ? "animate-scroll-rtl" : "animate-scroll",
           pauseOnHover && "hover:[animation-play-state:paused]"
         )}
       >
-        {children}
-      </ul>
+        <ul className={listClassName}>{children}</ul>
+        <ul aria-hidden="true" className={listClassName}>
+          {children}
+        </ul>
+      </div>
     </div>
   )
 }
