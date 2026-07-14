@@ -3,11 +3,7 @@ import type { ContactFormType } from "@/features/contact/contact-schema"
 export type ContactField = keyof ContactFormType
 
 export type ContactValidationErrorCode =
-  | "REQUIRED"
-  | "INVALID_FORMAT"
-  | "TOO_SHORT"
-  | "TOO_LONG"
-  | "INVALID_VALUE"
+  "REQUIRED" | "INVALID_FORMAT" | "TOO_SHORT" | "TOO_LONG" | "INVALID_VALUE"
 
 export type ContactFieldErrors = Partial<
   Record<ContactField, ContactValidationErrorCode[]>
