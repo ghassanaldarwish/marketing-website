@@ -44,7 +44,7 @@ export const FloatingNav = ({
   return (
     <AnimatePresence mode="wait">
       <motion.div
-        initial={prefersReducedMotion ? false : { opacity: 1, y: -100 }}
+        initial={false}
         animate={{
           y: isVisible ? 0 : -100,
           opacity: isVisible ? 1 : 0,
