@@ -1,0 +1,37 @@
+name: Format Playwright config
+
+on:
+  push:
+    branches:
+      - fix/e2e-use-current-build
+    paths:
+      - .github/workflows/format-e2e-config.yml
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/e2e-use-current-build
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec prettier --write playwright.config.ts
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add playwright.config.ts
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "chore(format): format Playwright config"
+          git push origin HEAD:fix/e2e-use-current-build
