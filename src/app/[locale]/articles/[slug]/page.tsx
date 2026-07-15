@@ -7,9 +7,12 @@ import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { MdxRenderer } from "@/components/mdx/mdx-renderer"
 
+import { getArticleLanguageAlternates } from "@/i18n/alternates"
+import { createArticlePath } from "@/i18n/paths"
 import { routing } from "@/i18n/routing"
-import { getArticle, type AppLocale } from "@/lib/mdx/get-article"
 import { absoluteUrl, getOpenGraphLocale, siteConfig } from "@/lib/config/site"
+import { toIsoDate } from "@/lib/dates"
+import { getArticle, type AppLocale } from "@/lib/mdx/get-article"
 
 type ArticlePageProps = {
   params: Promise<{
@@ -18,63 +21,8 @@ type ArticlePageProps = {
   }>
 }
 
-type ArticleLanguageAlternates = {
-  languages: Record<string, string>
-  availableLocales: AppLocale[]
-}
-
 export const runtime = "nodejs"
 export const revalidate = 3600
-
-function toIsoDate(date: string): string {
-  return new Date(`${date}T00:00:00.000Z`).toISOString()
-}
-
-function createArticlePath(locale: string, slug: string): string {
-  return `/${locale}/articles/${slug}`
-}
-
-async function getArticleLanguageAlternates(
-  slug: string
-): Promise<ArticleLanguageAlternates> {
-  const localizedArticles = await Promise.all(
-    routing.locales.map(async (locale) => {
-      const typedLocale = locale as AppLocale
-
-      return {
-        locale: typedLocale,
-        article: await getArticle(typedLocale, slug),
-      }
-    })
-  )
-
-  const languages: Record<string, string> = {}
-  const availableLocales: AppLocale[] = []
-
-  for (const localizedArticle of localizedArticles) {
-    if (!localizedArticle.article) {
-      continue
-    }
-
-    languages[localizedArticle.locale] = absoluteUrl(
-      createArticlePath(localizedArticle.locale, slug)
-    )
-
-    availableLocales.push(localizedArticle.locale)
-  }
-
-  const defaultLanguageUrl =
-    languages[routing.defaultLocale] ?? languages[availableLocales[0]]
-
-  if (defaultLanguageUrl) {
-    languages["x-default"] = defaultLanguageUrl
-  }
-
-  return {
-    languages,
-    availableLocales,
-  }
-}
 
 export async function generateMetadata({
   params,
@@ -102,11 +50,11 @@ export async function generateMetadata({
 
   const { metadata } = article
 
-  const articlePath = createArticlePath(locale, slug)
+  const articlePath = createArticlePath(typedLocale, slug)
   const articleUrl = absoluteUrl(articlePath)
 
   const { languages, availableLocales } =
-    await getArticleLanguageAlternates(slug)
+    await getArticleLanguageAlternates(slug, getArticle)
 
   const publishedTime = toIsoDate(metadata.publishedAt)
   const modifiedTime = toIsoDate(metadata.updatedAt ?? metadata.publishedAt)
@@ -157,8 +105,8 @@ export async function generateMetadata({
         .filter((availableLocale) => availableLocale !== typedLocale)
         .map(getOpenGraphLocale),
 
-      publishedTime,
-      modifiedTime,
+      ...(publishedTime ? { publishedTime } : {}),
+      ...(modifiedTime ? { modifiedTime } : {}),
 
       authors: [absoluteUrl(`/${locale}/about`)],
 
@@ -205,7 +153,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   const { metadata, body } = article
 
-  const articlePath = createArticlePath(locale, slug)
+  const articlePath = createArticlePath(locale as AppLocale, slug)
   const articleUrl = absoluteUrl(articlePath)
 
   const siteUrl = siteConfig.url.toString()
@@ -219,15 +167,18 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   const publishedTime = toIsoDate(metadata.publishedAt)
   const modifiedTime = toIsoDate(metadata.updatedAt ?? metadata.publishedAt)
 
-  const formattedPublishedDate = new Intl.DateTimeFormat(locale, {
-    dateStyle: "long",
-  }).format(new Date(publishedTime))
-
-  const formattedModifiedDate = metadata.updatedAt
+  const formattedPublishedDate = publishedTime
     ? new Intl.DateTimeFormat(locale, {
         dateStyle: "long",
-      }).format(new Date(modifiedTime))
+      }).format(new Date(publishedTime))
     : null
+
+  const formattedModifiedDate =
+    metadata.updatedAt && modifiedTime
+      ? new Intl.DateTimeFormat(locale, {
+          dateStyle: "long",
+        }).format(new Date(modifiedTime))
+      : null
 
   const imageAlt =
     metadata.coverImageAlt ??
@@ -298,8 +249,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             }
           : {}),
 
-        datePublished: publishedTime,
-        dateModified: modifiedTime,
+        ...(publishedTime ? { datePublished: publishedTime } : {}),
+        ...(modifiedTime ? { dateModified: modifiedTime } : {}),
 
         inLanguage: locale,
         wordCount,
@@ -381,9 +332,12 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 {content("authorPrefix")} {siteConfig.fullName}
               </span>
 
-              <span aria-hidden="true">•</span>
-
-              <time dateTime={publishedTime}>{formattedPublishedDate}</time>
+              {formattedPublishedDate && publishedTime && (
+                <>
+                  <span aria-hidden="true">•</span>
+                  <time dateTime={publishedTime}>{formattedPublishedDate}</time>
+                </>
+              )}
 
               {formattedModifiedDate && (
                 <>
