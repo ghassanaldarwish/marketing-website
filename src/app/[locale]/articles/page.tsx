@@ -11,10 +11,12 @@ import { getTranslations, setRequestLocale } from "next-intl/server"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 
+import { createStaticLanguageAlternates } from "@/i18n/alternates"
+import { createArticlePath } from "@/i18n/paths"
 import { routing } from "@/i18n/routing"
-import type { ArticleSummary } from "@/lib/mdx/article-schema"
-import { getArticles, type AppLocale } from "@/lib/mdx/get-article"
 import { absoluteUrl, getOpenGraphLocale, siteConfig } from "@/lib/config/site"
+import { getArticleDateValue, toIsoDate } from "@/lib/dates"
+import { getArticles, type AppLocale } from "@/lib/mdx/get-article"
 
 type ArticlesPageProps = {
   params: Promise<{
@@ -24,31 +26,6 @@ type ArticlesPageProps = {
 
 type ArticlesStructuredData = {
   pageName: string
-}
-
-function getLanguageAlternates(): Record<string, string> {
-  const languages: Record<string, string> = Object.fromEntries(
-    routing.locales.map((locale) => [
-      locale,
-      absoluteUrl(`/${locale}/articles`),
-    ])
-  )
-
-  languages["x-default"] = absoluteUrl(`/${routing.defaultLocale}/articles`)
-
-  return languages
-}
-
-function createArticlePath(locale: string, slug: string): string {
-  return `/${locale}/articles/${slug}`
-}
-
-function getArticleDate(article: ArticleSummary): string {
-  return article.metadata.updatedAt ?? article.metadata.publishedAt
-}
-
-function toIsoDate(date: string): string {
-  return `${date}T00:00:00.000Z`
 }
 
 export async function generateMetadata({
@@ -78,7 +55,7 @@ export async function generateMetadata({
 
     alternates: {
       canonical: pageUrl,
-      languages: getLanguageAlternates(),
+      languages: createStaticLanguageAlternates("/articles"),
     },
 
     /**
@@ -182,8 +159,10 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
         numberOfItems: articles.length,
 
         itemListElement: articles.map((article, index) => {
-          const articlePath = createArticlePath(locale, article.slug)
+          const articlePath = createArticlePath(locale as AppLocale, article.slug)
           const articleUrl = absoluteUrl(articlePath)
+          const publishedTime = toIsoDate(article.metadata.publishedAt)
+          const modifiedTime = toIsoDate(getArticleDateValue(article))
 
           return {
             "@type": "ListItem",
@@ -214,9 +193,8 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
                 ...article.metadata.stack,
               ].join(", "),
 
-              datePublished: toIsoDate(article.metadata.publishedAt),
-
-              dateModified: toIsoDate(getArticleDate(article)),
+              ...(publishedTime ? { datePublished: publishedTime } : {}),
+              ...(modifiedTime ? { dateModified: modifiedTime } : {}),
 
               inLanguage: locale,
 
@@ -292,13 +270,16 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
                 {articles.map((article) => {
                   const { metadata: articleMetadata, slug } = article
 
-                  const articleHref = createArticlePath(locale, slug)
-
-                  const formattedDate = new Intl.DateTimeFormat(locale, {
-                    dateStyle: "medium",
-                  }).format(
-                    new Date(`${articleMetadata.publishedAt}T00:00:00.000Z`)
+                  const articleHref = createArticlePath(
+                    locale as AppLocale,
+                    slug
                   )
+                  const publishedTime = toIsoDate(articleMetadata.publishedAt)
+                  const formattedDate = publishedTime
+                    ? new Intl.DateTimeFormat(locale, {
+                        dateStyle: "medium",
+                      }).format(new Date(publishedTime))
+                    : null
 
                   return (
                     <Link
@@ -360,12 +341,14 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
                           )}
 
                           <div className="mt-auto flex items-end justify-between gap-4 pt-8">
-                            <time
-                              dateTime={articleMetadata.publishedAt}
-                              className="text-xs text-muted-foreground"
-                            >
-                              {formattedDate}
-                            </time>
+                            {formattedDate && publishedTime && (
+                              <time
+                                dateTime={publishedTime}
+                                className="text-xs text-muted-foreground"
+                              >
+                                {formattedDate}
+                              </time>
+                            )}
 
                             <span className="inline-flex items-center text-sm font-medium text-accent-foreground">
                               {content("viewCaseStudy")}
