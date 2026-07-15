@@ -1,27 +1,21 @@
 /* eslint-disable react-hooks/refs */
 "use client"
+
 import React, { useEffect, useRef, useState } from "react"
-import { motion, useInView } from "motion/react"
+import { motion, useInView, useReducedMotion } from "motion/react"
+
 import { cn } from "@/lib/utils"
 
 type EncryptedTextProps = {
   text: string
   className?: string
-  /**
-   * Time in milliseconds between revealing each subsequent real character.
-   * Lower is faster. Defaults to 50ms per character.
-   */
+  /** Time in milliseconds between revealing each subsequent real character. */
   revealDelayMs?: number
   /** Optional custom character set to use for the gibberish effect. */
   charset?: string
-  /**
-   * Time in milliseconds between gibberish flips for unrevealed characters.
-   * Lower is more jittery. Defaults to 50ms.
-   */
+  /** Time in milliseconds between gibberish flips. */
   flipDelayMs?: number
-  /** CSS class for styling the encrypted/scrambled characters */
   encryptedClassName?: string
-  /** CSS class for styling the revealed characters */
   revealedClassName?: string
 }
 
@@ -38,11 +32,14 @@ function generateGibberishPreservingSpaces(
   charset: string
 ): string {
   if (!original) return ""
+
   let result = ""
-  for (let i = 0; i < original.length; i += 1) {
-    const ch = original[i]
-    result += ch === " " ? " " : generateRandomCharacter(charset)
+
+  for (let index = 0; index < original.length; index += 1) {
+    const character = original[index]
+    result += character === " " ? " " : generateRandomCharacter(charset)
   }
+
   return result
 }
 
@@ -57,21 +54,22 @@ export const EncryptedText: React.FC<EncryptedTextProps> = ({
 }) => {
   const ref = useRef<HTMLSpanElement>(null)
   const isInView = useInView(ref, { once: true })
+  const prefersReducedMotion = useReducedMotion()
 
-  const [revealCount, setRevealCount] = useState<number>(0)
+  const [revealCount, setRevealCount] = useState(0)
   const animationFrameRef = useRef<number | null>(null)
-  const startTimeRef = useRef<number>(0)
-  const lastFlipTimeRef = useRef<number>(0)
+  const startTimeRef = useRef(0)
+  const lastFlipTimeRef = useRef(0)
   const scrambleCharsRef = useRef<string[]>(Array(text.length).fill(" "))
 
   useEffect(() => {
-    if (!isInView) return
+    if (!isInView || prefersReducedMotion) return
 
-    // Reset state for a fresh animation whenever dependencies change
     const initial = text ? generateGibberishPreservingSpaces(text, charset) : ""
     scrambleCharsRef.current = initial.split("")
     startTimeRef.current = performance.now()
     lastFlipTimeRef.current = startTimeRef.current
+
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setRevealCount(0)
 
@@ -80,8 +78,8 @@ export const EncryptedText: React.FC<EncryptedTextProps> = ({
     const update = (now: number) => {
       if (isCancelled) return
 
-      const elapsedMs = now - startTimeRef.current
       const totalLength = text.length
+      const elapsedMs = now - startTimeRef.current
       const currentRevealCount = Math.min(
         totalLength,
         Math.floor(elapsedMs / Math.max(1, revealDelayMs))
@@ -89,22 +87,14 @@ export const EncryptedText: React.FC<EncryptedTextProps> = ({
 
       setRevealCount(currentRevealCount)
 
-      if (currentRevealCount >= totalLength) {
-        return
-      }
+      if (currentRevealCount >= totalLength) return
 
-      // Re-randomize unrevealed scramble characters on an interval
-      const timeSinceLastFlip = now - lastFlipTimeRef.current
-      if (timeSinceLastFlip >= Math.max(0, flipDelayMs)) {
-        for (let index = 0; index < totalLength; index += 1) {
-          if (index >= currentRevealCount) {
-            if (text[index] !== " ") {
-              scrambleCharsRef.current[index] = generateRandomCharacter(charset)
-            } else {
-              scrambleCharsRef.current[index] = " "
-            }
-          }
+      if (now - lastFlipTimeRef.current >= Math.max(0, flipDelayMs)) {
+        for (let index = currentRevealCount; index < totalLength; index += 1) {
+          scrambleCharsRef.current[index] =
+            text[index] === " " ? " " : generateRandomCharacter(charset)
         }
+
         lastFlipTimeRef.current = now
       }
 
@@ -115,13 +105,22 @@ export const EncryptedText: React.FC<EncryptedTextProps> = ({
 
     return () => {
       isCancelled = true
+
       if (animationFrameRef.current !== null) {
         cancelAnimationFrame(animationFrameRef.current)
       }
     }
-  }, [isInView, text, revealDelayMs, charset, flipDelayMs])
+  }, [charset, flipDelayMs, isInView, prefersReducedMotion, revealDelayMs, text])
 
   if (!text) return null
+
+  if (prefersReducedMotion) {
+    return (
+      <span ref={ref} className={cn(className)}>
+        {text}
+      </span>
+    )
+  }
 
   return (
     <motion.span
@@ -130,21 +129,22 @@ export const EncryptedText: React.FC<EncryptedTextProps> = ({
       aria-label={text}
       role="text"
     >
-      {text.split("").map((char, index) => {
+      {text.split("").map((character, index) => {
         const isRevealed = index < revealCount
-        const displayChar = isRevealed
-          ? char
-          : char === " "
+        const displayCharacter = isRevealed
+          ? character
+          : character === " "
             ? " "
             : (scrambleCharsRef.current[index] ??
               generateRandomCharacter(charset))
 
         return (
           <span
-            key={index}
+            key={`${index}-${character}`}
+            aria-hidden="true"
             className={cn(isRevealed ? revealedClassName : encryptedClassName)}
           >
-            {displayChar}
+            {displayCharacter}
           </span>
         )
       })}
