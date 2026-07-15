@@ -51,9 +51,9 @@ async function writeArticle(
 
 afterEach(async () => {
   await Promise.all(
-    temporaryDirectories.splice(0).map((directory) =>
-      rm(directory, { recursive: true, force: true })
-    )
+    temporaryDirectories
+      .splice(0)
+      .map((directory) => rm(directory, { recursive: true, force: true }))
   )
 })
 
@@ -161,7 +161,12 @@ describe("local article source", () => {
 
   it("throws a contextual error for malformed content", async () => {
     const contentDirectory = await createContentDirectory()
-    await writeArticle(contentDirectory, "en", "broken.mdx", "---\ntitle: ''\n---")
+    await writeArticle(
+      contentDirectory,
+      "en",
+      "broken.mdx",
+      "---\ntitle: ''\n---"
+    )
 
     const repository = createLocalArticleSource({ contentDirectory })
 
@@ -172,7 +177,11 @@ describe("local article source", () => {
 
   it("preserves typed filesystem error codes and causes", async () => {
     const contentDirectory = await createContentDirectory()
-    await writeFile(path.join(contentDirectory, "en"), "not a directory", "utf8")
+    await writeFile(
+      path.join(contentDirectory, "en"),
+      "not a directory",
+      "utf8"
+    )
 
     const repository = createLocalArticleSource({ contentDirectory })
 
