@@ -49,7 +49,7 @@ export default defineConfig({
   webServer: {
     command: `pnpm build && pnpm start --hostname 127.0.0.1 --port ${port}`,
     url: baseURL,
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
     timeout: 180_000,
     env: {
       ...process.env,
