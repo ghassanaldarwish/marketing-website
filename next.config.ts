@@ -55,9 +55,10 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "www.aiu.edu",
+        hostname: "raw.githubusercontent.com",
         port: "",
-        pathname: "/wp-content/uploads/**",
+        pathname:
+          "/ghassanaldarwish/marketing-website-remote-content/main/assets/**",
       },
     ],
   },

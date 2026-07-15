@@ -74,8 +74,8 @@ describe("remote article source", () => {
   })
 
   it("preserves authorization, revalidation, and cache tags", async () => {
-    const fetchImpl = vi.fn<typeof fetch>(
-      async () => Response.json({ files: [] })
+    const fetchImpl = vi.fn<typeof fetch>(async () =>
+      Response.json({ files: [] })
     )
     const repository = createSource(fetchImpl, "test-secret")
 
@@ -83,9 +83,11 @@ describe("remote article source", () => {
 
     const [, init] = fetchImpl.mock.calls[0] ?? []
     const headers = new Headers(init?.headers)
-    const next = (init as RequestInit & {
-      next?: { revalidate: number; tags: string[] }
-    }).next
+    const next = (
+      init as RequestInit & {
+        next?: { revalidate: number; tags: string[] }
+      }
+    ).next
 
     expect(headers.get("Authorization")).toBe("Bearer test-secret")
     expect(next).toEqual({
@@ -115,8 +117,7 @@ describe("remote article source", () => {
 
     await expect(repository.list("en")).rejects.toMatchObject({
       code: "MISSING_INDEXED_ARTICLE",
-      message:
-        'Remote index references a missing article: "en/missing.mdx".',
+      message: 'Remote index references a missing article: "en/missing.mdx".',
     })
   })
 
