@@ -6,10 +6,8 @@ import { useTranslations } from "next-intl"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -23,29 +21,23 @@ export function ContactDialog() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button size="lg" className="text-lg">
+        <Button size="lg" className="min-h-11 text-lg">
           {t("trigger")}
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="md:max-w-3xl">
+      <DialogContent className="max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] overflow-y-auto md:max-w-3xl">
         <DialogHeader>
           <DialogTitle>{t("title")}</DialogTitle>
           <DialogDescription>{t("description")}</DialogDescription>
         </DialogHeader>
 
-        <ContactForm onSuccess={() => setIsOpen(false)} />
-
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button type="button" variant="outline">
-              {t("cancel")}
-            </Button>
-          </DialogClose>
-          <Button type="submit" form="contact-form">
-            {t("submit")}
-          </Button>
-        </DialogFooter>
+        <ContactForm
+          submitLabel={t("submit")}
+          cancelLabel={t("cancel")}
+          onCancel={() => setIsOpen(false)}
+          onSuccess={() => setIsOpen(false)}
+        />
       </DialogContent>
     </Dialog>
   )
