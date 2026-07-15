@@ -203,23 +203,20 @@ export function Terminal({
     if (prefersReducedMotion || phase !== "typing") return
 
     if (characterIndex < currentCommand.length) {
-      const timeout = setTimeout(() => {
-        setCurrentText(currentCommand.slice(0, characterIndex + 1))
-        setCharacterIndex((current) => current + 1)
-      }, typingSpeed + Math.random() * 30)
+      const timeout = setTimeout(
+        () => {
+          setCurrentText(currentCommand.slice(0, characterIndex + 1))
+          setCharacterIndex((current) => current + 1)
+        },
+        typingSpeed + Math.random() * 30
+      )
 
       return () => clearTimeout(timeout)
     }
 
     const timeout = setTimeout(() => setPhase("executing"), 80)
     return () => clearTimeout(timeout)
-  }, [
-    characterIndex,
-    currentCommand,
-    phase,
-    prefersReducedMotion,
-    typingSpeed,
-  ])
+  }, [characterIndex, currentCommand, phase, prefersReducedMotion, typingSpeed])
 
   useEffect(() => {
     if (prefersReducedMotion || phase !== "executing") return
@@ -269,13 +266,7 @@ export function Terminal({
 
       return () => clearTimeout(timeout)
     }
-  }, [
-    currentOutputs,
-    isLastCommand,
-    outputIndex,
-    phase,
-    prefersReducedMotion,
-  ])
+  }, [currentOutputs, isLastCommand, outputIndex, phase, prefersReducedMotion])
 
   useEffect(() => {
     if (prefersReducedMotion || phase !== "pausing") return
