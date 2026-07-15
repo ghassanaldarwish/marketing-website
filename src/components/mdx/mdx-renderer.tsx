@@ -27,37 +27,50 @@ const prettyCodeOptions = {
   defaultLang: "plaintext",
 } satisfies PrettyCodeOptions
 
-export async function MdxRenderer({ source, components }: MdxRendererProps) {
-  const { default: MdxContent } = await evaluate(source, {
+const commonRehypePlugins = [
+  rehypeSlug,
+  [
+    rehypeAutolinkHeadings,
+    {
+      behavior: "append",
+      properties: {
+        className: ["heading-anchor"],
+        ariaLabel: "Link to this section",
+      },
+      content: {
+        type: "text",
+        value: "#",
+      },
+    },
+  ],
+] as const
+
+async function evaluateMdx(source: string, withPrettyCode: boolean) {
+  return evaluate(source, {
     ...runtime,
-
     format: "mdx",
-
     remarkPlugins: [remarkGfm],
-
-    rehypePlugins: [
-      rehypeSlug,
-
-      [
-        rehypeAutolinkHeadings,
-        {
-          behavior: "append",
-
-          properties: {
-            className: ["heading-anchor"],
-            ariaLabel: "Link to this section",
-          },
-
-          content: {
-            type: "text",
-            value: "#",
-          },
-        },
-      ],
-
-      [rehypePrettyCode, prettyCodeOptions],
-    ],
+    rehypePlugins: withPrettyCode
+      ? [...commonRehypePlugins, [rehypePrettyCode, prettyCodeOptions]]
+      : [...commonRehypePlugins],
   })
+}
+
+export async function MdxRenderer({ source, components }: MdxRendererProps) {
+  let evaluatedMdx
+
+  try {
+    evaluatedMdx = await evaluateMdx(source, true)
+  } catch (error) {
+    // Shiki-based syntax highlighting may fail to initialize in constrained
+    // serverless runtimes. Preserve article availability by retrying without
+    // the optional highlighting plugin. Invalid MDX still fails on the retry.
+    evaluatedMdx = await evaluateMdx(source, false).catch(() => {
+      throw error
+    })
+  }
+
+  const MdxContent = evaluatedMdx.default
 
   return (
     <MdxContent
