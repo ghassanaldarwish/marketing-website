@@ -13,6 +13,7 @@ import SelectedProjects from "@/components/selectedProjects/SelectedProjects"
 import Technologies from "@/components/technologies/Technologies"
 import GridBackground from "@/components/ui/GridBackground"
 
+import { createStaticLanguageAlternates } from "@/i18n/alternates"
 import { routing } from "@/i18n/routing"
 import { absoluteUrl, getOpenGraphLocale, siteConfig } from "@/lib/config/site"
 
@@ -30,16 +31,6 @@ type HomeStructuredData = {
     engineering: string
     contact: string
   }
-}
-
-function getLanguageAlternates(): Record<string, string> {
-  const languages: Record<string, string> = Object.fromEntries(
-    routing.locales.map((locale) => [locale, absoluteUrl(`/${locale}`)])
-  )
-
-  languages["x-default"] = absoluteUrl(`/${routing.defaultLocale}`)
-
-  return languages
 }
 
 export async function generateMetadata({
@@ -77,7 +68,7 @@ export async function generateMetadata({
 
     alternates: {
       canonical: pageUrl,
-      languages: getLanguageAlternates(),
+      languages: createStaticLanguageAlternates(),
     },
 
     /**

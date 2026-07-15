@@ -5,6 +5,7 @@ import { notFound } from "next/navigation"
 import { hasLocale } from "next-intl"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
+import { createStaticLanguageAlternates } from "@/i18n/alternates"
 import { routing } from "@/i18n/routing"
 import { absoluteUrl, getOpenGraphLocale, siteConfig } from "@/lib/config/site"
 
@@ -27,16 +28,6 @@ type AboutTimelineItem = {
   stage: string
   title: string
   description: string
-}
-
-function getLanguageAlternates(): Record<string, string> {
-  const languages: Record<string, string> = Object.fromEntries(
-    routing.locales.map((locale) => [locale, absoluteUrl(`/${locale}/about`)])
-  )
-
-  languages["x-default"] = absoluteUrl(`/${routing.defaultLocale}/about`)
-
-  return languages
 }
 
 export async function generateMetadata({
@@ -66,7 +57,7 @@ export async function generateMetadata({
 
     alternates: {
       canonical: pageUrl,
-      languages: getLanguageAlternates(),
+      languages: createStaticLanguageAlternates("/about"),
     },
 
     openGraph: {
