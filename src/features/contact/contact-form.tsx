@@ -205,7 +205,9 @@ export function ContactForm({
                       placeholder={t("fields.name.placeholder")}
                       autoComplete="name"
                       aria-invalid={fieldState.invalid}
-                      aria-describedby={fieldState.invalid ? errorId : undefined}
+                      aria-describedby={
+                        fieldState.invalid ? errorId : undefined
+                      }
                     />
                     {fieldState.invalid && (
                       <FieldError id={errorId} errors={[fieldState.error]} />
@@ -233,7 +235,9 @@ export function ContactForm({
                       placeholder={t("fields.email.placeholder")}
                       autoComplete="email"
                       aria-invalid={fieldState.invalid}
-                      aria-describedby={fieldState.invalid ? errorId : undefined}
+                      aria-describedby={
+                        fieldState.invalid ? errorId : undefined
+                      }
                     />
                     {fieldState.invalid && (
                       <FieldError id={errorId} errors={[fieldState.error]} />
@@ -263,7 +267,9 @@ export function ContactForm({
                         className="min-h-40 resize-y"
                         placeholder={t("fields.message.placeholder")}
                         aria-invalid={fieldState.invalid}
-                        aria-describedby={fieldState.invalid ? errorId : undefined}
+                        aria-describedby={
+                          fieldState.invalid ? errorId : undefined
+                        }
                       />
                       <InputGroupAddon align="block-end">
                         <InputGroupText className="tabular-nums">
