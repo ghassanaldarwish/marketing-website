@@ -30,7 +30,9 @@ test.describe("Contact dialog", () => {
     const trigger = page.locator('button[aria-haspopup="dialog"]').last()
     await trigger.click()
 
-    const submit = page.locator('button[form="contact-form"]')
+    const form = page.locator("#contact-form")
+    const submit = form.locator('button[type="submit"]')
+
     await submit.click()
     await expect(page.locator("#contact-name")).toHaveAttribute(
       "aria-invalid",
@@ -68,7 +70,8 @@ test.describe("Contact dialog", () => {
       "Erzählen Sie mir von Ihrem Projekt, Ihrer Idee oder Ihrer Gelegenheit..."
     )
 
-    await page.locator('button[form="contact-form"]').click()
+    const form = page.locator("#contact-form")
+    await form.locator('button[type="submit"]').click()
 
     await expect(
       page.getByText("Der Name muss mindestens 2 Zeichen lang sein.")
