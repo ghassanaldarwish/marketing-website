@@ -1,10 +1,15 @@
 import type { MetadataRoute } from "next"
 
-import { publishedLocales, type AppLocale } from "@/i18n/locale"
+import {
+  createArticleLanguageAlternates,
+  createStaticLanguageAlternates,
+  groupLocalizedArticles,
+  type LocalizedArticle,
+} from "@/i18n/alternates"
+import { publishedLocales } from "@/i18n/locale"
 import { createArticlePath, createLocalizedPath } from "@/i18n/paths"
-import { routing } from "@/i18n/routing"
 import { absoluteUrl } from "@/lib/config/site"
-import type { ArticleSummary } from "@/lib/mdx/article-schema"
+import { getArticleLastModified } from "@/lib/dates"
 import { getArticles } from "@/lib/mdx/get-article"
 
 type SitemapEntry = MetadataRoute.Sitemap[number]
@@ -15,11 +20,6 @@ type StaticRoute = {
   path: string
   changeFrequency: SitemapChangeFrequency
   priority: number
-}
-
-type LocalizedArticle = {
-  locale: AppLocale
-  article: ArticleSummary
 }
 
 export const revalidate = 3600
@@ -46,55 +46,6 @@ const staticRoutes: readonly StaticRoute[] = [
     priority: 0.6,
   },
 ]
-
-function createStaticLanguageAlternates(path: string): Record<string, string> {
-  const languages: Record<string, string> = Object.fromEntries(
-    publishedLocales.map((locale) => [
-      locale,
-      absoluteUrl(createLocalizedPath(locale, path)),
-    ])
-  )
-
-  languages["x-default"] = absoluteUrl(
-    createLocalizedPath(routing.defaultLocale, path)
-  )
-
-  return languages
-}
-
-function getArticleLastModified(article: ArticleSummary): Date | undefined {
-  const value = article.metadata.updatedAt ?? article.metadata.publishedAt
-
-  const date = new Date(`${value}T00:00:00.000Z`)
-
-  return Number.isNaN(date.getTime()) ? undefined : date
-}
-
-function getArticleGroupKey(article: ArticleSummary): string {
-  return article.metadata.translationKey ?? article.slug
-}
-
-function createArticleLanguageAlternates(
-  articles: LocalizedArticle[]
-): Record<string, string> {
-  const languages: Record<string, string> = {}
-
-  for (const { locale, article } of articles) {
-    languages[locale] = absoluteUrl(createArticlePath(locale, article.slug))
-  }
-
-  const defaultArticle =
-    articles.find(({ locale }) => locale === routing.defaultLocale) ??
-    articles[0]
-
-  if (defaultArticle) {
-    languages["x-default"] = absoluteUrl(
-      createArticlePath(defaultArticle.locale, defaultArticle.article.slug)
-    )
-  }
-
-  return languages
-}
 
 function removeDuplicateEntries(
   entries: MetadataRoute.Sitemap
@@ -139,34 +90,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
   )
 
-  const localizedArticles = articleCollections.flat().sort((a, b) => {
-    const groupComparison = getArticleGroupKey(a.article).localeCompare(
-      getArticleGroupKey(b.article)
-    )
-
-    if (groupComparison !== 0) {
-      return groupComparison
-    }
-
-    return a.locale.localeCompare(b.locale)
-  })
-
-  const articleGroups = new Map<string, LocalizedArticle[]>()
-
-  for (const localizedArticle of localizedArticles) {
-    const groupKey = getArticleGroupKey(localizedArticle.article)
-    const group = articleGroups.get(groupKey) ?? []
-
-    group.push(localizedArticle)
-    articleGroups.set(groupKey, group)
-  }
+  const articleGroups = groupLocalizedArticles(articleCollections.flat())
 
   for (const articles of articleGroups.values()) {
     if (articles.length === 0) {
       continue
     }
 
-    const languageAlternates = createArticleLanguageAlternates(articles)
+    const { languages: languageAlternates } =
+      createArticleLanguageAlternates(articles)
 
     for (const { locale, article } of articles) {
       const entry: SitemapEntry = {
