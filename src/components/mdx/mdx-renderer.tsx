@@ -1,5 +1,6 @@
 import "server-only"
 
+import type { EvaluateOptions } from "@mdx-js/mdx"
 import type { MDXComponents } from "mdx/types"
 import type { Options as PrettyCodeOptions } from "rehype-pretty-code"
 
@@ -27,37 +28,56 @@ const prettyCodeOptions = {
   defaultLang: "plaintext",
 } satisfies PrettyCodeOptions
 
-export async function MdxRenderer({ source, components }: MdxRendererProps) {
-  const { default: MdxContent } = await evaluate(source, {
+const commonRehypePlugins: NonNullable<EvaluateOptions["rehypePlugins"]> = [
+  rehypeSlug,
+  [
+    rehypeAutolinkHeadings,
+    {
+      behavior: "append",
+      properties: {
+        className: ["heading-anchor"],
+        ariaLabel: "Link to this section",
+      },
+      content: {
+        type: "text",
+        value: "#",
+      },
+    },
+  ],
+]
+
+async function evaluateMdx(source: string, withPrettyCode: boolean) {
+  const rehypePlugins: NonNullable<EvaluateOptions["rehypePlugins"]> = [
+    ...commonRehypePlugins,
+  ]
+
+  if (withPrettyCode) {
+    rehypePlugins.push([rehypePrettyCode, prettyCodeOptions])
+  }
+
+  return evaluate(source, {
     ...runtime,
-
     format: "mdx",
-
     remarkPlugins: [remarkGfm],
-
-    rehypePlugins: [
-      rehypeSlug,
-
-      [
-        rehypeAutolinkHeadings,
-        {
-          behavior: "append",
-
-          properties: {
-            className: ["heading-anchor"],
-            ariaLabel: "Link to this section",
-          },
-
-          content: {
-            type: "text",
-            value: "#",
-          },
-        },
-      ],
-
-      [rehypePrettyCode, prettyCodeOptions],
-    ],
+    rehypePlugins,
   })
+}
+
+export async function MdxRenderer({ source, components }: MdxRendererProps) {
+  let evaluatedMdx
+
+  try {
+    evaluatedMdx = await evaluateMdx(source, true)
+  } catch (error) {
+    // Shiki-based syntax highlighting may fail to initialize in constrained
+    // serverless runtimes. Preserve article availability by retrying without
+    // the optional highlighting plugin. Invalid MDX still fails on the retry.
+    evaluatedMdx = await evaluateMdx(source, false).catch(() => {
+      throw error
+    })
+  }
+
+  const MdxContent = evaluatedMdx.default
 
   return (
     <MdxContent
