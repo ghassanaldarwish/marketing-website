@@ -1,11 +1,13 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
+import { LoaderCircle } from "lucide-react"
 import { useTranslations } from "next-intl"
-import { useMemo, useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner"
 
+import { Button } from "@/components/ui/button"
 import {
   Field,
   FieldError,
@@ -30,20 +32,32 @@ import {
   type ContactFormType,
 } from "@/features/contact/contact-schema"
 import { submitContactForm } from "@/features/contact/server/submit-contact-form"
+import { cn } from "@/lib/utils"
 
 type ContactFormProps = {
+  submitLabel: string
+  cancelLabel?: string
+  onCancel?: () => void
   onSuccess?: () => void
+  actionsClassName?: string
 }
 
 type SubmissionAnnouncement = {
-  kind: "success" | "error"
+  kind: "status" | "success" | "error"
   message: string
 }
 
 const contactFields: ContactField[] = ["name", "email", "message"]
 
-export function ContactForm({ onSuccess }: ContactFormProps) {
+export function ContactForm({
+  submitLabel,
+  cancelLabel,
+  onCancel,
+  onSuccess,
+  actionsClassName,
+}: ContactFormProps) {
   const t = useTranslations("contact.form")
+  const submissionLockRef = useRef(false)
   const [announcement, setAnnouncement] =
     useState<SubmissionAnnouncement | null>(null)
 
@@ -71,6 +85,9 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
       message: "",
     },
   })
+
+  const isSubmitting = form.formState.isSubmitting
+  const loadingLabel = `${submitLabel}…`
 
   function getServerFieldErrorMessage(
     field: ContactField,
@@ -152,105 +169,163 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
   }
 
   async function onSubmit(data: ContactFormType) {
-    setAnnouncement(null)
+    if (submissionLockRef.current) {
+      return
+    }
+
+    submissionLockRef.current = true
+    setAnnouncement({ kind: "status", message: loadingLabel })
 
     try {
       const result = await submitContactForm(data)
       handleSubmissionResult(result)
     } catch {
       announceError(t("toast.unexpectedError"))
+    } finally {
+      submissionLockRef.current = false
     }
   }
 
   return (
-    <div className="w-full">
-      <form id="contact-form" noValidate onSubmit={form.handleSubmit(onSubmit)}>
-        <FieldGroup>
-          <Controller
-            name="name"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="contact-name">
-                  {t("fields.name.label")}
-                </FieldLabel>
-                <Input
-                  {...field}
-                  id="contact-name"
-                  placeholder={t("fields.name.placeholder")}
-                  autoComplete="name"
-                  aria-invalid={fieldState.invalid}
-                />
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
+    <div className="w-full min-w-0">
+      <form
+        id="contact-form"
+        noValidate
+        aria-busy={isSubmitting}
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
+        <fieldset disabled={isSubmitting} className="min-w-0 border-0 p-0">
+          <FieldGroup>
+            <Controller
+              name="name"
+              control={form.control}
+              render={({ field, fieldState }) => {
+                const errorId = "contact-name-error"
 
-          <Controller
-            name="email"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="contact-email">
-                  {t("fields.email.label")}
-                </FieldLabel>
-                <Input
-                  {...field}
-                  id="contact-email"
-                  type="email"
-                  placeholder={t("fields.email.placeholder")}
-                  autoComplete="email"
-                  aria-invalid={fieldState.invalid}
-                />
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
+                return (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="contact-name">
+                      {t("fields.name.label")}
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id="contact-name"
+                      placeholder={t("fields.name.placeholder")}
+                      autoComplete="name"
+                      aria-invalid={fieldState.invalid}
+                      aria-describedby={fieldState.invalid ? errorId : undefined}
+                    />
+                    {fieldState.invalid && (
+                      <FieldError id={errorId} errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )
+              }}
+            />
 
-          <Controller
-            name="message"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="contact-message">
-                  {t("fields.message.label")}
-                </FieldLabel>
-                <InputGroup>
-                  <InputGroupTextarea
-                    {...field}
-                    id="contact-message"
-                    rows={8}
-                    maxLength={5000}
-                    className="min-h-40 resize-none"
-                    placeholder={t("fields.message.placeholder")}
-                    aria-invalid={fieldState.invalid}
-                  />
-                  <InputGroupAddon align="block-end">
-                    <InputGroupText className="tabular-nums">
-                      {t("characterCount", {
-                        current: field.value.length,
-                        maximum: 5000,
-                      })}
-                    </InputGroupText>
-                  </InputGroupAddon>
-                </InputGroup>
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
+            <Controller
+              name="email"
+              control={form.control}
+              render={({ field, fieldState }) => {
+                const errorId = "contact-email-error"
+
+                return (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="contact-email">
+                      {t("fields.email.label")}
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id="contact-email"
+                      type="email"
+                      placeholder={t("fields.email.placeholder")}
+                      autoComplete="email"
+                      aria-invalid={fieldState.invalid}
+                      aria-describedby={fieldState.invalid ? errorId : undefined}
+                    />
+                    {fieldState.invalid && (
+                      <FieldError id={errorId} errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )
+              }}
+            />
+
+            <Controller
+              name="message"
+              control={form.control}
+              render={({ field, fieldState }) => {
+                const errorId = "contact-message-error"
+
+                return (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="contact-message">
+                      {t("fields.message.label")}
+                    </FieldLabel>
+                    <InputGroup>
+                      <InputGroupTextarea
+                        {...field}
+                        id="contact-message"
+                        rows={8}
+                        maxLength={5000}
+                        className="min-h-40 resize-y"
+                        placeholder={t("fields.message.placeholder")}
+                        aria-invalid={fieldState.invalid}
+                        aria-describedby={fieldState.invalid ? errorId : undefined}
+                      />
+                      <InputGroupAddon align="block-end">
+                        <InputGroupText className="tabular-nums">
+                          {t("characterCount", {
+                            current: field.value.length,
+                            maximum: 5000,
+                          })}
+                        </InputGroupText>
+                      </InputGroupAddon>
+                    </InputGroup>
+                    {fieldState.invalid && (
+                      <FieldError id={errorId} errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )
+              }}
+            />
+          </FieldGroup>
+        </fieldset>
+
+        <div
+          className={cn(
+            "mt-6 flex min-w-0 flex-col-reverse gap-3 sm:flex-row sm:justify-end",
+            actionsClassName
+          )}
+        >
+          {cancelLabel && onCancel && (
+            <Button
+              type="button"
+              variant="outline"
+              className="min-h-11 w-full sm:w-auto"
+              disabled={isSubmitting}
+              onClick={onCancel}
+            >
+              {cancelLabel}
+            </Button>
+          )}
+          <Button
+            type="submit"
+            className="min-h-11 w-full sm:w-auto"
+            disabled={isSubmitting}
+          >
+            {isSubmitting && (
+              <LoaderCircle className="animate-spin" aria-hidden="true" />
             )}
-          />
-        </FieldGroup>
+            {isSubmitting ? loadingLabel : submitLabel}
+          </Button>
+        </div>
 
         {announcement && (
           <p
             className="sr-only"
             role={announcement.kind === "error" ? "alert" : "status"}
-            aria-live="polite"
+            aria-live={announcement.kind === "error" ? "assertive" : "polite"}
             aria-atomic="true"
           >
             {announcement.message}
