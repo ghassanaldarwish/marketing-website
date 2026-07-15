@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next"
 
+import { getArticles } from "@/features/articles/server"
 import {
   createArticleLanguageAlternates,
   createStaticLanguageAlternates,
@@ -10,7 +11,6 @@ import { publishedLocales } from "@/i18n/locale"
 import { createArticlePath, createLocalizedPath } from "@/i18n/paths"
 import { absoluteUrl } from "@/lib/config/site"
 import { getArticleLastModified } from "@/lib/dates"
-import { getArticles } from "@/lib/mdx/get-article"
 
 type SitemapEntry = MetadataRoute.Sitemap[number]
 
