@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl"
 import { ContactDialog } from "@/features/contact/contact-dialog"
 import { siteConfig } from "@/lib/config/site"
 
-import InfiniteMovingCards from "../ui/InfiniteMovingCards"
 import { Terminal } from "../ui/Terminal"
 import { Icons } from "../ui/icons"
 import { TechBadge } from "./TechBadge"
@@ -58,19 +57,18 @@ export default function Hero() {
 
       <div className="relative m-auto max-w-6xl items-end justify-between md:flex">
         <div className="flex lg:w-[59%]">
-          <InfiniteMovingCards
-            animated={false}
-            className="bg-background/10 text-lg leading-8 text-muted-foreground backdrop-blur-xs"
-          >
+          <div className="flex w-full gap-4 bg-background/10 text-lg leading-8 text-muted-foreground backdrop-blur-xs">
             {infiniteMovingCards.map((item) => (
-              <li key={item}>{item}</li>
+              <div className="text-nowrap" key={item}>
+                {item}
+              </div>
             ))}
-          </InfiniteMovingCards>
+          </div>
         </div>
 
         <Terminal
           initialDelay={800}
-          className="h-62 sm:w-full lg:w-[41%]"
+          className="z-10 h-62 sm:w-full lg:w-[41%]"
           commands={["npx ai architect", "pnpm build", "git push origin main"]}
           outputs={{
             0: [
