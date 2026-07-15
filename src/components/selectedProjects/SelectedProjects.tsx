@@ -2,56 +2,25 @@ import { ArrowRight } from "lucide-react"
 import { getLocale, getTranslations } from "next-intl/server"
 
 import { Link } from "@/i18n/routing"
-import { getArticle, type AppLocale } from "@/lib/mdx/get-article"
+import { getArticles, type AppLocale } from "@/lib/mdx/get-article"
+import { selectFeaturedArticles } from "@/lib/mdx/select-featured-articles"
 
 import { Alert } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 
-type SelectedProjectsProps = {
-  /**
-   * Article slugs in the order they should appear.
-   *
-   * Example:
-   * [
-   *   "ai-agent-platform",
-   *   "scalable-backend-platform",
-   * ]
-   */
-  slugs: readonly string[]
-}
-
-export default async function SelectedProjects({
-  slugs,
-}: SelectedProjectsProps) {
+export default async function SelectedProjects() {
   const locale = (await getLocale()) as AppLocale
 
-  const t = await getTranslations({
-    locale,
-    namespace: "home.selectedProjects",
-  })
+  const [t, articles] = await Promise.all([
+    getTranslations({
+      locale,
+      namespace: "home.selectedProjects",
+    }),
+    getArticles(locale),
+  ])
 
-  const articles = await Promise.all(
-    slugs.map(async (slug) => {
-      const article = await getArticle(locale, slug)
-
-      if (!article) {
-        if (process.env.NODE_ENV !== "production") {
-          console.warn(
-            `[SelectedProjects] Article not found: "${locale}/${slug}"`
-          )
-        }
-
-        return null
-      }
-
-      return article
-    })
-  )
-
-  const selectedArticles = articles.filter(
-    (article): article is NonNullable<typeof article> => article !== null
-  )
+  const selectedArticles = selectFeaturedArticles(articles)
 
   if (selectedArticles.length === 0) {
     return null
@@ -84,7 +53,6 @@ export default async function SelectedProjects({
         <div className="mt-12 space-y-8">
           {selectedArticles.map((article) => {
             const { slug, metadata } = article
-
             const articleHref = `/articles/${slug}` as const
             const challenge = metadata.challenge ?? metadata.description
 
