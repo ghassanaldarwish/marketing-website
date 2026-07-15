@@ -5,20 +5,19 @@ import { useTranslations } from "next-intl"
 import { ContactDialog } from "@/features/contact/contact-dialog"
 import { siteConfig } from "@/lib/config/site"
 
-import { TechBadge } from "./TechBadge"
-import InfiniteMovingCards from "../ui/InfiniteMovingCards"
 import { Terminal } from "../ui/Terminal"
 import { Icons } from "../ui/icons"
+import { TechBadge } from "./TechBadge"
 
 export default function Hero() {
   const t = useTranslations("home")
   const title = t("hero.title")
   const description = t("hero.description")
   const secondaryTitle = t("hero.secondaryTitle")
-  const infiniteMovingCards = t.raw("hero.infiniteMovingCards")
+  const infiniteMovingCards = t.raw("hero.infiniteMovingCards") as string[]
 
   return (
-    <div className="relative px-2 lg:mb-24 lg:px-0">
+    <div className="relative overflow-x-clip px-2 lg:mb-24 lg:px-0">
       <div className="relative m-auto flex h-full max-w-6xl flex-col pt-12 md:mt-0 lg:flex-row">
         <div className="lh:gap-4 flex w-full flex-col justify-end gap-8 lg:gap-10 lg:pt-0">
           <TechBadge />
@@ -57,17 +56,19 @@ export default function Hero() {
       </div>
 
       <div className="relative m-auto max-w-6xl items-end justify-between md:flex">
-        <div className="flex lg:w-[59%]">
-          <InfiniteMovingCards className="bg-background/10 text-lg leading-8 text-muted-foreground backdrop-blur-xs">
-            {infiniteMovingCards.map((item: string, index: number) => (
-              <p key={index}>{item}</p>
+        <div className="min-w-0 lg:w-[59%]">
+          <ul className="flex w-full flex-wrap gap-x-4 gap-y-2 bg-background/10 py-4 text-lg leading-8 text-muted-foreground backdrop-blur-xs">
+            {infiniteMovingCards.map((item) => (
+              <li className="min-w-0" key={item}>
+                {item}
+              </li>
             ))}
-          </InfiniteMovingCards>
+          </ul>
         </div>
 
         <Terminal
           initialDelay={800}
-          className="h-62 sm:w-full lg:w-[41%]"
+          className="z-10 h-62 w-full lg:w-[41%]"
           commands={["npx ai architect", "pnpm build", "git push origin main"]}
           outputs={{
             0: [
