@@ -4,22 +4,25 @@ import { readdir, readFile } from "node:fs/promises"
 import path from "node:path"
 import { cache } from "react"
 
-import matter from "gray-matter"
 import { z } from "zod"
 
-import { routing } from "@/i18n/routing"
 import {
-  articleMetadataSchema,
+  createArticleSummary,
   type Article,
   type ArticleSource,
   type ArticleSummary,
-} from "@/lib/mdx/article-schema"
+} from "@/features/articles/domain/article"
+import {
+  articleFilePattern,
+  getArticleSlugFromFileName,
+  parseArticle,
+  validateArticleSlug,
+  type ArticleRuntimeMode,
+} from "@/features/articles/domain/article-parser"
+import { mergeArticles } from "@/features/articles/domain/article-policy"
+import { routing } from "@/i18n/routing"
 
 export type AppLocale = (typeof routing.locales)[number]
-
-const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
-
-const articleFilePattern = /^[a-z0-9]+(?:-[a-z0-9]+)*\.(?:md|mdx)$/
 
 const optionalString = z.preprocess((value) => {
   if (typeof value !== "string") {
@@ -33,9 +36,7 @@ const optionalString = z.preprocess((value) => {
 
 const mdxEnvironmentSchema = z.object({
   MDX_CONTENT_SOURCE: z.enum(["local", "remote", "hybrid"]).default("local"),
-
   MDX_REVALIDATE_SECONDS: z.coerce.number().int().nonnegative().default(3600),
-
   MDX_REMOTE_BASE_URL: z.preprocess((value) => {
     if (typeof value !== "string") {
       return value
@@ -45,7 +46,6 @@ const mdxEnvironmentSchema = z.object({
 
     return normalizedValue.length > 0 ? normalizedValue : undefined
   }, z.string().url().optional()),
-
   MDX_REMOTE_TOKEN: optionalString,
 })
 
@@ -67,7 +67,6 @@ const remoteIndexSchema = z
           "Remote article filenames must use kebab-case and end in .md or .mdx",
       })
     ),
-
     z.object({
       files: z.array(
         z.string().regex(articleFilePattern, {
@@ -79,23 +78,15 @@ const remoteIndexSchema = z
   ])
   .transform((value) => (Array.isArray(value) ? value : value.files))
 
-function validateSlug(slug: string): void {
-  if (!slugPattern.test(slug)) {
-    throw new Error(`Invalid article slug: "${slug}"`)
+function getArticleRuntimeMode(): ArticleRuntimeMode {
+  switch (process.env.NODE_ENV) {
+    case "production":
+      return "production"
+    case "test":
+      return "test"
+    default:
+      return "development"
   }
-}
-
-function getSlugFromFileName(fileName: string): string {
-  if (!articleFilePattern.test(fileName)) {
-    throw new Error(`Invalid article filename: "${fileName}"`)
-  }
-
-  const extension = path.extname(fileName)
-  const slug = path.basename(fileName, extension)
-
-  validateSlug(slug)
-
-  return slug
 }
 
 function getLocalArticleDirectory(locale: AppLocale): string {
@@ -117,7 +108,6 @@ function createRemoteUrl(remoteBaseUrl: string, relativePath: string): URL {
 function createRemoteHeaders(): HeadersInit {
   return {
     Accept: "text/markdown, text/plain, application/json;q=0.9, */*;q=0.8",
-
     ...(mdxEnvironment.MDX_REMOTE_TOKEN
       ? {
           Authorization: `Bearer ${mdxEnvironment.MDX_REMOTE_TOKEN}`,
@@ -126,7 +116,7 @@ function createRemoteHeaders(): HeadersInit {
   }
 }
 
-function parseArticle({
+function parseRepositoryArticle({
   rawArticle,
   locale,
   slug,
@@ -137,32 +127,18 @@ function parseArticle({
   slug: string
   source: ArticleSource
 }): Article | null {
-  const { data, content } = matter(rawArticle)
-
-  const metadataResult = articleMetadataSchema.safeParse(data)
-
-  if (!metadataResult.success) {
-    throw new Error(
-      `Invalid frontmatter in article "${locale}/${slug}":\n${metadataResult.error.message}`
-    )
-  }
-
-  const metadata = metadataResult.data
-
-  if (metadata.draft && process.env.NODE_ENV === "production") {
-    return null
-  }
-
-  return {
-    slug,
+  return parseArticle({
+    rawArticle,
     locale,
+    slug,
     source,
-    metadata,
-    body: content,
-  }
+    runtimeMode: getArticleRuntimeMode(),
+  })
 }
 
-async function listLocalArticleFileNames(locale: AppLocale): Promise<string[]> {
+async function listLocalArticleFileNames(
+  locale: AppLocale
+): Promise<string[]> {
   const directory = getLocalArticleDirectory(locale)
 
   try {
@@ -217,7 +193,7 @@ async function readLocalArticleBySlug(
     try {
       const rawArticle = await readLocalArticleFile(locale, fileName)
 
-      return parseArticle({
+      return parseRepositoryArticle({
         rawArticle,
         locale,
         slug,
@@ -226,11 +202,6 @@ async function readLocalArticleBySlug(
     } catch (error) {
       const nodeError = error as NodeJS.ErrnoException
 
-      /**
-       * readLocalArticleFile wraps errors, so inspect
-       * whether the original message represents a
-       * missing file.
-       */
       if (nodeError.code === "ENOENT" || String(error).includes("ENOENT")) {
         continue
       }
@@ -244,14 +215,12 @@ async function readLocalArticleBySlug(
 
 async function listLocalArticles(locale: AppLocale): Promise<Article[]> {
   const fileNames = await listLocalArticleFileNames(locale)
-
   const articles = await Promise.all(
     fileNames.map(async (fileName) => {
-      const slug = getSlugFromFileName(fileName)
-
+      const slug = getArticleSlugFromFileName(fileName)
       const rawArticle = await readLocalArticleFile(locale, fileName)
 
-      return parseArticle({
+      return parseRepositoryArticle({
         rawArticle,
         locale,
         slug,
@@ -269,14 +238,11 @@ async function fetchRemoteArticleFile(
   fileName: string
 ): Promise<string | null> {
   const articleUrl = createRemoteUrl(remoteBaseUrl, `${locale}/${fileName}`)
-
   const response = await fetch(articleUrl, {
     headers: createRemoteHeaders(),
-
     next: {
       revalidate: mdxEnvironment.MDX_REVALIDATE_SECONDS,
-
-      tags: [`article:${locale}:${getSlugFromFileName(fileName)}`],
+      tags: [`article:${locale}:${getArticleSlugFromFileName(fileName)}`],
     },
   })
 
@@ -311,7 +277,7 @@ async function readRemoteArticleBySlug(
       continue
     }
 
-    return parseArticle({
+    return parseRepositoryArticle({
       rawArticle,
       locale,
       slug,
@@ -327,13 +293,10 @@ async function listRemoteArticleFileNames(
   locale: AppLocale
 ): Promise<string[] | null> {
   const indexUrl = createRemoteUrl(remoteBaseUrl, `${locale}/index.json`)
-
   const response = await fetch(indexUrl, {
     headers: createRemoteHeaders(),
-
     next: {
       revalidate: mdxEnvironment.MDX_REVALIDATE_SECONDS,
-
       tags: [`articles:${locale}`],
     },
   })
@@ -371,8 +334,7 @@ async function listRemoteArticles(
 
   const articles = await Promise.all(
     fileNames.map(async (fileName) => {
-      const slug = getSlugFromFileName(fileName)
-
+      const slug = getArticleSlugFromFileName(fileName)
       const rawArticle = await fetchRemoteArticleFile(
         remoteBaseUrl,
         locale,
@@ -385,7 +347,7 @@ async function listRemoteArticles(
         )
       }
 
-      return parseArticle({
+      return parseRepositoryArticle({
         rawArticle,
         locale,
         slug,
@@ -395,70 +357,6 @@ async function listRemoteArticles(
   )
 
   return articles.filter((article): article is Article => article !== null)
-}
-
-function sortArticles(first: Article, second: Article): number {
-  if (first.metadata.featured !== second.metadata.featured) {
-    return first.metadata.featured ? -1 : 1
-  }
-
-  const firstOrder = first.metadata.order ?? Number.MAX_SAFE_INTEGER
-
-  const secondOrder = second.metadata.order ?? Number.MAX_SAFE_INTEGER
-
-  if (firstOrder !== secondOrder) {
-    return firstOrder - secondOrder
-  }
-
-  const firstDate = new Date(
-    `${first.metadata.publishedAt}T00:00:00.000Z`
-  ).getTime()
-
-  const secondDate = new Date(
-    `${second.metadata.publishedAt}T00:00:00.000Z`
-  ).getTime()
-
-  if (firstDate !== secondDate) {
-    return secondDate - firstDate
-  }
-
-  return first.metadata.title.localeCompare(second.metadata.title)
-}
-
-function mergeArticles({
-  localArticles,
-  remoteArticles,
-}: {
-  localArticles: Article[]
-  remoteArticles: Article[]
-}): Article[] {
-  const articlesBySlug = new Map<string, Article>()
-
-  /**
-   * Add local first.
-   */
-  for (const article of localArticles) {
-    articlesBySlug.set(article.slug, article)
-  }
-
-  /**
-   * Remote articles override local articles with
-   * the same filename/slug.
-   */
-  for (const article of remoteArticles) {
-    articlesBySlug.set(article.slug, article)
-  }
-
-  return Array.from(articlesBySlug.values()).sort(sortArticles)
-}
-
-function createArticleSummary(article: Article): ArticleSummary {
-  return {
-    slug: article.slug,
-    locale: article.locale,
-    source: article.source,
-    metadata: article.metadata,
-  }
 }
 
 async function loadArticles(locale: AppLocale): Promise<ArticleSummary[]> {
@@ -472,10 +370,8 @@ async function loadArticles(locale: AppLocale): Promise<ArticleSummary[]> {
   switch (contentSource) {
     case "local": {
       articles = await listLocalArticles(locale)
-
       break
     }
-
     case "remote": {
       if (!remoteBaseUrl) {
         throw new Error(
@@ -484,17 +380,13 @@ async function loadArticles(locale: AppLocale): Promise<ArticleSummary[]> {
       }
 
       articles = await listRemoteArticles(remoteBaseUrl, locale)
-
       break
     }
-
     case "hybrid": {
       const localArticlesPromise = listLocalArticles(locale)
-
       const remoteArticlesPromise = remoteBaseUrl
         ? listRemoteArticles(remoteBaseUrl, locale)
         : Promise.resolve([])
-
       const [localArticles, remoteArticles] = await Promise.all([
         localArticlesPromise,
         remoteArticlesPromise,
@@ -504,7 +396,6 @@ async function loadArticles(locale: AppLocale): Promise<ArticleSummary[]> {
         localArticles,
         remoteArticles,
       })
-
       break
     }
   }
@@ -516,7 +407,7 @@ async function loadArticle(
   locale: AppLocale,
   slug: string
 ): Promise<Article | null> {
-  validateSlug(slug)
+  validateArticleSlug(slug)
 
   const {
     MDX_CONTENT_SOURCE: contentSource,
@@ -527,7 +418,6 @@ async function loadArticle(
     case "local": {
       return readLocalArticleBySlug(locale, slug)
     }
-
     case "remote": {
       if (!remoteBaseUrl) {
         throw new Error(
@@ -537,7 +427,6 @@ async function loadArticle(
 
       return readRemoteArticleBySlug(remoteBaseUrl, locale, slug)
     }
-
     case "hybrid": {
       if (remoteBaseUrl) {
         const remoteArticle = await readRemoteArticleBySlug(
@@ -557,5 +446,4 @@ async function loadArticle(
 }
 
 export const getArticles = cache(loadArticles)
-
 export const getArticle = cache(loadArticle)
