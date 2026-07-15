@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { LoaderCircle } from "lucide-react"
 import { useTranslations } from "next-intl"
-import { useMemo, useRef, useState } from "react"
+import { useMemo, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner"
 
@@ -57,7 +57,6 @@ export function ContactForm({
   actionsClassName,
 }: ContactFormProps) {
   const t = useTranslations("contact.form")
-  const submissionLockRef = useRef(false)
   const [announcement, setAnnouncement] =
     useState<SubmissionAnnouncement | null>(null)
 
@@ -169,11 +168,6 @@ export function ContactForm({
   }
 
   async function onSubmit(data: ContactFormType) {
-    if (submissionLockRef.current) {
-      return
-    }
-
-    submissionLockRef.current = true
     setAnnouncement({ kind: "status", message: loadingLabel })
 
     try {
@@ -181,8 +175,6 @@ export function ContactForm({
       handleSubmissionResult(result)
     } catch {
       announceError(t("toast.unexpectedError"))
-    } finally {
-      submissionLockRef.current = false
     }
   }
 
