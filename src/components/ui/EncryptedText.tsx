@@ -110,7 +110,14 @@ export const EncryptedText: React.FC<EncryptedTextProps> = ({
         cancelAnimationFrame(animationFrameRef.current)
       }
     }
-  }, [charset, flipDelayMs, isInView, prefersReducedMotion, revealDelayMs, text])
+  }, [
+    charset,
+    flipDelayMs,
+    isInView,
+    prefersReducedMotion,
+    revealDelayMs,
+    text,
+  ])
 
   if (!text) return null
 
