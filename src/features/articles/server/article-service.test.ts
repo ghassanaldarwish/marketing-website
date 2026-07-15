@@ -49,10 +49,11 @@ function createRepository(articles: Article[] = []): ArticleRepository {
     list: vi.fn(async (locale: string) =>
       articles.filter((article) => article.locale === locale)
     ),
-    get: vi.fn(async (locale: string, slug: string) =>
-      articles.find(
-        (article) => article.locale === locale && article.slug === slug
-      ) ?? null
+    get: vi.fn(
+      async (locale: string, slug: string) =>
+        articles.find(
+          (article) => article.locale === locale && article.slug === slug
+        ) ?? null
     ),
   }
 }
@@ -63,10 +64,16 @@ describe("article service", () => {
     const remoteSource = createRepository()
 
     expect(
-      selectArticleSource({ contentSource: "local" }, { localSource, remoteSource })
+      selectArticleSource(
+        { contentSource: "local" },
+        { localSource, remoteSource }
+      )
     ).toBe(localSource)
     expect(
-      selectArticleSource({ contentSource: "remote" }, { localSource, remoteSource })
+      selectArticleSource(
+        { contentSource: "remote" },
+        { localSource, remoteSource }
+      )
     ).toBe(remoteSource)
   })
 

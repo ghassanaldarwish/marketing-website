@@ -51,10 +51,7 @@ export function selectArticleSource(
     case "hybrid":
       return createHybridArticleSource({
         localSource: dependencies.localSource,
-        remoteSource: requireRemoteSource(
-          dependencies.remoteSource,
-          "hybrid"
-        ),
+        remoteSource: requireRemoteSource(dependencies.remoteSource, "hybrid"),
       })
   }
 }
