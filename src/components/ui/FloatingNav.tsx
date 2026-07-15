@@ -49,9 +49,7 @@ export const FloatingNav = ({
           y: isVisible ? 0 : -100,
           opacity: isVisible ? 1 : 0,
         }}
-        transition={
-          prefersReducedMotion ? { duration: 0 } : { duration: 0.2 }
-        }
+        transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.2 }}
         className={cn(className)}
       >
         {children}
