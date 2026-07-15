@@ -5,17 +5,17 @@ import { useTranslations } from "next-intl"
 import { ContactDialog } from "@/features/contact/contact-dialog"
 import { siteConfig } from "@/lib/config/site"
 
-import { TechBadge } from "./TechBadge"
 import InfiniteMovingCards from "../ui/InfiniteMovingCards"
 import { Terminal } from "../ui/Terminal"
 import { Icons } from "../ui/icons"
+import { TechBadge } from "./TechBadge"
 
 export default function Hero() {
   const t = useTranslations("home")
   const title = t("hero.title")
   const description = t("hero.description")
   const secondaryTitle = t("hero.secondaryTitle")
-  const infiniteMovingCards = t.raw("hero.infiniteMovingCards")
+  const infiniteMovingCards = t.raw("hero.infiniteMovingCards") as string[]
 
   return (
     <div className="relative px-2 lg:mb-24 lg:px-0">
@@ -58,9 +58,12 @@ export default function Hero() {
 
       <div className="relative m-auto max-w-6xl items-end justify-between md:flex">
         <div className="flex lg:w-[59%]">
-          <InfiniteMovingCards className="bg-background/10 text-lg leading-8 text-muted-foreground backdrop-blur-xs">
-            {infiniteMovingCards.map((item: string, index: number) => (
-              <p key={index}>{item}</p>
+          <InfiniteMovingCards
+            animated={false}
+            className="bg-background/10 text-lg leading-8 text-muted-foreground backdrop-blur-xs"
+          >
+            {infiniteMovingCards.map((item) => (
+              <li key={item}>{item}</li>
             ))}
           </InfiniteMovingCards>
         </div>
