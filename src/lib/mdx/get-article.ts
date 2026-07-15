@@ -1,7 +1,5 @@
 import "server-only"
 
-import { readdir, readFile } from "node:fs/promises"
-import path from "node:path"
 import { cache } from "react"
 
 import { z } from "zod"
@@ -20,6 +18,7 @@ import {
   type ArticleRuntimeMode,
 } from "@/features/articles/domain/article-parser"
 import { mergeArticles } from "@/features/articles/domain/article-policy"
+import { createLocalArticleSource } from "@/features/articles/server/local-article-source"
 import { routing } from "@/i18n/routing"
 
 export type AppLocale = (typeof routing.locales)[number]
@@ -30,7 +29,6 @@ const optionalString = z.preprocess((value) => {
   }
 
   const normalizedValue = value.trim()
-
   return normalizedValue.length > 0 ? normalizedValue : undefined
 }, z.string().optional())
 
@@ -43,7 +41,6 @@ const mdxEnvironmentSchema = z.object({
     }
 
     const normalizedValue = value.trim()
-
     return normalizedValue.length > 0 ? normalizedValue : undefined
   }, z.string().url().optional()),
   MDX_REMOTE_TOKEN: optionalString,
@@ -89,13 +86,9 @@ function getArticleRuntimeMode(): ArticleRuntimeMode {
   }
 }
 
-function getLocalArticleDirectory(locale: AppLocale): string {
-  return path.join(process.cwd(), "content", "articles", locale)
-}
-
-function getLocalArticleFilePath(locale: AppLocale, fileName: string): string {
-  return path.join(getLocalArticleDirectory(locale), fileName)
-}
+const localArticleSource = createLocalArticleSource({
+  getRuntimeMode: getArticleRuntimeMode,
+})
 
 function createRemoteUrl(remoteBaseUrl: string, relativePath: string): URL {
   const normalizedBaseUrl = remoteBaseUrl.endsWith("/")
@@ -109,9 +102,7 @@ function createRemoteHeaders(): HeadersInit {
   return {
     Accept: "text/markdown, text/plain, application/json;q=0.9, */*;q=0.8",
     ...(mdxEnvironment.MDX_REMOTE_TOKEN
-      ? {
-          Authorization: `Bearer ${mdxEnvironment.MDX_REMOTE_TOKEN}`,
-        }
+      ? { Authorization: `Bearer ${mdxEnvironment.MDX_REMOTE_TOKEN}` }
       : {}),
   }
 }
@@ -134,100 +125,6 @@ function parseRepositoryArticle({
     source,
     runtimeMode: getArticleRuntimeMode(),
   })
-}
-
-async function listLocalArticleFileNames(locale: AppLocale): Promise<string[]> {
-  const directory = getLocalArticleDirectory(locale)
-
-  try {
-    const entries = await readdir(directory, {
-      withFileTypes: true,
-    })
-
-    return entries
-      .filter((entry) => entry.isFile() && articleFilePattern.test(entry.name))
-      .map((entry) => entry.name)
-  } catch (error) {
-    const nodeError = error as NodeJS.ErrnoException
-
-    if (nodeError.code === "ENOENT") {
-      return []
-    }
-
-    throw new Error(
-      `Could not list local articles for "${locale}": ${
-        nodeError.message || "Unknown filesystem error"
-      }`
-    )
-  }
-}
-
-async function readLocalArticleFile(
-  locale: AppLocale,
-  fileName: string
-): Promise<string> {
-  const filePath = getLocalArticleFilePath(locale, fileName)
-
-  try {
-    return await readFile(filePath, "utf8")
-  } catch (error) {
-    const nodeError = error as NodeJS.ErrnoException
-
-    throw new Error(
-      `Could not read local article "${locale}/${fileName}": ${
-        nodeError.message || "Unknown filesystem error"
-      }`
-    )
-  }
-}
-
-async function readLocalArticleBySlug(
-  locale: AppLocale,
-  slug: string
-): Promise<Article | null> {
-  const possibleFileNames = [`${slug}.mdx`, `${slug}.md`]
-
-  for (const fileName of possibleFileNames) {
-    try {
-      const rawArticle = await readLocalArticleFile(locale, fileName)
-
-      return parseRepositoryArticle({
-        rawArticle,
-        locale,
-        slug,
-        source: "local",
-      })
-    } catch (error) {
-      const nodeError = error as NodeJS.ErrnoException
-
-      if (nodeError.code === "ENOENT" || String(error).includes("ENOENT")) {
-        continue
-      }
-
-      throw error
-    }
-  }
-
-  return null
-}
-
-async function listLocalArticles(locale: AppLocale): Promise<Article[]> {
-  const fileNames = await listLocalArticleFileNames(locale)
-  const articles = await Promise.all(
-    fileNames.map(async (fileName) => {
-      const slug = getArticleSlugFromFileName(fileName)
-      const rawArticle = await readLocalArticleFile(locale, fileName)
-
-      return parseRepositoryArticle({
-        rawArticle,
-        locale,
-        slug,
-        source: "local",
-      })
-    })
-  )
-
-  return articles.filter((article): article is Article => article !== null)
 }
 
 async function fetchRemoteArticleFile(
@@ -367,7 +264,7 @@ async function loadArticles(locale: AppLocale): Promise<ArticleSummary[]> {
 
   switch (contentSource) {
     case "local": {
-      articles = await listLocalArticles(locale)
+      articles = await localArticleSource.list(locale)
       break
     }
     case "remote": {
@@ -381,7 +278,7 @@ async function loadArticles(locale: AppLocale): Promise<ArticleSummary[]> {
       break
     }
     case "hybrid": {
-      const localArticlesPromise = listLocalArticles(locale)
+      const localArticlesPromise = localArticleSource.list(locale)
       const remoteArticlesPromise = remoteBaseUrl
         ? listRemoteArticles(remoteBaseUrl, locale)
         : Promise.resolve([])
@@ -390,10 +287,7 @@ async function loadArticles(locale: AppLocale): Promise<ArticleSummary[]> {
         remoteArticlesPromise,
       ])
 
-      articles = mergeArticles({
-        localArticles,
-        remoteArticles,
-      })
+      articles = mergeArticles({ localArticles, remoteArticles })
       break
     }
   }
@@ -414,7 +308,7 @@ async function loadArticle(
 
   switch (contentSource) {
     case "local": {
-      return readLocalArticleBySlug(locale, slug)
+      return localArticleSource.get(locale, slug)
     }
     case "remote": {
       if (!remoteBaseUrl) {
@@ -438,7 +332,7 @@ async function loadArticle(
         }
       }
 
-      return readLocalArticleBySlug(locale, slug)
+      return localArticleSource.get(locale, slug)
     }
   }
 }
