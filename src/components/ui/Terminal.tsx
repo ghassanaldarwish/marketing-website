@@ -5,10 +5,7 @@ import { useReducedMotion } from "motion/react"
 
 import { cn } from "@/lib/utils"
 
-import {
-  createTerminalLines,
-  type TerminalLine,
-} from "./terminal-content"
+import { createTerminalLines, type TerminalLine } from "./terminal-content"
 
 function useInView(ref: React.RefObject<HTMLElement | null>, once = true) {
   const [inView, setInView] = useState(false)
@@ -75,7 +72,6 @@ function tokenizeBash(text: string): Token[] {
       tokens.push({ type: "variable", value: word })
       isFirstWord = false
       continue
-
     }
 
     if (word.startsWith("--") || word.startsWith("-")) {
@@ -138,7 +134,10 @@ function SyntaxHighlightedText({ text }: { text: string }) {
   return (
     <>
       {tokens.map((token, index) => (
-        <span key={`${index}-${token.value}`} className={tokenColors[token.type]}>
+        <span
+          key={`${index}-${token.value}`}
+          className={tokenColors[token.type]}
+        >
           {token.value}
         </span>
       ))}
