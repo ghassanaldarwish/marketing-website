@@ -136,9 +136,7 @@ function parseRepositoryArticle({
   })
 }
 
-async function listLocalArticleFileNames(
-  locale: AppLocale
-): Promise<string[]> {
+async function listLocalArticleFileNames(locale: AppLocale): Promise<string[]> {
   const directory = getLocalArticleDirectory(locale)
 
   try {

@@ -7,8 +7,7 @@ import {
 } from "@/features/articles/domain/article"
 
 export const articleSlugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
-export const articleFilePattern =
-  /^[a-z0-9]+(?:-[a-z0-9]+)*\.(?:md|mdx)$/
+export const articleFilePattern = /^[a-z0-9]+(?:-[a-z0-9]+)*\.(?:md|mdx)$/
 
 export type ArticleRuntimeMode = "development" | "production" | "test"
 
