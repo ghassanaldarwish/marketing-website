@@ -1,8 +1,8 @@
 import { ArrowRight } from "lucide-react"
 import { getLocale, getTranslations } from "next-intl/server"
 
+import { getArticles, type AppLocale } from "@/features/articles/server"
 import { Link } from "@/i18n/routing"
-import { getArticles, type AppLocale } from "@/lib/mdx/get-article"
 import { selectFeaturedArticles } from "@/lib/mdx/select-featured-articles"
 
 import { Alert } from "@/components/ui/alert"
