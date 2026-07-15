@@ -58,15 +58,13 @@ describe("toIsoDate", () => {
 
 describe("article dates", () => {
   it("prefers updatedAt for the article date value", () => {
-    expect(
-      getArticleDateValue(createArticle("2026-07-01", "2026-07-15"))
-    ).toBe("2026-07-15")
+    expect(getArticleDateValue(createArticle("2026-07-01", "2026-07-15"))).toBe(
+      "2026-07-15"
+    )
   })
 
   it("falls back to publishedAt", () => {
-    expect(getArticleDateValue(createArticle("2026-07-01"))).toBe(
-      "2026-07-01"
-    )
+    expect(getArticleDateValue(createArticle("2026-07-01"))).toBe("2026-07-01")
   })
 
   it("returns a valid last-modified Date", () => {

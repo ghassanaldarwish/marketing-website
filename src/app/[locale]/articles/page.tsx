@@ -159,7 +159,10 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
         numberOfItems: articles.length,
 
         itemListElement: articles.map((article, index) => {
-          const articlePath = createArticlePath(locale as AppLocale, article.slug)
+          const articlePath = createArticlePath(
+            locale as AppLocale,
+            article.slug
+          )
           const articleUrl = absoluteUrl(articlePath)
           const publishedTime = toIsoDate(article.metadata.publishedAt)
           const modifiedTime = toIsoDate(getArticleDateValue(article))

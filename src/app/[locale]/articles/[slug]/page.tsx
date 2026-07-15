@@ -53,8 +53,10 @@ export async function generateMetadata({
   const articlePath = createArticlePath(typedLocale, slug)
   const articleUrl = absoluteUrl(articlePath)
 
-  const { languages, availableLocales } =
-    await getArticleLanguageAlternates(slug, getArticle)
+  const { languages, availableLocales } = await getArticleLanguageAlternates(
+    slug,
+    getArticle
+  )
 
   const publishedTime = toIsoDate(metadata.publishedAt)
   const modifiedTime = toIsoDate(metadata.updatedAt ?? metadata.publishedAt)

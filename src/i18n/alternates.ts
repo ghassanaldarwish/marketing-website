@@ -1,8 +1,4 @@
-import {
-  defaultLocale,
-  publishedLocales,
-  type AppLocale,
-} from "@/i18n/locale"
+import { defaultLocale, publishedLocales, type AppLocale } from "@/i18n/locale"
 import { createArticlePath, createLocalizedPath } from "@/i18n/paths"
 import { absoluteUrl } from "@/lib/config/site"
 import type { ArticleSummary } from "@/lib/mdx/article-schema"
@@ -46,9 +42,7 @@ export function createStaticLanguageAlternates(
     languages[locale] = absoluteUrl(createLocalizedPath(locale, path))
   }
 
-  languages["x-default"] = absoluteUrl(
-    createLocalizedPath(defaultLocale, path)
-  )
+  languages["x-default"] = absoluteUrl(createLocalizedPath(defaultLocale, path))
 
   return languages
 }
