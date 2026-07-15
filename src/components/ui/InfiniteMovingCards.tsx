@@ -3,6 +3,7 @@
 import type { CSSProperties, ReactNode } from "react"
 
 import { useLocale } from "next-intl"
+import { useReducedMotion } from "motion/react"
 
 import { getTextDirection, isAppLocale } from "@/i18n/locale"
 import { cn } from "@/lib/utils"
@@ -12,6 +13,7 @@ type InfiniteMovingCardsProps = {
   direction?: "left" | "right"
   speed?: "fast" | "normal" | "slow"
   pauseOnHover?: boolean
+  animated?: boolean
   className?: string
 }
 
@@ -34,10 +36,13 @@ export default function InfiniteMovingCards({
   direction = "left",
   speed = "normal",
   pauseOnHover = true,
+  animated = true,
   className,
 }: InfiniteMovingCardsProps) {
   const locale = useLocale()
+  const prefersReducedMotion = useReducedMotion()
   const textDirection = isAppLocale(locale) ? getTextDirection(locale) : "ltr"
+  const shouldAnimate = animated && !prefersReducedMotion
 
   const scrollerStyle: ScrollerStyle = {
     "--animation-direction": direction === "left" ? "forwards" : "reverse",
@@ -49,22 +54,29 @@ export default function InfiniteMovingCards({
   return (
     <div
       className={cn(
-        "scroller relative z-20 m-auto max-w-6xl overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)]",
+        "scroller relative z-20 m-auto max-w-6xl overflow-hidden",
+        shouldAnimate &&
+          "[mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)]",
         className
       )}
       style={scrollerStyle}
     >
       <div
         className={cn(
-          "flex w-max min-w-full shrink-0 flex-nowrap items-center gap-8",
-          textDirection === "rtl" ? "animate-scroll-rtl" : "animate-scroll",
-          pauseOnHover && "hover:[animation-play-state:paused]"
+          "flex min-w-full shrink-0 flex-nowrap items-center gap-8",
+          shouldAnimate && "w-max",
+          shouldAnimate &&
+            (textDirection === "rtl" ? "animate-scroll-rtl" : "animate-scroll"),
+          shouldAnimate && pauseOnHover && "hover:[animation-play-state:paused]"
         )}
       >
         <ul className={listClassName}>{children}</ul>
-        <ul aria-hidden="true" className={listClassName}>
-          {children}
-        </ul>
+
+        {shouldAnimate && (
+          <ul aria-hidden="true" className={listClassName}>
+            {children}
+          </ul>
+        )}
       </div>
     </div>
   )
