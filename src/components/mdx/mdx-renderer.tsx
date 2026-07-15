@@ -1,5 +1,6 @@
 import "server-only"
 
+import type { EvaluateOptions } from "@mdx-js/mdx"
 import type { MDXComponents } from "mdx/types"
 import type { Options as PrettyCodeOptions } from "rehype-pretty-code"
 
@@ -27,7 +28,7 @@ const prettyCodeOptions = {
   defaultLang: "plaintext",
 } satisfies PrettyCodeOptions
 
-const commonRehypePlugins = [
+const commonRehypePlugins: NonNullable<EvaluateOptions["rehypePlugins"]> = [
   rehypeSlug,
   [
     rehypeAutolinkHeadings,
@@ -43,16 +44,22 @@ const commonRehypePlugins = [
       },
     },
   ],
-] as const
+]
 
 async function evaluateMdx(source: string, withPrettyCode: boolean) {
+  const rehypePlugins: NonNullable<EvaluateOptions["rehypePlugins"]> = [
+    ...commonRehypePlugins,
+  ]
+
+  if (withPrettyCode) {
+    rehypePlugins.push([rehypePrettyCode, prettyCodeOptions])
+  }
+
   return evaluate(source, {
     ...runtime,
     format: "mdx",
     remarkPlugins: [remarkGfm],
-    rehypePlugins: withPrettyCode
-      ? [...commonRehypePlugins, [rehypePrettyCode, prettyCodeOptions]]
-      : [...commonRehypePlugins],
+    rehypePlugins,
   })
 }
 
