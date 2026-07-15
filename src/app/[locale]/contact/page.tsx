@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 
+import { ExternalLink } from "lucide-react"
 import { notFound } from "next/navigation"
 import { hasLocale } from "next-intl"
 import { getTranslations, setRequestLocale } from "next-intl/server"
@@ -155,9 +156,9 @@ export default async function ContactPage({ params }: ContactPageProps) {
         }}
       />
 
-      <main className="relative min-h-screen px-4 sm:px-6 lg:px-0">
-        <div className="mx-auto flex min-h-[calc(100vh-5rem)] w-full max-w-3xl flex-col justify-center gap-10 py-16 md:gap-14 lg:py-24">
-          <header className="w-full">
+      <main className="relative min-h-screen overflow-x-clip px-4 sm:px-6 lg:px-0">
+        <div className="mx-auto flex min-h-[calc(100vh-5rem)] w-full max-w-3xl min-w-0 flex-col justify-center gap-10 py-16 md:gap-14 lg:py-24">
+          <header className="w-full min-w-0">
             <p className="mb-3 text-sm font-medium tracking-widest text-accent-foreground uppercase">
               {content("eyebrow")}
             </p>
@@ -169,14 +170,29 @@ export default async function ContactPage({ params }: ContactPageProps) {
             </p>
           </header>
 
-          <section aria-labelledby="contact-form-heading" className="w-full">
+          <section
+            aria-labelledby="contact-form-heading"
+            className="w-full min-w-0"
+          >
             <h2 id="contact-form-heading" className="sr-only">
               {content("formHeading")}
             </h2>
-            <ContactForm />
-            <div className="mt-6 flex justify-end">
-              <Button type="submit" form="contact-form" size="lg">
-                {content("sendMessage")}
+            <ContactForm submitLabel={content("sendMessage")} />
+
+            <div className="mt-8 border-t border-border pt-6">
+              <Button
+                asChild
+                variant="outline"
+                className="min-h-11 w-full whitespace-normal sm:w-auto"
+              >
+                <a
+                  href={siteConfig.socialLinks.linkedin}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  LinkedIn
+                  <ExternalLink aria-hidden="true" />
+                </a>
               </Button>
             </div>
           </section>
