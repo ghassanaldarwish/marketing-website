@@ -8,6 +8,7 @@ function createArticle(
   options: {
     featured?: boolean
     order?: number
+    publishedAt?: string
   } = {}
 ): ArticleSummary {
   return {
@@ -19,7 +20,7 @@ function createArticle(
       description: `${slug} description`,
       category: "Case Study",
       status: "Case Study",
-      publishedAt: "2026-07-01",
+      publishedAt: options.publishedAt ?? "2026-07-01",
       coverImage: `/articles/${slug}/cover.png`,
       coverImageAlt: `${slug} cover`,
       tags: [],
@@ -45,11 +46,28 @@ describe("selectFeaturedArticles", () => {
     ).toEqual(["featured", "ordered"])
   })
 
-  it("preserves the article loader order", () => {
+  it("sorts selected projects with the shared article policy", () => {
+    const aiPlatform = createArticle("ai-platform", { order: 2 })
+    const backendPlatform = createArticle("backend-platform", {
+      featured: true,
+      order: 1,
+    })
+
+    expect(
+      selectFeaturedArticles([aiPlatform, backendPlatform]).map(
+        ({ slug }) => slug
+      )
+    ).toEqual(["backend-platform", "ai-platform"])
+  })
+
+  it("does not mutate the loader result", () => {
     const first = createArticle("first", { order: 1 })
     const second = createArticle("second", { order: 2 })
+    const articles = [second, first]
 
-    expect(selectFeaturedArticles([first, second])).toEqual([first, second])
+    selectFeaturedArticles(articles)
+
+    expect(articles).toEqual([second, first])
   })
 
   it("returns an empty collection when no article is selected", () => {
