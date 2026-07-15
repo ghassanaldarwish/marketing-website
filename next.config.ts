@@ -51,17 +51,17 @@ const withMDX = createMDX({
 
 const nextConfig: NextConfig = {
   pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
-  // images: {
-  //   remotePatterns: [
-  //     {
-  //       protocol: "https",
-  //       hostname: "raw.githubusercontent.com",
-  //       port: "",
-  //       pathname:
-  //         "/ghassanaldarwish/YOUR_REPOSITORY/**",
-  //     },
-  //   ],
-  // },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "raw.githubusercontent.com",
+        port: "",
+        pathname:
+          "/ghassanaldarwish/marketing-website-remote-content/main/assets/**",
+      },
+    ],
+  },
   compiler: {
     removeConsole:
       process.env.NODE_ENV === "production"
