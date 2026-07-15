@@ -1,25 +1,32 @@
 "use client"
-import React, { useState } from "react"
+
+import type { ReactNode } from "react"
+import { useState } from "react"
+
 import {
-  motion,
   AnimatePresence,
-  useScroll,
+  motion,
   useMotionValueEvent,
+  useReducedMotion,
+  useScroll,
 } from "motion/react"
+
 import { cn } from "@/lib/utils"
 
 export const FloatingNav = ({
   children,
   className,
 }: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  children: any
+  children: ReactNode
   className?: string
 }) => {
   const { scrollY } = useScroll()
+  const prefersReducedMotion = useReducedMotion()
   const [visible, setVisible] = useState(true)
 
   useMotionValueEvent(scrollY, "change", (current) => {
+    if (prefersReducedMotion) return
+
     const previous = scrollY.getPrevious()
 
     if (previous === undefined) return
@@ -32,20 +39,17 @@ export const FloatingNav = ({
     setVisible(current < previous)
   })
 
+  const isVisible = prefersReducedMotion || visible
+
   return (
     <AnimatePresence mode="wait">
       <motion.div
-        initial={{
-          opacity: 1,
-          y: -100,
-        }}
+        initial={prefersReducedMotion ? false : { opacity: 1, y: -100 }}
         animate={{
-          y: visible ? 0 : -100,
-          opacity: visible ? 1 : 0,
+          y: isVisible ? 0 : -100,
+          opacity: isVisible ? 1 : 0,
         }}
-        transition={{
-          duration: 0.2,
-        }}
+        transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.2 }}
         className={cn(className)}
       >
         {children}
