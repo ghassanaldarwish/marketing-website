@@ -1,6 +1,14 @@
-import type { Article } from "@/features/articles/domain/article"
+import type {
+  Article,
+  ArticleSummary,
+} from "@/features/articles/domain/article"
 
-export function compareArticles(first: Article, second: Article): number {
+type SortableArticle = Article | ArticleSummary
+
+export function compareArticles(
+  first: SortableArticle,
+  second: SortableArticle
+): number {
   if (first.metadata.featured !== second.metadata.featured) {
     return first.metadata.featured ? -1 : 1
   }
@@ -26,7 +34,9 @@ export function compareArticles(first: Article, second: Article): number {
   return first.metadata.title.localeCompare(second.metadata.title)
 }
 
-export function sortArticles(articles: readonly Article[]): Article[] {
+export function sortArticles<T extends SortableArticle>(
+  articles: readonly T[]
+): T[] {
   return [...articles].sort(compareArticles)
 }
 
