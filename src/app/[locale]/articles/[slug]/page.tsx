@@ -7,12 +7,12 @@ import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { MdxRenderer } from "@/components/mdx/mdx-renderer"
 
+import { getArticle, type AppLocale } from "@/features/articles/server"
 import { getArticleLanguageAlternates } from "@/i18n/alternates"
 import { createArticlePath } from "@/i18n/paths"
 import { routing } from "@/i18n/routing"
 import { absoluteUrl, getOpenGraphLocale, siteConfig } from "@/lib/config/site"
 import { toIsoDate } from "@/lib/dates"
-import { getArticle, type AppLocale } from "@/lib/mdx/get-article"
 
 type ArticlePageProps = {
   params: Promise<{

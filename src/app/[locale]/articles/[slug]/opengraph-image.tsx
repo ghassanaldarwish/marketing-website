@@ -6,8 +6,8 @@ import {
   socialImageSize,
 } from "@/components/seo/article-social-image"
 
+import { getArticle, type AppLocale } from "@/features/articles/server"
 import { routing } from "@/i18n/routing"
-import { getArticle, type AppLocale } from "@/lib/mdx/get-article"
 
 export const runtime = "nodejs"
 

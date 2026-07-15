@@ -11,12 +11,12 @@ import { getTranslations, setRequestLocale } from "next-intl/server"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 
+import { getArticles, type AppLocale } from "@/features/articles/server"
 import { createStaticLanguageAlternates } from "@/i18n/alternates"
 import { createArticlePath } from "@/i18n/paths"
 import { routing } from "@/i18n/routing"
 import { absoluteUrl, getOpenGraphLocale, siteConfig } from "@/lib/config/site"
 import { getArticleDateValue, toIsoDate } from "@/lib/dates"
-import { getArticles, type AppLocale } from "@/lib/mdx/get-article"
 
 type ArticlesPageProps = {
   params: Promise<{
