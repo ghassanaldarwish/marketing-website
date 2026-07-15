@@ -1,6 +1,9 @@
-import { publishedLocales, type AppLocale } from "@/i18n/locale"
+import {
+  defaultLocale,
+  publishedLocales,
+  type AppLocale,
+} from "@/i18n/locale"
 import { createArticlePath, createLocalizedPath } from "@/i18n/paths"
-import { routing } from "@/i18n/routing"
 import { absoluteUrl } from "@/lib/config/site"
 import type { ArticleSummary } from "@/lib/mdx/article-schema"
 
@@ -24,7 +27,7 @@ function addDefaultAlternate(
   availableLocales: readonly AppLocale[]
 ): void {
   const defaultUrl =
-    languages[routing.defaultLocale] ??
+    languages[defaultLocale] ??
     availableLocales
       .map((locale) => languages[locale])
       .find((url): url is string => typeof url === "string")
@@ -44,7 +47,7 @@ export function createStaticLanguageAlternates(
   }
 
   languages["x-default"] = absoluteUrl(
-    createLocalizedPath(routing.defaultLocale, path)
+    createLocalizedPath(defaultLocale, path)
   )
 
   return languages
