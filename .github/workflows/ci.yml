@@ -57,5 +57,8 @@ jobs:
       - name: Run unit tests
         run: pnpm test:ci
 
+      - name: Validate localized content
+        run: pnpm content:check
+
       - name: Build production application
         run: pnpm build

@@ -14,7 +14,13 @@ import {
 } from "@/components/ui/dialog"
 import { ContactForm } from "@/features/contact/contact-form"
 
-export function ContactDialog() {
+type ContactDialogProps = {
+  triggerVariant?: React.ComponentProps<typeof Button>["variant"]
+}
+
+export function ContactDialog({
+  triggerVariant = "default",
+}: ContactDialogProps = {}) {
   const [isOpen, setIsOpen] = React.useState(false)
   const t = useTranslations("contactModal")
 
@@ -23,6 +29,7 @@ export function ContactDialog() {
       <DialogTrigger asChild>
         <Button
           size="lg"
+          variant={triggerVariant}
           className="h-auto min-h-11 max-w-full min-w-0 text-center text-lg whitespace-normal"
         >
           {t("trigger")}

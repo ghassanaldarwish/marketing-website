@@ -1,8 +1,11 @@
 import Image from "next/image"
 import Link from "next/link"
+import { ArrowRight } from "lucide-react"
 import { useTranslations } from "next-intl"
 
+import { Button } from "@/components/ui/button"
 import { ContactDialog } from "@/features/contact/contact-dialog"
+import { Link as LocalizedLink } from "@/i18n/routing"
 import { siteConfig } from "@/lib/config/site"
 
 import { Terminal } from "../ui/Terminal"
@@ -35,12 +38,30 @@ export default function Hero() {
           <p className="text-lg leading-relaxed sm:text-xl">{description}</p>
 
           <div
-            className="flex min-w-0 flex-wrap items-center justify-start gap-x-8 gap-y-4"
+            className="flex min-w-0 flex-wrap items-center justify-start gap-x-3 gap-y-4"
             data-testid="hero-actions"
           >
-            <ContactDialog />
+            <Button
+              size="lg"
+              className="h-auto min-h-11 max-w-full min-w-0 text-center text-lg whitespace-normal"
+              asChild
+            >
+              <LocalizedLink
+                href="/articles"
+                data-testid="hero-engineering-action"
+              >
+                {t("hero.viewEngineering")}
 
-            <div className="flex shrink-0 items-center gap-4">
+                <ArrowRight
+                  aria-hidden="true"
+                  className="ms-1 size-4 rtl:rotate-180"
+                />
+              </LocalizedLink>
+            </Button>
+
+            <ContactDialog triggerVariant="outline" />
+
+            <div className="ms-2 flex shrink-0 items-center gap-4">
               <Link
                 href={siteConfig.socialLinks.github}
                 target="_blank"
