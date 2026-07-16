@@ -51,6 +51,9 @@ const withMDX = createMDX({
 
 const nextConfig: NextConfig = {
   pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
+  outputFileTracingIncludes: {
+    "/*": ["./content/articles/**/*"],
+  },
   images: {
     remotePatterns: [
       {
@@ -72,13 +75,10 @@ const nextConfig: NextConfig = {
   },
 
   /**
-   * Enable these only when deploying with Docker using
+   * Enable this only when deploying with Docker using
    * Next.js standalone output.
    */
   // output: "standalone",
-  // outputFileTracingIncludes: {
-  //   "/*": ["./content/**/*"],
-  // },
 }
 
 export default withMDX(withNextIntl(nextConfig))
