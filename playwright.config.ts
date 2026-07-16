@@ -55,6 +55,8 @@ export default defineConfig({
       ...process.env,
       CI: "true",
       E2E_DISABLE_TELEGRAM_DELIVERY: "true",
+      E2E_USE_IN_MEMORY_CONTACT_RATE_LIMIT: "true",
+      CONTACT_RATE_LIMIT_GLOBAL_MAX_ATTEMPTS: "1000",
       NEXT_PUBLIC_SITE_URL: baseURL,
       MDX_CONTENT_SOURCE: "local",
       TELEGRAM_BOT_TOKEN: "",

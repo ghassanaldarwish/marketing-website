@@ -23,7 +23,17 @@ describe("contactFormSchema", () => {
       name: "Test User",
       email: "test.user@example.test",
       message: "This message is long enough to be accepted.",
+      website: "",
     })
+  })
+
+  it("accepts and trims the optional honeypot for server-side detection", () => {
+    expect(
+      contactFormSchema.parse({
+        ...validContactInput,
+        website: "  https://spam.example  ",
+      }).website
+    ).toBe("https://spam.example")
   })
 
   it.each([

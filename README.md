@@ -240,19 +240,22 @@ are not sent to Telegram.
 
 ## Environment variables
 
-| Variable                   | Required                        | Default / behavior                                 |
-| -------------------------- | ------------------------------- | -------------------------------------------------- |
-| `NEXT_PUBLIC_SITE_URL`     | No                              | Canonical origin; defaults to `https://ghassan.de` |
-| `TELEGRAM_BOT_TOKEN`       | For production contact delivery | Telegram bot credential; server-only               |
-| `GROUP_CHAT_ID`            | For production contact delivery | Destination user, group, or channel chat ID        |
-| `MDX_CONTENT_SOURCE`       | No                              | `local`; accepts `local`, `remote`, or `hybrid`    |
-| `MDX_REVALIDATE_SECONDS`   | No                              | `3600`; non-negative cache revalidation interval   |
-| `MDX_REMOTE_BASE_URL`      | In `remote` mode                | Root URL containing locale directories             |
-| `MDX_REMOTE_TOKEN`         | No                              | Bearer token sent to the remote content service    |
-| `GOOGLE_SITE_VERIFICATION` | No                              | Adds Google verification metadata                  |
-| `BING_SITE_VERIFICATION`   | No                              | Adds Bing `msvalidate.01` metadata                 |
-| `NODE_ENV`                 | Framework-managed               | Controls development logging and draft visibility  |
-| `VERCEL_ENV`               | Vercel-managed                  | Prevents preview deployments from being indexed    |
+| Variable                    | Required                        | Default / behavior                                 |
+| --------------------------- | ------------------------------- | -------------------------------------------------- |
+| `NEXT_PUBLIC_SITE_URL`      | No                              | Canonical origin; defaults to `https://ghassan.de` |
+| `TELEGRAM_BOT_TOKEN`        | For production contact delivery | Telegram bot credential; server-only               |
+| `GROUP_CHAT_ID`             | For production contact delivery | Destination user, group, or channel chat ID        |
+| `KV_REST_API_URL`           | For production contact delivery | Upstash Redis REST endpoint; server-only           |
+| `KV_REST_API_TOKEN`         | For production contact delivery | Upstash Redis write token; server-only             |
+| `CONTACT_RATE_LIMIT_SECRET` | For production contact delivery | HMAC secret for privacy-safe request identifiers   |
+| `MDX_CONTENT_SOURCE`        | No                              | `local`; accepts `local`, `remote`, or `hybrid`    |
+| `MDX_REVALIDATE_SECONDS`    | No                              | `3600`; non-negative cache revalidation interval   |
+| `MDX_REMOTE_BASE_URL`       | In `remote` mode                | Root URL containing locale directories             |
+| `MDX_REMOTE_TOKEN`          | No                              | Bearer token sent to the remote content service    |
+| `GOOGLE_SITE_VERIFICATION`  | No                              | Adds Google verification metadata                  |
+| `BING_SITE_VERIFICATION`    | No                              | Adds Bing `msvalidate.01` metadata                 |
+| `NODE_ENV`                  | Framework-managed               | Controls development logging and draft visibility  |
+| `VERCEL_ENV`                | Vercel-managed                  | Prevents preview deployments from being indexed    |
 
 Environment configuration for MDX is parsed with Zod when the server module is
 loaded. Invalid enum values, URLs, or revalidation values fail early rather than
@@ -416,9 +419,15 @@ page.
 1. React Hook Form manages the Client Component state.
 2. Zod validates name, email, and message before submission.
 3. The Server Action reconstructs and validates the payload again.
-4. Development logs the resulting Telegram message on the server.
-5. Production sends the message to the configured Telegram chat.
-6. Sonner displays success or error feedback and the dialog closes after a
+4. An off-screen honeypot silently rejects automated submissions.
+5. A privacy-safe HMAC request key is checked against Upstash Redis using a
+   three-per-ten-minute client limit and a thirty-per-ten-minute global delivery
+   budget.
+6. Redis failures fail closed with the same localized retry-later response as a
+   normal limit, and structured logs contain no email, message, or raw address.
+7. Development and CI use an isolated in-memory limiter; production sends an
+   allowed message to the configured Telegram chat.
+8. Sonner displays success or error feedback and the dialog closes after a
    successful response.
 
 Validation rules:
@@ -429,6 +438,11 @@ Validation rules:
 
 Keep `TELEGRAM_BOT_TOKEN` and `GROUP_CHAT_ID` server-side. They must never use a
 `NEXT_PUBLIC_` prefix or be committed to the repository.
+
+The Vercel Upstash integration supplies `KV_REST_API_URL` and
+`KV_REST_API_TOKEN`. Generate `CONTACT_RATE_LIMIT_SECRET` independently and keep
+all three values server-side. The limiter stores only expiring counters keyed by
+an HMAC digest; it never stores contact content or a raw client address.
 
 ## SEO and social sharing
 

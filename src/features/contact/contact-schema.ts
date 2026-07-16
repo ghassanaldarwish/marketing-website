@@ -16,6 +16,7 @@ export function createContactFormSchema(messages: ContactValidationMessages) {
       .trim()
       .min(10, messages.messageMin)
       .max(5000, messages.messageMax),
+    website: z.string().trim().optional().default(""),
   })
 }
 
@@ -30,4 +31,5 @@ export const contactFormSchema = createContactFormSchema(
   serverValidationMessages
 )
 
+export type ContactFormInput = z.input<typeof contactFormSchema>
 export type ContactFormType = z.infer<typeof contactFormSchema>

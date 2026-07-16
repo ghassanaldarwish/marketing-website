@@ -29,6 +29,7 @@ import {
 } from "@/features/contact/contact-result"
 import {
   createContactFormSchema,
+  type ContactFormInput,
   type ContactFormType,
 } from "@/features/contact/contact-schema"
 import { submitContactForm } from "@/features/contact/server/submit-contact-form"
@@ -76,12 +77,13 @@ export function ContactForm({
     [emailInvalidMessage, messageMaxMessage, messageMinMessage, nameMinMessage]
   )
 
-  const form = useForm<ContactFormType>({
+  const form = useForm<ContactFormInput, unknown, ContactFormType>({
     resolver: zodResolver(localizedSchema),
     defaultValues: {
       name: "",
       email: "",
       message: "",
+      website: "",
     },
   })
 
@@ -156,6 +158,10 @@ export function ContactForm({
         announceError(t("toast.deliveryError"))
         return
 
+      case "rate_limited":
+        announceError(t("toast.rateLimited"))
+        return
+
       case "unexpected_error":
         announceError(t("toast.unexpectedError"))
         return
@@ -188,6 +194,20 @@ export function ContactForm({
       >
         <fieldset disabled={isSubmitting} className="min-w-0 border-0 p-0">
           <FieldGroup>
+            <div
+              className="absolute top-auto -left-[10000px] h-px w-px overflow-hidden"
+              aria-hidden="true"
+            >
+              <label htmlFor="contact-website">Leave this field empty</label>
+              <input
+                {...form.register("website")}
+                id="contact-website"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+              />
+            </div>
+
             <Controller
               name="name"
               control={form.control}
