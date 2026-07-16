@@ -69,7 +69,7 @@ export default function Hero() {
       <div className="relative m-auto max-w-6xl items-end justify-between lg:flex">
         <div className="min-w-0 lg:w-[59%]">
           <ul
-            className="grid w-full grid-cols-2 gap-x-4 gap-y-2 bg-background/10 py-4 text-sm leading-6 text-muted-foreground backdrop-blur-xs sm:grid-cols-4 sm:text-base lg:flex lg:flex-wrap lg:text-lg lg:leading-8"
+            className="grid w-full grid-cols-2 gap-x-4 gap-y-2 bg-background/10 py-4 text-center text-sm leading-6 text-muted-foreground backdrop-blur-xs sm:grid-cols-4 sm:text-base lg:flex lg:flex-wrap lg:text-lg lg:leading-8"
             data-testid="hero-metrics"
           >
             {infiniteMovingCards.map((item) => (

@@ -123,4 +123,32 @@ test.describe("responsive Hero", () => {
     await expect(terminal).toContainText("git push origin main")
     expect(hydrationErrors).toEqual([])
   })
+
+  test("keeps the Terminal LTR on the Arabic homepage", async ({ page }) => {
+    await page.setViewportSize({ width: 1024, height: 768 })
+    await page.emulateMedia({ reducedMotion: "reduce" })
+    await page.goto("/ar")
+
+    await expect(page.locator("html")).toHaveAttribute("dir", "rtl")
+
+    const terminal = page.getByTestId("hero-terminal")
+    const terminalRoot = terminal.locator('[dir="ltr"]')
+
+    await expect(terminal).toBeVisible()
+    await expect(terminalRoot).toHaveCount(1)
+    await expect(terminalRoot).toContainText("npx ai architect")
+
+    const writingDirection = await terminalRoot.evaluate((element) => {
+      const style = getComputedStyle(element)
+      return {
+        direction: style.direction,
+        textAlign: style.textAlign,
+      }
+    })
+
+    expect(writingDirection).toEqual({
+      direction: "ltr",
+      textAlign: "left",
+    })
+  })
 })

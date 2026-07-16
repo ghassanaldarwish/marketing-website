@@ -329,7 +329,8 @@ export function Terminal({
   return (
     <div
       ref={containerRef}
-      className={cn("h-full w-full font-mono text-xs", className)}
+      className={cn("h-full w-full text-left font-mono text-xs", className)}
+      dir="ltr"
     >
       <div className="h-full overflow-hidden rounded-lg border bg-background/60 shadow-2xl dark:border-neutral-800 dark:bg-neutral-900">
         <div className="flex items-center gap-2 border-b bg-background px-4 py-3 dark:bg-neutral-800">
