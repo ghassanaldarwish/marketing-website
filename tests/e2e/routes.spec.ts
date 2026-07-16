@@ -43,6 +43,25 @@ for (const locale of publishedLocales) {
   })
 }
 
+test("the canonical article renderer supports MDX features", async ({
+  page,
+}) => {
+  const response = await page.goto("/en/articles/scalable-backend-platform")
+
+  expect(response?.status()).toBeLessThan(400)
+  await expect(page.locator("h2#the-problem")).toBeVisible()
+  await expect(
+    page.locator('h2#the-problem a[aria-label="Link to this section"]')
+  ).toBeVisible()
+  await expect(page.locator("article table").first()).toBeVisible()
+  await expect(
+    page.getByText("Core engineering principle", { exact: true })
+  ).toBeVisible()
+  await expect(
+    page.locator("[data-rehype-pretty-code-figure]").first()
+  ).toBeVisible()
+})
+
 test("Arabic is publicly advertised after GH-022", async ({
   page,
   isMobile,

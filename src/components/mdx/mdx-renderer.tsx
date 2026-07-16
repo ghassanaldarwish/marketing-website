@@ -63,6 +63,14 @@ async function evaluateMdx(source: string, withPrettyCode: boolean) {
   })
 }
 
+/**
+ * Canonical article compilation boundary.
+ *
+ * MDX is executable application code. Only pass author-controlled content from
+ * the configured local or remote article repositories to this renderer. If an
+ * untrusted publishing source is introduced, render sanitized Markdown instead
+ * of evaluating it as MDX.
+ */
 export async function MdxRenderer({ source, components }: MdxRendererProps) {
   const shouldUsePrettyCode = process.env.VERCEL !== "1"
   let evaluatedMdx
