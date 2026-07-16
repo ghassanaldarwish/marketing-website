@@ -17,18 +17,27 @@ export default function Hero() {
   const infiniteMovingCards = t.raw("hero.infiniteMovingCards") as string[]
 
   return (
-    <div className="relative overflow-x-clip px-2 lg:mb-24 lg:px-0">
+    <div
+      className="relative overflow-x-clip px-2 lg:mb-24 lg:px-0"
+      data-testid="hero"
+    >
       <div className="relative m-auto flex h-full max-w-6xl flex-col pt-12 md:mt-0 lg:flex-row">
-        <div className="lh:gap-4 flex w-full flex-col justify-end gap-8 lg:gap-10 lg:pt-0">
+        <div className="flex w-full flex-col justify-end gap-4 sm:gap-6 lg:gap-10 lg:pt-0">
           <TechBadge />
 
-          <h1 className="text-3xl lg:text-6xl">
+          <h1
+            className="text-4xl sm:text-5xl lg:text-6xl"
+            data-testid="hero-heading"
+          >
             {title} <br /> {secondaryTitle}
           </h1>
 
-          <p className="min-h-30 text-xl md:min-h-10">{description}</p>
+          <p className="text-lg leading-relaxed sm:text-xl">{description}</p>
 
-          <div className="flex items-center justify-start gap-8">
+          <div
+            className="flex items-center justify-start gap-8"
+            data-testid="hero-actions"
+          >
             <ContactDialog />
 
             <div className="flex items-center gap-4">
@@ -48,16 +57,21 @@ export default function Hero() {
             src="/hero.png"
             width={794}
             height={930}
-            className="pt-8 lg:pt-14"
+            className="h-80 w-full object-contain object-bottom pt-4 sm:h-[30rem] sm:pt-6 lg:h-auto lg:w-auto lg:pt-14"
+            data-testid="hero-portrait"
             alt="Ghassan Hero"
             loading="eager"
+            sizes="(min-width: 1024px) 50vw, 100vw"
           />
         </div>
       </div>
 
-      <div className="relative m-auto max-w-6xl items-end justify-between md:flex">
+      <div className="relative m-auto max-w-6xl items-end justify-between lg:flex">
         <div className="min-w-0 lg:w-[59%]">
-          <ul className="flex w-full flex-wrap gap-x-4 gap-y-2 bg-background/10 py-4 text-lg leading-8 text-muted-foreground backdrop-blur-xs">
+          <ul
+            className="grid w-full grid-cols-2 gap-x-4 gap-y-2 bg-background/10 py-4 text-center text-sm leading-6 text-muted-foreground backdrop-blur-xs sm:grid-cols-4 sm:text-base lg:flex lg:flex-wrap lg:text-lg lg:leading-8"
+            data-testid="hero-metrics"
+          >
             {infiniteMovingCards.map((item) => (
               <li className="min-w-0" key={item}>
                 {item}
@@ -66,22 +80,31 @@ export default function Hero() {
           </ul>
         </div>
 
-        <Terminal
-          initialDelay={800}
-          className="z-10 h-62 w-full lg:w-[41%]"
-          commands={["npx ai architect", "pnpm build", "git push origin main"]}
-          outputs={{
-            0: [
-              "Analyzing project...",
-              "✔ Suggested microservice architecture",
-              "✔ Generated deployment strategy",
-            ],
-            1: ["✓ Build completed"],
-            2: ["✔ Deployment started..."],
-          }}
-          typingSpeed={45}
-          delayBetweenCommands={1000}
-        />
+        <div
+          className="hidden h-62 lg:block lg:w-[41%]"
+          data-testid="hero-terminal"
+        >
+          <Terminal
+            initialDelay={800}
+            className="z-10 h-full w-full"
+            commands={[
+              "npx ai architect",
+              "pnpm build",
+              "git push origin main",
+            ]}
+            outputs={{
+              0: [
+                "Analyzing project...",
+                "✔ Suggested microservice architecture",
+                "✔ Generated deployment strategy",
+              ],
+              1: ["✓ Build completed"],
+              2: ["✔ Deployment started..."],
+            }}
+            typingSpeed={45}
+            delayBetweenCommands={1000}
+          />
+        </div>
       </div>
     </div>
   )

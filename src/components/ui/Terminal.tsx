@@ -1,11 +1,27 @@
 "use client"
 
-import React, { useEffect, useMemo, useRef, useState } from "react"
+import React, {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react"
 import { useReducedMotion } from "motion/react"
 
 import { cn } from "@/lib/utils"
 
 import { createTerminalLines, type TerminalLine } from "./terminal-content"
+
+const subscribeToHydration = () => () => undefined
+
+function useHasHydrated() {
+  return useSyncExternalStore(
+    subscribeToHydration,
+    () => true,
+    () => false
+  )
+}
 
 function useInView(ref: React.RefObject<HTMLElement | null>, once = true) {
   const [inView, setInView] = useState(false)
@@ -169,6 +185,8 @@ export function Terminal({
   const contentRef = useRef<HTMLDivElement>(null)
   const inView = useInView(containerRef)
   const prefersReducedMotion = useReducedMotion()
+  const hasHydrated = useHasHydrated()
+  const shouldReduceMotion = hasHydrated && prefersReducedMotion
 
   const staticLines = useMemo(
     () => createTerminalLines(commands, outputs),
@@ -193,14 +211,14 @@ export function Terminal({
   const isLastCommand = commandIndex === commands.length - 1
 
   useEffect(() => {
-    if (prefersReducedMotion || !inView || phase !== "idle") return
+    if (shouldReduceMotion || !inView || phase !== "idle") return
 
     const timeout = setTimeout(() => setPhase("typing"), initialDelay)
     return () => clearTimeout(timeout)
-  }, [inView, initialDelay, phase, prefersReducedMotion])
+  }, [inView, initialDelay, phase, shouldReduceMotion])
 
   useEffect(() => {
-    if (prefersReducedMotion || phase !== "typing") return
+    if (shouldReduceMotion || phase !== "typing") return
 
     if (characterIndex < currentCommand.length) {
       const timeout = setTimeout(
@@ -216,10 +234,10 @@ export function Terminal({
 
     const timeout = setTimeout(() => setPhase("executing"), 80)
     return () => clearTimeout(timeout)
-  }, [characterIndex, currentCommand, phase, prefersReducedMotion, typingSpeed])
+  }, [characterIndex, currentCommand, phase, shouldReduceMotion, typingSpeed])
 
   useEffect(() => {
-    if (prefersReducedMotion || phase !== "executing") return
+    if (shouldReduceMotion || phase !== "executing") return
 
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLines((previous) => [
@@ -241,11 +259,11 @@ export function Terminal({
     currentOutputs.length,
     isLastCommand,
     phase,
-    prefersReducedMotion,
+    shouldReduceMotion,
   ])
 
   useEffect(() => {
-    if (prefersReducedMotion || phase !== "outputting") return
+    if (shouldReduceMotion || phase !== "outputting") return
 
     if (outputIndex >= 0 && outputIndex < currentOutputs.length) {
       const timeout = setTimeout(() => {
@@ -266,10 +284,10 @@ export function Terminal({
 
       return () => clearTimeout(timeout)
     }
-  }, [currentOutputs, isLastCommand, outputIndex, phase, prefersReducedMotion])
+  }, [currentOutputs, isLastCommand, outputIndex, phase, shouldReduceMotion])
 
   useEffect(() => {
-    if (prefersReducedMotion || phase !== "pausing") return
+    if (shouldReduceMotion || phase !== "pausing") return
 
     const timeout = setTimeout(() => {
       setCharacterIndex(0)
@@ -279,25 +297,25 @@ export function Terminal({
     }, delayBetweenCommands)
 
     return () => clearTimeout(timeout)
-  }, [delayBetweenCommands, phase, prefersReducedMotion])
+  }, [delayBetweenCommands, phase, shouldReduceMotion])
 
   useEffect(() => {
-    if (prefersReducedMotion) return
+    if (shouldReduceMotion) return
 
     const interval = setInterval(() => {
       setCursorVisible((current) => !current)
     }, 530)
 
     return () => clearInterval(interval)
-  }, [prefersReducedMotion])
+  }, [shouldReduceMotion])
 
   useEffect(() => {
-    if (!prefersReducedMotion && contentRef.current) {
+    if (!shouldReduceMotion && contentRef.current) {
       contentRef.current.scrollTop = contentRef.current.scrollHeight
     }
-  }, [lines, phase, prefersReducedMotion])
+  }, [lines, phase, shouldReduceMotion])
 
-  const visibleLines = prefersReducedMotion ? staticLines : lines
+  const visibleLines = shouldReduceMotion ? staticLines : lines
 
   const prompt = (
     <span className="text-neutral-500">
@@ -311,7 +329,8 @@ export function Terminal({
   return (
     <div
       ref={containerRef}
-      className={cn("h-full w-full font-mono text-xs", className)}
+      className={cn("h-full w-full text-left font-mono text-xs", className)}
+      dir="ltr"
     >
       <div className="h-full overflow-hidden rounded-lg border bg-background/60 shadow-2xl dark:border-neutral-800 dark:bg-neutral-900">
         <div className="flex items-center gap-2 border-b bg-background px-4 py-3 dark:bg-neutral-800">
@@ -352,7 +371,7 @@ export function Terminal({
             </div>
           ))}
 
-          {!prefersReducedMotion && phase === "typing" && (
+          {!shouldReduceMotion && phase === "typing" && (
             <div className="leading-relaxed whitespace-pre-wrap">
               {prompt}
               <SyntaxHighlightedText text={currentText} />
@@ -360,7 +379,7 @@ export function Terminal({
             </div>
           )}
 
-          {!prefersReducedMotion &&
+          {!shouldReduceMotion &&
             (phase === "done" ||
               phase === "pausing" ||
               phase === "outputting") && (
