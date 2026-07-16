@@ -22,27 +22,25 @@ for (const colorScheme of ["light", "dark"] as const) {
 
       const rendering = await icon.evaluate((element) => {
         const paths = [...element.querySelectorAll("path")]
-        const foregroundPaths = paths.filter((path) =>
-          path.classList.contains("fill-foreground")
+        const glyph = element.querySelector<SVGPathElement>(
+          '[data-part="glyph"]'
         )
-        const backgroundPaths = paths.filter((path) =>
-          path.classList.contains("fill-background")
-        )
-        const mutedPaths = paths.filter((path) =>
-          path.classList.contains("fill-muted-foreground")
-        )
+
+        if (!glyph) {
+          throw new Error("Expected the Jenkins glyph to render")
+        }
+
         const box = element.getBoundingClientRect()
         const pageBackground = getComputedStyle(document.body).backgroundColor
-        const fills = (items: SVGPathElement[]) =>
-          items.map((path) => getComputedStyle(path).fill)
+        const pathData = glyph.getAttribute("d") ?? ""
 
         return {
           width: box.width,
           height: box.height,
           pageBackground,
-          foregroundFills: fills(foregroundPaths),
-          backgroundFills: fills(backgroundPaths),
-          mutedFills: fills(mutedPaths),
+          pathCount: paths.length,
+          glyphFill: getComputedStyle(glyph).fill,
+          subpathCount: (pathData.match(/[Mm]/g) ?? []).length,
           filters: paths.map((path) => getComputedStyle(path).filter),
           pageOverflows:
             document.documentElement.scrollWidth >
@@ -52,14 +50,9 @@ for (const colorScheme of ["light", "dark"] as const) {
 
       expect(rendering.width).toBe(viewport.iconSize)
       expect(rendering.height).toBe(viewport.iconSize)
-      expect(rendering.foregroundFills).toHaveLength(14)
-      expect(rendering.backgroundFills).toHaveLength(2)
-      expect(rendering.mutedFills).toHaveLength(1)
-      expect(rendering.foregroundFills).not.toContain(rendering.pageBackground)
-      expect(rendering.mutedFills).not.toContain(rendering.pageBackground)
-      expect(rendering.backgroundFills[0]).not.toBe(
-        rendering.foregroundFills[0]
-      )
+      expect(rendering.pathCount).toBe(1)
+      expect(rendering.subpathCount).toBeGreaterThan(10)
+      expect(rendering.glyphFill).not.toBe(rendering.pageBackground)
       expect(new Set(rendering.filters)).toEqual(new Set(["none"]))
       expect(rendering.pageOverflows).toBe(false)
     })
