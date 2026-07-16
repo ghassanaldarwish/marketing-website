@@ -8,7 +8,7 @@ type CalloutProps = {
 
 function Callout({ title = "Note", children }: CalloutProps) {
   return (
-    <aside className="my-8 rounded-xl border border-primary/25 bg-primary/5 p-5 text-start">
+    <aside className="mx-auto my-8 max-w-[70ch] rounded-xl border border-primary/25 bg-primary/5 p-5 text-start">
       <p className="m-0 font-semibold text-foreground">{title}</p>
 
       <div className="mt-2 text-muted-foreground">{children}</div>
@@ -56,7 +56,7 @@ export const mdxComponents = {
   h1: ({ children, ...props }: ComponentPropsWithoutRef<"h1">) => (
     <h1
       {...props}
-      className="mt-10 text-start text-4xl font-semibold tracking-tight text-foreground sm:text-5xl"
+      className="mx-auto mt-10 max-w-[70ch] text-start text-4xl font-semibold tracking-tight text-foreground sm:text-5xl"
     >
       {children}
     </h1>
@@ -65,7 +65,7 @@ export const mdxComponents = {
   h2: ({ children, ...props }: ComponentPropsWithoutRef<"h2">) => (
     <h2
       {...props}
-      className="mt-16 pt-10 text-start text-3xl font-semibold tracking-tight text-foreground sm:text-4xl"
+      className="mx-auto mt-14 max-w-[70ch] text-start text-3xl font-semibold tracking-tight text-foreground sm:text-4xl"
     >
       {children}
     </h2>
@@ -74,19 +74,22 @@ export const mdxComponents = {
   h3: ({ children, ...props }: ComponentPropsWithoutRef<"h3">) => (
     <h3
       {...props}
-      className="mt-10 text-start text-2xl font-semibold tracking-tight text-foreground"
+      className="mx-auto mt-10 max-w-[70ch] text-start text-2xl font-semibold tracking-tight text-foreground"
     >
       {children}
     </h3>
   ),
   blockquote: ({ children }) => (
-    <blockquote className="my-8 border-s-2 border-blue-500 ps-6 text-start text-lg leading-8 text-muted-foreground italic">
+    <blockquote className="mx-auto my-8 max-w-[70ch] border-s-2 border-blue-500 ps-6 text-start text-lg leading-8 text-muted-foreground italic">
       {children}
     </blockquote>
   ),
 
   table: ({ children }) => (
-    <div className="my-8 overflow-x-auto rounded-2xl border border-border">
+    <div
+      data-article-table
+      className="my-8 max-w-full overflow-x-auto overscroll-x-contain rounded-2xl border border-border"
+    >
       <table className="w-full min-w-xl border-collapse text-start text-sm">
         {children}
       </table>
@@ -105,19 +108,19 @@ export const mdxComponents = {
     </td>
   ),
   p: ({ children }) => (
-    <p className="mt-5 text-start text-lg leading-8 text-muted-foreground">
+    <p className="mx-auto mt-5 max-w-[70ch] text-start text-lg leading-8 text-muted-foreground">
       {children}
     </p>
   ),
 
   ul: ({ children }) => (
-    <ul className="mt-6 list-disc space-y-3 ps-6 text-start text-muted-foreground">
+    <ul className="mx-auto mt-6 max-w-[70ch] list-disc space-y-3 ps-6 text-start text-muted-foreground">
       {children}
     </ul>
   ),
 
   ol: ({ children }) => (
-    <ol className="mt-6 list-decimal space-y-3 ps-6 text-start text-muted-foreground">
+    <ol className="mx-auto mt-6 max-w-[70ch] list-decimal space-y-3 ps-6 text-start text-muted-foreground">
       {children}
     </ol>
   ),
