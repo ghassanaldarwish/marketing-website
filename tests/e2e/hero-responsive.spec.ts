@@ -132,23 +132,35 @@ test.describe("responsive Hero", () => {
     await expect(page.locator("html")).toHaveAttribute("dir", "rtl")
 
     const terminal = page.getByTestId("hero-terminal")
-    const terminalRoot = terminal.locator('[dir="ltr"]')
+    const terminalRoot = terminal.locator('[data-slot="terminal-root"]')
+    const terminalContent = terminal.locator('[data-slot="terminal-content"]')
+    const terminalLines = terminal.locator('[data-slot="terminal-line"]')
 
     await expect(terminal).toBeVisible()
     await expect(terminalRoot).toHaveCount(1)
+    await expect(terminalContent).toHaveCount(1)
+    await expect(terminalLines).toHaveCount(8)
     await expect(terminalRoot).toContainText("npx ai architect")
 
-    const writingDirection = await terminalRoot.evaluate((element) => {
-      const style = getComputedStyle(element)
-      return {
-        direction: style.direction,
-        textAlign: style.textAlign,
-      }
-    })
+    const writingDirections = await Promise.all(
+      [terminalRoot, terminalContent, terminalLines].map((locator) =>
+        locator.evaluateAll((elements) =>
+          elements.map((element) => {
+            const style = getComputedStyle(element)
+            return {
+              direction: style.direction,
+              textAlign: style.textAlign,
+            }
+          })
+        )
+      )
+    )
 
-    expect(writingDirection).toEqual({
-      direction: "ltr",
-      textAlign: "left",
-    })
+    expect(writingDirections.flat()).toEqual(
+      Array.from({ length: 10 }, () => ({
+        direction: "ltr",
+        textAlign: "left",
+      }))
+    )
   })
 })
