@@ -15,6 +15,7 @@ import { mdxComponents } from "@/mdx-components"
 
 type MdxRendererProps = {
   source: string
+  headingAnchorLabel: string
   components?: MDXComponents
 }
 
@@ -27,27 +28,35 @@ const prettyCodeOptions = {
   defaultLang: "plaintext",
 } satisfies PrettyCodeOptions
 
-const commonRehypePlugins: NonNullable<EvaluateOptions["rehypePlugins"]> = [
-  rehypeSlug,
-  [
-    rehypeAutolinkHeadings,
-    {
-      behavior: "append",
-      properties: {
-        className: ["heading-anchor"],
-        ariaLabel: "Link to this section",
+function createCommonRehypePlugins(
+  headingAnchorLabel: string
+): NonNullable<EvaluateOptions["rehypePlugins"]> {
+  return [
+    rehypeSlug,
+    [
+      rehypeAutolinkHeadings,
+      {
+        behavior: "append",
+        properties: {
+          className: ["heading-anchor"],
+          ariaLabel: headingAnchorLabel,
+        },
+        content: {
+          type: "text",
+          value: "#",
+        },
       },
-      content: {
-        type: "text",
-        value: "#",
-      },
-    },
-  ],
-]
+    ],
+  ]
+}
 
-async function evaluateMdx(source: string, withPrettyCode: boolean) {
+async function evaluateMdx(
+  source: string,
+  withPrettyCode: boolean,
+  headingAnchorLabel: string
+) {
   const rehypePlugins: NonNullable<EvaluateOptions["rehypePlugins"]> = [
-    ...commonRehypePlugins,
+    ...createCommonRehypePlugins(headingAnchorLabel),
   ]
 
   if (withPrettyCode) {
@@ -71,19 +80,27 @@ async function evaluateMdx(source: string, withPrettyCode: boolean) {
  * untrusted publishing source is introduced, render sanitized Markdown instead
  * of evaluating it as MDX.
  */
-export async function MdxRenderer({ source, components }: MdxRendererProps) {
+export async function MdxRenderer({
+  source,
+  headingAnchorLabel,
+  components,
+}: MdxRendererProps) {
   const shouldUsePrettyCode = process.env.VERCEL !== "1"
   let evaluatedMdx
 
   try {
-    evaluatedMdx = await evaluateMdx(source, shouldUsePrettyCode)
+    evaluatedMdx = await evaluateMdx(
+      source,
+      shouldUsePrettyCode,
+      headingAnchorLabel
+    )
   } catch (highlightingError) {
     if (!shouldUsePrettyCode) {
       throw highlightingError
     }
 
     try {
-      evaluatedMdx = await evaluateMdx(source, false)
+      evaluatedMdx = await evaluateMdx(source, false, headingAnchorLabel)
     } catch (mdxError) {
       throw new AggregateError(
         [highlightingError, mdxError],

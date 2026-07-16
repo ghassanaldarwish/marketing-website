@@ -7,6 +7,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { MdxRenderer } from "@/components/mdx/mdx-renderer"
 
+import { getArticleReadingMetrics } from "@/features/articles/domain/article-reading"
 import { getArticle, type AppLocale } from "@/features/articles/server"
 import { getArticleLanguageAlternates } from "@/i18n/alternates"
 import { createArticlePath } from "@/i18n/paths"
@@ -194,7 +195,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   const articleSection =
     metadata.category || metadata.tags[0] || defaultCategory
 
-  const wordCount = body.trim().split(/\s+/).filter(Boolean).length
+  const { wordCount, readingMinutes, tableOfContents } =
+    getArticleReadingMetrics(body)
 
   const articleKeywords = Array.from(
     new Set([...metadata.tags, ...metadata.stack])
@@ -350,6 +352,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                   </span>
                 </>
               )}
+
+              <span aria-hidden="true">•</span>
+              <span>{content("readingTime", { minutes: readingMinutes })}</span>
             </div>
 
             {metadata.coverImage && (
@@ -367,7 +372,38 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             )}
           </header>
 
-          <MdxRenderer key={`${locale}:${slug}`} source={body} />
+          {tableOfContents.length > 0 && (
+            <nav
+              data-article-toc
+              aria-label={content("tableOfContentsLabel")}
+              className="not-prose mx-auto mb-12 max-w-[70ch] rounded-2xl border border-border bg-muted/35 p-5 sm:p-6"
+            >
+              <h2 className="text-base font-semibold text-foreground">
+                {content("tableOfContentsTitle")}
+              </h2>
+
+              <ol className="mt-4 grid gap-x-8 gap-y-2 text-sm text-muted-foreground sm:grid-cols-2">
+                {tableOfContents.map(({ id, title }) => (
+                  <li key={id}>
+                    <a
+                      href={`#${id}`}
+                      className="inline-flex rounded-sm py-1 hover:text-foreground hover:underline"
+                    >
+                      {title}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </nav>
+          )}
+
+          <div data-article-prose className="min-w-0">
+            <MdxRenderer
+              key={`${locale}:${slug}`}
+              source={body}
+              headingAnchorLabel={content("headingAnchorLabel")}
+            />
+          </div>
         </article>
       </main>
     </>

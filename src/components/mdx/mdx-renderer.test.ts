@@ -22,6 +22,7 @@ import { MdxRenderer } from "@/components/mdx/mdx-renderer"
 import { mdxComponents } from "@/mdx-components"
 
 const originalVercelEnvironment = process.env.VERCEL
+const headingAnchorLabel = "Link to this section"
 
 describe("MdxRenderer", () => {
   beforeEach(() => {
@@ -43,7 +44,9 @@ describe("MdxRenderer", () => {
       .mockRejectedValueOnce(new Error("Shiki initialization failed"))
       .mockResolvedValueOnce({ default: MdxContent })
 
-    await expect(MdxRenderer({ source: "# Article" })).resolves.toBeDefined()
+    await expect(
+      MdxRenderer({ source: "# Article", headingAnchorLabel })
+    ).resolves.toBeDefined()
 
     expect(evaluateMock).toHaveBeenCalledTimes(2)
 
@@ -59,7 +62,9 @@ describe("MdxRenderer", () => {
     const MdxContent = () => null
     evaluateMock.mockResolvedValueOnce({ default: MdxContent })
 
-    await expect(MdxRenderer({ source: "# Article" })).resolves.toBeDefined()
+    await expect(
+      MdxRenderer({ source: "# Article", headingAnchorLabel })
+    ).resolves.toBeDefined()
 
     expect(evaluateMock).toHaveBeenCalledTimes(1)
     expect(evaluateMock.mock.calls[0]?.[1].rehypePlugins).toHaveLength(2)
@@ -72,6 +77,7 @@ describe("MdxRenderer", () => {
 
     const rendered = (await MdxRenderer({
       source: "# Remote or hybrid fixture\n\n| A | B |\n| - | - |\n| 1 | 2 |",
+      headingAnchorLabel,
       components: { Callout: CustomCallout },
     })) as ReactElement<{ components: MDXComponents }>
 
@@ -85,6 +91,25 @@ describe("MdxRenderer", () => {
     })
   })
 
+  it("passes the active locale's heading-anchor label to MDX", async () => {
+    const MdxContent = () => null
+    evaluateMock.mockResolvedValueOnce({ default: MdxContent })
+
+    await MdxRenderer({
+      source: "## Abschnitt",
+      headingAnchorLabel: "Link zu diesem Abschnitt",
+    })
+
+    expect(evaluateMock.mock.calls[0]?.[1].rehypePlugins[1]).toEqual([
+      expect.any(Function),
+      expect.objectContaining({
+        properties: expect.objectContaining({
+          ariaLabel: "Link zu diesem Abschnitt",
+        }),
+      }),
+    ])
+  })
+
   it("reports both highlighting and MDX failures when the fallback fails", async () => {
     const highlightingError = new Error("Shiki initialization failed")
     const mdxError = new Error("Invalid MDX")
@@ -93,7 +118,7 @@ describe("MdxRenderer", () => {
       .mockRejectedValueOnce(mdxError)
 
     try {
-      await MdxRenderer({ source: "<Broken" })
+      await MdxRenderer({ source: "<Broken", headingAnchorLabel })
       throw new Error("Expected MDX rendering to fail")
     } catch (error) {
       expect(error).toBeInstanceOf(AggregateError)

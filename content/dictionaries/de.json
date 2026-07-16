@@ -507,6 +507,10 @@
     "content": {
       "authorPrefix": "Von",
       "updatedPrefix": "Aktualisiert",
+      "readingTime": "{minutes} Min. Lesezeit",
+      "headingAnchorLabel": "Link zu diesem Abschnitt",
+      "tableOfContentsLabel": "Inhaltsverzeichnis",
+      "tableOfContentsTitle": "Auf dieser Seite",
       "coverImageAlt": "{title} — Artikel von {author}"
     }
   }

@@ -503,6 +503,10 @@
     "content": {
       "authorPrefix": "بقلم",
       "updatedPrefix": "آخر تحديث",
+      "readingTime": "{minutes, plural, one {دقيقة واحدة للقراءة} two {دقيقتان للقراءة} few {# دقائق للقراءة} many {# دقيقة للقراءة} other {# دقيقة للقراءة}}",
+      "headingAnchorLabel": "رابط إلى هذا القسم",
+      "tableOfContentsLabel": "جدول المحتويات",
+      "tableOfContentsTitle": "في هذه الصفحة",
       "coverImageAlt": "{title} — مقال بقلم {author}"
     }
   }

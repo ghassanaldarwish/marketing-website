@@ -515,6 +515,10 @@
     "content": {
       "authorPrefix": "By",
       "updatedPrefix": "Updated",
+      "readingTime": "{minutes} min read",
+      "headingAnchorLabel": "Link to this section",
+      "tableOfContentsLabel": "Table of contents",
+      "tableOfContentsTitle": "On this page",
       "coverImageAlt": "{title} — article by {author}"
     }
   }
