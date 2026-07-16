@@ -57,9 +57,7 @@ describe("MdxRenderer", () => {
     await expect(MdxRenderer({ source: "# Article" })).resolves.toBeDefined()
 
     expect(evaluateMock).toHaveBeenCalledTimes(1)
-    expect(
-      evaluateMock.mock.calls[0]?.[1].rehypePlugins
-    ).toHaveLength(2)
+    expect(evaluateMock.mock.calls[0]?.[1].rehypePlugins).toHaveLength(2)
   })
 
   it("reports both highlighting and MDX failures when the fallback fails", async () => {
