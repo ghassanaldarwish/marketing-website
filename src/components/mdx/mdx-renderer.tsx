@@ -10,7 +10,6 @@ import * as runtime from "react/jsx-runtime"
 import remarkGfm from "remark-gfm"
 import rehypeSlug from "rehype-slug"
 import rehypeAutolinkHeadings from "rehype-autolink-headings"
-import rehypePrettyCode from "rehype-pretty-code"
 
 import { mdxComponents } from "@/mdx-components"
 
@@ -52,6 +51,7 @@ async function evaluateMdx(source: string, withPrettyCode: boolean) {
   ]
 
   if (withPrettyCode) {
+    const { default: rehypePrettyCode } = await import("rehype-pretty-code")
     rehypePlugins.push([rehypePrettyCode, prettyCodeOptions])
   }
 
@@ -64,17 +64,24 @@ async function evaluateMdx(source: string, withPrettyCode: boolean) {
 }
 
 export async function MdxRenderer({ source, components }: MdxRendererProps) {
+  const shouldUsePrettyCode = process.env.VERCEL !== "1"
   let evaluatedMdx
 
   try {
-    evaluatedMdx = await evaluateMdx(source, true)
-  } catch (error) {
-    // Shiki-based syntax highlighting may fail to initialize in constrained
-    // serverless runtimes. Preserve article availability by retrying without
-    // the optional highlighting plugin. Invalid MDX still fails on the retry.
-    evaluatedMdx = await evaluateMdx(source, false).catch(() => {
-      throw error
-    })
+    evaluatedMdx = await evaluateMdx(source, shouldUsePrettyCode)
+  } catch (highlightingError) {
+    if (!shouldUsePrettyCode) {
+      throw highlightingError
+    }
+
+    try {
+      evaluatedMdx = await evaluateMdx(source, false)
+    } catch (mdxError) {
+      throw new AggregateError(
+        [highlightingError, mdxError],
+        "MDX evaluation failed with and without syntax highlighting."
+      )
+    }
   }
 
   const MdxContent = evaluatedMdx.default
