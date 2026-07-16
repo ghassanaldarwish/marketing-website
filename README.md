@@ -55,6 +55,7 @@ islands such as navigation, theme controls, animation, and form handling.
 - Responsive shadcn/Radix UI components, Motion animations, keyboard focus
   treatment, and reduced-motion support.
 
+
 ## Technology stack
 
 | Area               | Technology                                                          |
