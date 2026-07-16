@@ -1,4 +1,5 @@
 import matter from "gray-matter"
+import { z } from "zod"
 
 import {
   articleMetadataSchema,
@@ -8,6 +9,25 @@ import {
 
 const articleSlugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 export const articleFilePattern = /^[a-z0-9]+(?:-[a-z0-9]+)*\.(?:md|mdx)$/
+
+const remoteArticleIndexSchema = z
+  .union([
+    z.array(
+      z.string().regex(articleFilePattern, {
+        message:
+          "Remote article filenames must use kebab-case and end in .md or .mdx",
+      })
+    ),
+    z.object({
+      files: z.array(
+        z.string().regex(articleFilePattern, {
+          message:
+            "Remote article filenames must use kebab-case and end in .md or .mdx",
+        })
+      ),
+    }),
+  ])
+  .transform((value) => (Array.isArray(value) ? value : value.files))
 
 export type ArticleRuntimeMode = "development" | "production" | "test"
 
@@ -49,6 +69,10 @@ export function getArticleSlugFromFileName(fileName: string): string {
   validateArticleSlug(slug)
 
   return slug
+}
+
+export function parseRemoteArticleIndex(value: unknown): string[] {
+  return remoteArticleIndexSchema.parse(value)
 }
 
 export function parseArticle({

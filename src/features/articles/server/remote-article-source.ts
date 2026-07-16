@@ -2,38 +2,17 @@ import "server-only"
 
 import path from "node:path"
 
-import { z } from "zod"
-
 import type { Article } from "@/features/articles/domain/article"
 import {
-  articleFilePattern,
   getArticleSlugFromFileName,
   parseArticle,
+  parseRemoteArticleIndex,
   validateArticleSlug,
   type ArticleRuntimeMode,
 } from "@/features/articles/domain/article-parser"
 import type { ArticleRepository } from "@/features/articles/server/article-repository"
 
 const articleExtensions = [".mdx", ".md"] as const
-
-const remoteIndexSchema = z
-  .union([
-    z.array(
-      z.string().regex(articleFilePattern, {
-        message:
-          "Remote article filenames must use kebab-case and end in .md or .mdx",
-      })
-    ),
-    z.object({
-      files: z.array(
-        z.string().regex(articleFilePattern, {
-          message:
-            "Remote article filenames must use kebab-case and end in .md or .mdx",
-        })
-      ),
-    }),
-  ])
-  .transform((value) => (Array.isArray(value) ? value : value.files))
 
 type RemoteFetchInit = RequestInit & {
   next: {
@@ -252,17 +231,19 @@ export function createRemoteArticleSource({
       })
     }
 
-    const indexResult = remoteIndexSchema.safeParse(json)
+    let fileNames: string[]
 
-    if (!indexResult.success) {
+    try {
+      fileNames = parseRemoteArticleIndex(json)
+    } catch (error) {
       throw new RemoteArticleSourceError({
         code: "INVALID_INDEX",
         message: `Invalid remote article index for "${locale}".`,
-        cause: indexResult.error,
+        cause: error,
       })
     }
 
-    return preferArticleFileNames(Array.from(new Set(indexResult.data)))
+    return preferArticleFileNames(Array.from(new Set(fileNames)))
   }
 
   async function list(locale: string): Promise<Article[]> {

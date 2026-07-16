@@ -24,6 +24,7 @@ architecture.
 - [SEO and social sharing](#seo-and-social-sharing)
 - [Styling, themes, and accessibility](#styling-themes-and-accessibility)
 - [Scripts and quality checks](#scripts-and-quality-checks)
+- [Documentation guides](#documentation-guides)
 - [Deployment](#deployment)
 - [Development workflow](#development-workflow)
 - [License](#license)
@@ -127,6 +128,11 @@ The article server boundaries live in `src/features/articles/server` and
 mutation is defined as a Server Action in
 `src/features/contact/server/submit-contact-form.ts`.
 
+The accepted
+[feature-oriented structure ADR](docs/architecture/001-feature-oriented-structure.md)
+defines ownership, dependency direction, naming, server-only rules, and the
+incremental “move files when touched” policy.
+
 ## Routes and locales
 
 The routing strategy uses `localePrefix: "always"`. A request to `/` is handled
@@ -166,26 +172,33 @@ to English.
 │   ├── articles/                # Article images and diagrams
 │   └── ...                      # Logos, flags, and profile assets
 ├── src/
-│   ├── actions/                 # Server Actions
 │   ├── app/
 │   │   ├── [locale]/            # Localized App Router pages
 │   │   ├── robots.ts            # robots.txt
 │   │   └── sitemap.ts           # sitemap.xml
 │   ├── components/
-│   │   ├── contact/             # Contact dialog and form
 │   │   ├── mdx/                 # Server-side MDX renderer
 │   │   ├── navbar/              # Desktop/mobile navigation and controls
 │   │   ├── seo/                 # Reusable social-image generators
 │   │   ├── technologies/        # Technology logo components
 │   │   └── ui/                  # shadcn and custom UI primitives
-│   ├── hooks/                   # Locale-aware client hooks
+│   ├── features/
+│   │   ├── articles/
+│   │   │   ├── domain/          # Article schema, parsing, and merge policy
+│   │   │   └── server/          # Local, remote, and hybrid repositories
+│   │   └── contact/
+│   │       ├── server/          # Server Action and abuse protection
+│   │       └── *.tsx            # Localized dialog and form UI
 │   ├── i18n/                    # Routing and request configuration
 │   ├── lib/
-│   │   ├── config/              # Site, navigation, and environment config
-│   │   └── mdx/                 # Article schema and content repository
+│   │   └── config/              # Site, navigation, and environment config
 │   ├── styles/                  # Tailwind theme and global MDX styles
 │   ├── mdx-components.tsx       # Shared MDX element mapping
 │   └── proxy.ts                 # next-intl locale proxy
+├── scripts/
+│   ├── build.mjs                # Build plus article trace verification
+│   └── content-check.ts         # Offline localized-content validation
+├── tests/e2e/                   # Desktop and mobile Chromium release flows
 ├── next.config.ts
 ├── package.json
 └── tsconfig.json
@@ -203,26 +216,21 @@ to English.
 ```bash
 git clone https://github.com/ghassanaldarwish/marketing-website.git
 cd marketing-website
+corepack enable
+corepack prepare pnpm@10.12.1 --activate
 pnpm install --frozen-lockfile
 ```
 
 Create `.env.local` when you need to override the defaults or test an external
 integration:
 
-```dotenv
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
-
-TELEGRAM_BOT_TOKEN=
-GROUP_CHAT_ID=
-
-MDX_CONTENT_SOURCE=local
-MDX_REVALIDATE_SECONDS=3600
-# MDX_REMOTE_BASE_URL=https://content.example.com/articles/
-# MDX_REMOTE_TOKEN=
-
-# GOOGLE_SITE_VERIFICATION=
-# BING_SITE_VERIFICATION=
+```bash
+cp .env.example .env.local
 ```
+
+The checked-in example contains placeholders and documented constraints only.
+Keep real credentials in the deployment platform or the untracked
+`.env.local` file.
 
 Start the development server:
 
@@ -233,27 +241,37 @@ pnpm dev
 Open [http://localhost:3000](http://localhost:3000). The locale proxy redirects
 the root request to a negotiated localized route, with English as the fallback.
 
-In development, valid contact messages are printed to the server console and
-are not sent to Telegram.
+In development, Telegram delivery is a safe no-op when credentials are absent.
+Contact message content is not logged.
 
 ## Environment variables
 
-| Variable                    | Required                        | Default / behavior                                 |
-| --------------------------- | ------------------------------- | -------------------------------------------------- |
-| `NEXT_PUBLIC_SITE_URL`      | No                              | Canonical origin; defaults to `https://ghassan.de` |
-| `TELEGRAM_BOT_TOKEN`        | For production contact delivery | Telegram bot credential; server-only               |
-| `GROUP_CHAT_ID`             | For production contact delivery | Destination user, group, or channel chat ID        |
-| `KV_REST_API_URL`           | For production contact delivery | Upstash Redis REST endpoint; server-only           |
-| `KV_REST_API_TOKEN`         | For production contact delivery | Upstash Redis write token; server-only             |
-| `CONTACT_RATE_LIMIT_SECRET` | For production contact delivery | HMAC secret for privacy-safe request identifiers   |
-| `MDX_CONTENT_SOURCE`        | No                              | `local`; accepts `local`, `remote`, or `hybrid`    |
-| `MDX_REVALIDATE_SECONDS`    | No                              | `3600`; non-negative cache revalidation interval   |
-| `MDX_REMOTE_BASE_URL`       | In `remote` mode                | Root URL containing locale directories             |
-| `MDX_REMOTE_TOKEN`          | No                              | Bearer token sent to the remote content service    |
-| `GOOGLE_SITE_VERIFICATION`  | No                              | Adds Google verification metadata                  |
-| `BING_SITE_VERIFICATION`    | No                              | Adds Bing `msvalidate.01` metadata                 |
-| `NODE_ENV`                  | Framework-managed               | Controls development logging and draft visibility  |
-| `VERCEL_ENV`                | Vercel-managed                  | Prevents preview deployments from being indexed    |
+| Variable                                 | Required                     | Constraint / default                                                          |
+| ---------------------------------------- | ---------------------------- | ----------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_SITE_URL`                   | No                           | Absolute canonical origin; defaults to `https://ghassan.de`                   |
+| `TELEGRAM_BOT_TOKEN`                     | In production for contact    | Non-empty Telegram bot credential; server-only                                |
+| `GROUP_CHAT_ID`                          | In production for contact    | Non-empty Telegram user, group, or channel ID; server-only                    |
+| `TELEGRAM_REQUEST_TIMEOUT_MS`            | No                           | Integer `1000`–`30000`; defaults to `8000`                                    |
+| `KV_REST_API_URL`                        | In production for contact    | Upstash Redis REST endpoint; server-only                                      |
+| `KV_REST_API_TOKEN`                      | In production for contact    | Upstash Redis token; server-only                                              |
+| `CONTACT_RATE_LIMIT_SECRET`              | In production for contact    | Non-empty HMAC secret for privacy-safe request identifiers                    |
+| `CONTACT_RATE_LIMIT_MAX_ATTEMPTS`        | No                           | Integer `1`–`20`; defaults to `3`                                             |
+| `CONTACT_RATE_LIMIT_GLOBAL_MAX_ATTEMPTS` | No                           | Integer `1`–`1000`; defaults to `30`                                          |
+| `CONTACT_RATE_LIMIT_WINDOW_SECONDS`      | No                           | Integer `60`–`86400`; defaults to `600`                                       |
+| `E2E_DISABLE_TELEGRAM_DELIVERY`          | Test-only                    | Boolean; effective only when `CI=true`                                        |
+| `E2E_USE_IN_MEMORY_CONTACT_RATE_LIMIT`   | Test-only                    | Boolean; effective only when `CI=true`                                        |
+| `MDX_CONTENT_SOURCE`                     | No                           | `local`, `remote`, or `hybrid`; defaults to `local`                           |
+| `MDX_REVALIDATE_SECONDS`                 | No                           | Non-negative integer; defaults to `3600`                                      |
+| `MDX_REMOTE_BASE_URL`                    | In `remote` or `hybrid` mode | Absolute URL containing locale directories                                    |
+| `MDX_REMOTE_TOKEN`                       | No                           | Optional bearer token; server-only                                            |
+| `MDX_REMOTE_TIMEOUT_MS`                  | No                           | Integer `100`–`60000`; defaults to `10000`                                    |
+| `GOOGLE_SITE_VERIFICATION`               | No                           | Non-empty Google verification value                                           |
+| `BING_SITE_VERIFICATION`                 | No                           | Non-empty Bing `msvalidate.01` value                                          |
+| `NODE_ENV`                               | Framework-managed            | `development`, `test`, or `production`; controls drafts and production checks |
+| `CI`                                     | CI-managed                   | Enables strict Playwright behavior and gates the E2E safety switches          |
+| `NEXT_TELEMETRY_DISABLED`                | CI/deployment optional       | Set to `1` to disable Next.js telemetry in automated environments             |
+| `VERCEL_ENV`                             | Vercel-managed               | `production` marks the deployment indexable; preview is blocked               |
+| `VERCEL`                                 | Vercel-managed               | `1` disables local-only Shiki work during Vercel compilation                  |
 
 Environment configuration for MDX is parsed with Zod when the server module is
 loaded. Invalid enum values, URLs, or revalidation values fail early rather than
@@ -327,7 +345,8 @@ files.
 ### Frontmatter schema
 
 Every article is parsed with `gray-matter` and validated by the Zod schema in
-`src/lib/mdx/article-schema.ts`.
+`src/features/articles/domain/article.ts` through the production parser in
+`src/features/articles/domain/article-parser.ts`.
 
 ```yaml
 ---
@@ -481,18 +500,19 @@ default remote-content cache interval.
 
 ## Scripts and quality checks
 
-| Command               | Purpose                                                        |
-| --------------------- | -------------------------------------------------------------- |
-| `pnpm dev`            | Start the Turbopack development server                         |
-| `pnpm build`          | Build and verify traced local article content                  |
-| `pnpm start`          | Serve an existing production build                             |
-| `pnpm lint:ci`        | Run ESLint and fail on warnings                                |
-| `pnpm deadcode:check` | Report unused files, exports, and dependencies with Knip       |
-| `pnpm typecheck`      | Run TypeScript without emitting files                          |
-| `pnpm test:ci`        | Run the Vitest unit and integration suite                      |
-| `pnpm test:e2e`       | Run desktop and mobile Playwright tests                        |
-| `pnpm format:check`   | Check JavaScript and TypeScript formatting with Prettier       |
-| `pnpm check`          | Run formatting, lint, dead code, types, tests, and build gates |
+| Command               | Purpose                                                       |
+| --------------------- | ------------------------------------------------------------- |
+| `pnpm dev`            | Start the Turbopack development server                        |
+| `pnpm build`          | Build and verify traced local article content                 |
+| `pnpm start`          | Serve an existing production build                            |
+| `pnpm lint:ci`        | Run ESLint and fail on warnings                               |
+| `pnpm deadcode:check` | Report unused files, exports, and dependencies with Knip      |
+| `pnpm content:check`  | Validate EN/DE/AR dictionaries, articles, indexes, and assets |
+| `pnpm typecheck`      | Run TypeScript without emitting files                         |
+| `pnpm test:ci`        | Run the Vitest unit and integration suite                     |
+| `pnpm test:e2e`       | Run desktop and mobile Playwright tests                       |
+| `pnpm format:check`   | Check JavaScript and TypeScript formatting with Prettier      |
+| `pnpm check`          | Run formatting, lint, dead code, types, tests, content, build |
 
 Run the current repository gates before opening a pull request:
 
@@ -514,6 +534,13 @@ Next.js output traces. Dependency install scripts are denied by default; the
 reviewed allow/ignore lists in `pnpm-workspace.yaml` are the source of truth for
 the pinned pnpm version. CI runs these quality gates on every ready pull
 request, with Playwright covered by the dedicated E2E workflow.
+
+## Documentation guides
+
+- [Content authoring](docs/content-authoring.md) explains how to add, translate,
+  validate, and preview an article without reading loader source.
+- [Release checklist](docs/release-checklist.md) covers CI, localized content,
+  RTL, metadata, contact delivery, preview QA, release evidence, and rollback.
 
 ## Deployment
 
@@ -553,7 +580,7 @@ local content is included in the deployment artifact.
 3. Update every affected locale dictionary when changing shared interface copy.
 4. Add translated MDX files and public assets together when publishing an
    article.
-5. Run lint, typecheck, and a production build.
+5. Run `pnpm content:check`, `pnpm check`, and relevant Playwright coverage.
 6. Open a pull request that explains the change, impact, and verification.
 
 ## License

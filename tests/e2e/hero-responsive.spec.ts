@@ -24,6 +24,27 @@ const portraitViewports = [
 ] as const
 
 test.describe("responsive Hero", () => {
+  for (const { locale, label } of [
+    { locale: "en", label: "View Engineering" },
+    { locale: "de", label: "Engineering ansehen" },
+    { locale: "ar", label: "استكشاف الأعمال الهندسية" },
+  ] as const) {
+    test(`${locale} exposes the primary localized Engineering action`, async ({
+      page,
+    }) => {
+      await page.goto(`/${locale}`)
+
+      const action = page.getByTestId("hero-engineering-action")
+
+      await expect(action).toBeVisible()
+      await expect(action).toHaveAccessibleName(label)
+      await expect(action).toHaveAttribute("href", `/${locale}/articles`)
+
+      await action.focus()
+      await expect(action).toBeFocused()
+    })
+  }
+
   for (const locale of ["en", "de", "ar"] as const) {
     test(`${locale} points the portrait toward its Hero copy`, async ({
       page,
