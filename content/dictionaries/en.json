@@ -343,6 +343,7 @@
         "success": "Message sent successfully!",
         "validationError": "Please check the form fields and try again.",
         "deliveryError": "Your message could not be sent. Please try again in a few minutes.",
+        "rateLimited": "Your message cannot be sent right now. Please try again in a few minutes.",
         "unexpectedError": "An unexpected error occurred. Please check your connection and try again."
       },
       "validation": {

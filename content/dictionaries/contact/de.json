@@ -17,6 +17,7 @@
     "success": "Ihre Nachricht wurde erfolgreich gesendet.",
     "validationError": "Bitte überprüfen Sie die Formularfelder und versuchen Sie es erneut.",
     "deliveryError": "Ihre Nachricht konnte nicht gesendet werden. Bitte versuchen Sie es in einigen Minuten erneut.",
+    "rateLimited": "Ihre Nachricht kann derzeit nicht gesendet werden. Bitte versuchen Sie es in einigen Minuten erneut.",
     "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten. Bitte überprüfen Sie Ihre Verbindung und versuchen Sie es erneut."
   },
   "validation": {

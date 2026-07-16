@@ -338,6 +338,7 @@
         "success": "Message sent successfully!DE",
         "validationError": "Please check the form fields and try again.",
         "deliveryError": "Your message could not be sent. Please try again in a few minutes. DE",
+        "rateLimited": "Ihre Nachricht kann derzeit nicht gesendet werden. Bitte versuchen Sie es in einigen Minuten erneut.",
         "unexpectedError": "An unexpected error occurred. Please check your connection and try again."
       },
       "validation": {

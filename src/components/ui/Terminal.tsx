@@ -330,6 +330,7 @@ export function Terminal({
     <div
       ref={containerRef}
       className={cn("h-full w-full text-left font-mono text-xs", className)}
+      data-slot="terminal-root"
       dir="ltr"
     >
       <div className="h-full overflow-hidden rounded-lg border bg-background/60 shadow-2xl dark:border-neutral-800 dark:bg-neutral-900">
@@ -351,12 +352,16 @@ export function Terminal({
 
         <div
           ref={contentRef}
-          className="no-visible-scrollbar overflow-y-auto p-4 font-mono"
+          className="no-visible-scrollbar overflow-y-auto p-4 text-left font-mono"
+          data-slot="terminal-content"
+          dir="ltr"
         >
           {visibleLines.map((line, index) => (
             <div
               key={`${line.type}-${index}-${line.content}`}
-              className="leading-relaxed whitespace-pre-wrap"
+              className="text-left leading-relaxed whitespace-pre-wrap"
+              data-slot="terminal-line"
+              dir="ltr"
             >
               {line.type === "command" ? (
                 <span>
@@ -372,7 +377,11 @@ export function Terminal({
           ))}
 
           {!shouldReduceMotion && phase === "typing" && (
-            <div className="leading-relaxed whitespace-pre-wrap">
+            <div
+              className="text-left leading-relaxed whitespace-pre-wrap"
+              data-slot="terminal-line"
+              dir="ltr"
+            >
               {prompt}
               <SyntaxHighlightedText text={currentText} />
               <span className="ml-0.5 inline-block h-4 w-2 bg-accent-foreground/70 align-middle dark:bg-neutral-300" />
@@ -383,7 +392,11 @@ export function Terminal({
             (phase === "done" ||
               phase === "pausing" ||
               phase === "outputting") && (
-              <div className="leading-relaxed whitespace-pre-wrap">
+              <div
+                className="text-left leading-relaxed whitespace-pre-wrap"
+                data-slot="terminal-line"
+                dir="ltr"
+              >
                 {prompt}
                 <span
                   className={cn(
