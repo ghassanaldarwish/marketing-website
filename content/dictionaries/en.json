@@ -2,7 +2,7 @@
   "brand": {
     "name": "Ghassan Aldarwish",
     "shortName": "Ghassan",
-    "role": "AI Engineer, Backend Engineer & DevOps Engineer",
+    "role": "Backend Developer, DevOps Engineer & Junior AI Developer",
     "location": "Germany"
   },
   "contactModal": {
@@ -54,36 +54,38 @@
     "hint": "Error code: 404"
   },
   "metadata": {
-    "defaultTitle": "Ghassan — AI Engineer & Backend Engineer",
+    "defaultTitle": "Ghassan — Backend Developer, DevOps Engineer & Junior AI Developer",
     "titleTemplate": "{title} | Ghassan",
-    "description": "AI Engineer and Backend Engineer building production AI systems, scalable backend platforms, microservices, and cloud-native applications.",
+    "description": "Backend Developer, DevOps Engineer, and Junior AI Developer building scalable backend platforms, cloud-native applications, and production AI systems.",
     "category": "Technology",
-    "socialImageAlt": "Ghassan Aldarwish — AI Engineer and Backend Engineer"
+    "socialImageAlt": "Ghassan Aldarwish — Backend Developer, DevOps Engineer, and Junior AI Developer"
   },
   "home": {
     "metadata": {
-      "title": "Ghassan — AI Engineer & Backend Engineer",
-      "description": "Ghassan Aldarwish is an AI Engineer and Backend Engineer building production AI systems, scalable backend platforms, distributed architectures, automation workflows, and cloud-native applications.",
+      "title": "Ghassan — Backend Developer, DevOps Engineer & Junior AI Developer",
+      "description": "Ghassan Aldarwish is a Backend Developer, DevOps Engineer, and Junior AI Developer building scalable backend platforms, distributed architectures, cloud-native applications, and production AI systems.",
       "headline": "Building intelligent systems that scale.",
       "shortDescription": "Production AI systems, scalable backend architecture, and cloud-native software.",
       "category": "Technology",
       "socialImage": {
-        "alt": "Ghassan Aldarwish — AI Engineer and Backend Engineer",
+        "alt": "Ghassan Aldarwish — Backend Developer, DevOps Engineer, and Junior AI Developer",
         "availability": "Available for opportunities in Germany",
-        "expertise": "AI Engineering · Backend Systems",
-        "role": "AI Engineer · Backend Engineer · Software Architecture",
-        "twitterRole": "AI Engineer · Backend Engineer",
+        "expertise": "Backend Development · DevOps · Junior AI Development",
+        "role": "Backend Developer · DevOps Engineer · Junior AI Developer",
+        "twitterRole": "Backend Developer · DevOps Engineer · Junior AI Developer",
         "openGraphAction": "Explore my engineering →",
         "twitterAction": "View my work →"
       },
       "keywords": [
         "Ghassan Aldarwish",
-        "AI Engineer",
-        "Backend Engineer",
+        "Backend Developer",
+        "DevOps Engineer",
+        "Junior AI Developer",
         "Senior Software Engineer",
         "Software Engineer Germany",
-        "AI Engineer Germany",
-        "Backend Engineer Germany",
+        "Backend Developer Germany",
+        "DevOps Engineer Germany",
+        "Junior AI Developer Germany",
         "Production AI Systems",
         "AI Agents",
         "Large Language Models",
@@ -104,9 +106,13 @@
       ],
 
       "structuredData": {
-        "personDescription": "AI Engineer and Backend Engineer focused on production AI systems, distributed backend architecture, cloud infrastructure, DevOps, and modern web development.",
+        "personDescription": "Backend Developer, DevOps Engineer, and Junior AI Developer focused on distributed backend architecture, cloud infrastructure, production AI systems, and modern web development.",
 
-        "jobTitles": ["AI Engineer", "Backend Engineer", "Software Engineer"],
+        "jobTitles": [
+          "Backend Developer",
+          "DevOps Engineer",
+          "Junior AI Developer"
+        ],
 
         "knowsAbout": [
           "Artificial Intelligence",
@@ -138,7 +144,7 @@
       }
     },
     "hero": {
-      "badge": ["AI Engineer", "DevOps", "Backend"],
+      "badge": ["Backend Developer", "DevOps Engineer", "Junior AI Developer"],
       "title": "Building AI Systems",
       "secondaryTitle": "That Scale",
       "description": "I design and build production-ready AI systems, scalable backend platforms, and cloud-native infrastructure.",
@@ -281,8 +287,9 @@
       "description": "Contact Ghassan Aldarwish about AI engineering, backend development, software architecture, consulting, collaboration, or job opportunities in Germany.",
       "keywords": [
         "Contact Ghassan Aldarwish",
-        "Hire AI Engineer",
-        "Hire Backend Engineer",
+        "Hire Backend Developer",
+        "Hire DevOps Engineer",
+        "Hire Junior AI Developer",
         "Software Engineer Germany",
         "AI Engineering Consultant",
         "Backend Development",
@@ -293,8 +300,12 @@
       ],
       "structuredData": {
         "pageName": "Contact Ghassan Aldarwish",
-        "personDescription": "AI Engineer and Backend Engineer focused on production AI systems, distributed backend architecture, cloud infrastructure, DevOps, and modern web development.",
-        "jobTitles": ["AI Engineer", "Backend Engineer", "Software Engineer"],
+        "personDescription": "Backend Developer, DevOps Engineer, and Junior AI Developer focused on distributed backend architecture, cloud infrastructure, production AI systems, and modern web development.",
+        "jobTitles": [
+          "Backend Developer",
+          "DevOps Engineer",
+          "Junior AI Developer"
+        ],
         "knowsAbout": [
           "Artificial Intelligence",
           "AI Agents",
@@ -311,11 +322,11 @@
         ]
       },
       "socialImage": {
-        "alt": "Contact Ghassan Aldarwish — AI Engineer and Backend Engineer",
+        "alt": "Contact Ghassan Aldarwish — Backend Developer, DevOps Engineer, and Junior AI Developer",
         "badge": "Contact",
         "headline": "Let’s build something meaningful.",
         "description": "Get in touch about AI engineering, backend systems, software architecture, or opportunities in Germany.",
-        "role": "AI Engineer · Backend Engineer",
+        "role": "Backend Developer · DevOps Engineer · Junior AI Developer",
         "action": "Start a conversation →"
       }
     },
@@ -328,6 +339,7 @@
     },
 
     "form": {
+      "honeypotLabel": "Leave this field empty",
       "fields": {
         "name": { "label": "Full Name", "placeholder": "John Doe" },
         "email": {
@@ -359,11 +371,12 @@
   "about": {
     "metadata": {
       "title": "About Me",
-      "description": "Learn about Ghassan Aldarwish, an AI Engineer and Backend Engineer with experience in production AI systems, distributed backend architecture, DevOps, cloud infrastructure, and modern web development.",
+      "description": "Learn about Ghassan Aldarwish, a Backend Developer, DevOps Engineer, and Junior AI Developer with experience in distributed backend architecture, cloud infrastructure, production AI systems, and modern web development.",
       "keywords": [
         "Ghassan Aldarwish",
-        "AI Engineer",
-        "Backend Engineer",
+        "Backend Developer",
+        "DevOps Engineer",
+        "Junior AI Developer",
         "Software Engineer Germany",
         "Node.js Engineer",
         "TypeScript Engineer",
@@ -376,8 +389,12 @@
       ],
       "structuredData": {
         "pageName": "About Ghassan Aldarwish",
-        "personDescription": "AI Engineer and Backend Engineer focused on production AI systems, distributed backend architecture, cloud infrastructure, DevOps, and modern web development.",
-        "jobTitles": ["AI Engineer", "Backend Engineer", "Software Engineer"],
+        "personDescription": "Backend Developer, DevOps Engineer, and Junior AI Developer focused on distributed backend architecture, cloud infrastructure, production AI systems, and modern web development.",
+        "jobTitles": [
+          "Backend Developer",
+          "DevOps Engineer",
+          "Junior AI Developer"
+        ],
         "knowsAbout": [
           "Artificial Intelligence",
           "Large Language Models",
@@ -402,10 +419,10 @@
         "educationName": "Physics"
       },
       "socialImage": {
-        "alt": "Ghassan Aldarwish — AI Engineer and Backend Engineer",
+        "alt": "Ghassan Aldarwish — Backend Developer, DevOps Engineer, and Junior AI Developer",
         "badge": "About Me",
         "headline": "Ghassan Aldarwish",
-        "role": "AI Engineer · Backend Engineer",
+        "role": "Backend Developer · DevOps Engineer · Junior AI Developer",
         "description": "Building production AI systems, scalable backend platforms, and cloud-native software.",
         "technologies": "Node.js · TypeScript · Python · AI Systems",
         "action": "Explore my journey →"
@@ -487,7 +504,7 @@
         "badge": "Engineering",
         "headline": "Systems built beyond the code.",
         "description": "AI platforms, backend architectures, automation workflows, and cloud infrastructure designed for production.",
-        "role": "AI Engineer · Backend Engineer",
+        "role": "Backend Developer · DevOps Engineer · Junior AI Developer",
         "action": "Explore the systems →"
       }
     },

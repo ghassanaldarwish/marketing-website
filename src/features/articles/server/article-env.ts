@@ -41,7 +41,7 @@ export type ArticleEnvironment = {
   remoteTimeoutMs: number
 }
 
-export function parseArticleEnvironment(
+function parseArticleEnvironment(
   environment: NodeJS.ProcessEnv
 ): ArticleEnvironment {
   const result = articleEnvironmentSchema.safeParse(environment)

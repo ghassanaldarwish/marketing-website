@@ -4,7 +4,8 @@ import { getTranslations } from "next-intl/server"
 import { routing } from "@/i18n/routing"
 import { siteConfig } from "@/lib/config/site"
 
-export const alt = "Ghassan Aldarwish — AI Engineer and Backend Engineer"
+export const alt =
+  "Ghassan Aldarwish — Backend Developer, DevOps Engineer, and Junior AI Developer"
 
 export const size = {
   width: 1200,

@@ -9,7 +9,7 @@ import { getContactAbuseEnvironment } from "@/lib/config/server-environment"
 
 type HeaderReader = Pick<Headers, "get">
 
-export type ContactRateLimitResult = {
+type ContactRateLimitResult = {
   success: boolean
   remaining: number
   reset: number

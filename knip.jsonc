@@ -1,0 +1,6 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  // Local MDX is discovered with node:fs at runtime and bundled through
+  // Next.js output tracing, so it is not part of Knip's static module graph.
+  "ignoreFiles": ["content/articles/**/*.{md,mdx}"],
+}

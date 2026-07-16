@@ -16,7 +16,7 @@ import type { ArticleRepository } from "@/features/articles/server/article-repos
 const articleExtensions = [".mdx", ".md"] as const
 
 type LocalArticleSourceOptions = {
-  contentDirectory?: string
+  contentDirectory: string
   getRuntimeMode?: () => ArticleRuntimeMode
 }
 
@@ -72,9 +72,9 @@ function preferArticleFileNames(fileNames: string[]): string[] {
 }
 
 export function createLocalArticleSource({
-  contentDirectory = path.join(process.cwd(), "content", "articles"),
+  contentDirectory,
   getRuntimeMode = getDefaultRuntimeMode,
-}: LocalArticleSourceOptions = {}): ArticleRepository {
+}: LocalArticleSourceOptions): ArticleRepository {
   function getLocaleDirectory(locale: string): string {
     return path.join(contentDirectory, locale)
   }

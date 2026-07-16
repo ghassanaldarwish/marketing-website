@@ -7,7 +7,157 @@ const compactViewports = [
   { width: 768, height: 1024, portraitMaxHeight: 480 },
 ] as const
 
+const fullPageViewports = [
+  { width: 320, height: 568 },
+  { width: 360, height: 800 },
+  { width: 390, height: 844 },
+  { width: 768, height: 1024 },
+  { width: 1440, height: 900 },
+] as const
+
+const portraitViewports = [
+  { width: 320, height: 800 },
+  { width: 390, height: 844 },
+  { width: 768, height: 1024 },
+  { width: 1024, height: 768 },
+  { width: 1440, height: 900 },
+] as const
+
 test.describe("responsive Hero", () => {
+  for (const locale of ["en", "de", "ar"] as const) {
+    test(`${locale} points the portrait toward its Hero copy`, async ({
+      page,
+    }) => {
+      for (const viewport of portraitViewports) {
+        await page.setViewportSize(viewport)
+        await page.goto(`/${locale}`)
+
+        const portrait = page.getByTestId("hero-portrait")
+        await expect(portrait).toBeVisible()
+
+        const rendering = await portrait.evaluate((image) => {
+          const root = document.documentElement
+          const box = image.getBoundingClientRect()
+          const transform = getComputedStyle(image).transform
+          const matrix = transform === "none" ? null : new DOMMatrix(transform)
+
+          return {
+            scaleX: matrix?.a ?? 1,
+            insideViewport: box.left >= 0 && box.right <= root.clientWidth,
+            pageOverflows: root.scrollWidth > root.clientWidth,
+          }
+        })
+
+        expect(rendering.scaleX).toBe(locale === "ar" ? -1 : 1)
+        expect(rendering.insideViewport).toBe(true)
+        expect(rendering.pageOverflows).toBe(false)
+      }
+    })
+  }
+
+  for (const locale of ["en", "de", "ar"] as const) {
+    for (const colorScheme of ["light", "dark"] as const) {
+      test(`${locale} has no full-page overflow in ${colorScheme} mode`, async ({
+        page,
+      }) => {
+        await page.emulateMedia({ colorScheme })
+
+        for (const viewport of fullPageViewports) {
+          await page.setViewportSize(viewport)
+          await page.goto(`/${locale}`)
+
+          const layout = await page.evaluate(() => {
+            const root = document.documentElement
+            const finalCta = document.querySelector<HTMLElement>(
+              '[data-testid="final-cta"]'
+            )
+            const finalCtaHeading = document.querySelector<HTMLElement>(
+              '[data-testid="final-cta-heading"]'
+            )
+            const finalCtaDescription = document.querySelector<HTMLElement>(
+              '[data-testid="final-cta-description"]'
+            )
+            const finalCtaAction = document.querySelector<HTMLElement>(
+              '[data-testid="final-cta-action"]'
+            )
+
+            if (
+              !finalCta ||
+              !finalCtaHeading ||
+              !finalCtaDescription ||
+              !finalCtaAction
+            ) {
+              throw new Error("Expected the final CTA to render")
+            }
+
+            const isInsideViewport = (element: HTMLElement) => {
+              const box = element.getBoundingClientRect()
+              return box.left >= 0 && box.right <= root.clientWidth
+            }
+
+            return {
+              rootClientWidth: root.clientWidth,
+              rootScrollWidth: root.scrollWidth,
+              ctaInsideViewport: [
+                finalCta,
+                finalCtaHeading,
+                finalCtaDescription,
+                finalCtaAction,
+              ].every(isInsideViewport),
+            }
+          })
+
+          expect(layout.rootScrollWidth).toBeLessThanOrEqual(
+            layout.rootClientWidth
+          )
+          expect(layout.ctaInsideViewport).toBe(true)
+        }
+      })
+    }
+  }
+
+  for (const locale of ["en", "de", "ar"] as const) {
+    test(`names and secures the ${locale} social links`, async ({ page }) => {
+      await page.goto(`/${locale}`)
+
+      const links = [
+        {
+          name: "GitHub",
+          href: "https://github.com/ghassanaldarwish",
+        },
+        {
+          name: "LinkedIn",
+          href: "https://linkedin.com/in/ghassan-aldarwish",
+        },
+      ]
+
+      for (const { name, href } of links) {
+        const socialLinks = page.getByRole("link", { name, exact: true })
+
+        await expect(socialLinks).toHaveCount(2)
+
+        for (const socialLink of await socialLinks.all()) {
+          await expect(socialLink).toHaveAttribute("href", href)
+          await expect(socialLink).toHaveAttribute("target", "_blank")
+          await expect(socialLink).toHaveAttribute(
+            "rel",
+            /^(?:noopener noreferrer|noreferrer noopener)$/
+          )
+        }
+
+        await socialLinks.first().focus()
+        await expect(socialLinks.first()).toBeFocused()
+
+        const focusStyle = await socialLinks.first().evaluate((link) => {
+          const style = getComputedStyle(link)
+          return `${style.outlineStyle} ${style.boxShadow}`
+        })
+
+        expect(focusStyle).not.toBe("none none")
+      }
+    })
+  }
+
   for (const viewport of compactViewports) {
     test(`keeps the ${viewport.width}px layout concise and static`, async ({
       page,

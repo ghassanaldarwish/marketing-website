@@ -126,7 +126,7 @@ export function createArticleSocialImage({
               color: "#a1a1aa",
             }}
           >
-            AI Engineer · Backend Engineer
+            Backend Developer · DevOps Engineer · Junior AI Developer
           </div>
         </div>
 

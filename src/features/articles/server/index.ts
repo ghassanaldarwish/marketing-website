@@ -1,5 +1,7 @@
 import "server-only"
 
+import path from "node:path"
+
 import { cache } from "react"
 
 import {
@@ -17,6 +19,7 @@ import { routing } from "@/i18n/routing"
 export type AppLocale = (typeof routing.locales)[number]
 
 const localArticleSource = createLocalArticleSource({
+  contentDirectory: path.join(process.cwd(), "content", "articles"),
   getRuntimeMode: getArticleRuntimeMode,
 })
 

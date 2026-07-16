@@ -5,7 +5,7 @@ import type {
 
 type SortableArticle = Article | ArticleSummary
 
-export function compareArticles(
+function compareArticles(
   first: SortableArticle,
   second: SortableArticle
 ): number {

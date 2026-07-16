@@ -21,7 +21,10 @@ export function ContactDialog() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button size="lg" className="min-h-11 text-lg">
+        <Button
+          size="lg"
+          className="h-auto min-h-11 max-w-full min-w-0 text-center text-lg whitespace-normal"
+        >
           {t("trigger")}
         </Button>
       </DialogTrigger>

@@ -6,7 +6,7 @@ import { SocialImage } from "@/components/seo/socialImage"
 import { routing } from "@/i18n/routing"
 
 export const alt =
-  "Contact Ghassan Aldarwish — AI Engineer and Backend Engineer"
+  "Contact Ghassan Aldarwish — Backend Developer, DevOps Engineer, and Junior AI Developer"
 
 export const size = {
   width: 1200,

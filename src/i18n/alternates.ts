@@ -47,7 +47,7 @@ export function createStaticLanguageAlternates(
   return languages
 }
 
-export function getArticleGroupKey(article: ArticleSummary): string {
+function getArticleGroupKey(article: ArticleSummary): string {
   return article.metadata.translationKey ?? article.slug
 }
 
