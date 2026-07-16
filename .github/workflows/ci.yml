@@ -20,7 +20,7 @@ concurrency:
 jobs:
   quality:
     if: github.event.pull_request.draft == false
-    name: Format, lint, types, tests, and build
+    name: Format, lint, dead code, types, tests, and build
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -47,6 +47,9 @@ jobs:
 
       - name: Lint without warnings
         run: pnpm lint:ci
+
+      - name: Check unused files, exports, and dependencies
+        run: pnpm deadcode:check
 
       - name: Type-check
         run: pnpm typecheck

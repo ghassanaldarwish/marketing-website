@@ -41,7 +41,10 @@ export default function Technologies() {
           </p>
         </div>
 
-        <div className="grid grid-cols-5 gap-6 md:grid-cols-12 md:gap-16">
+        <div
+          className="grid grid-cols-5 gap-6 md:grid-cols-8 md:gap-8 xl:grid-cols-12"
+          data-testid="technology-grid"
+        >
           <Docker />
           <Kubernetes />
           <Ansible />

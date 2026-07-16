@@ -3,7 +3,7 @@ import GithubSlugger from "github-slugger"
 export const ARTICLE_READING_WORDS_PER_MINUTE = 225
 export const ARTICLE_TOC_MINIMUM_WORDS = 1_000
 
-export type ArticleTableOfContentsItem = {
+type ArticleTableOfContentsItem = {
   id: string
   title: string
 }

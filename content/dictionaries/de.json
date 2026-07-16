@@ -2,7 +2,7 @@
   "brand": {
     "name": "Ghassan Aldarwish",
     "shortName": "Ghassan",
-    "role": "AI Engineer, Backend Engineer und DevOps Engineer",
+    "role": "Backend-Entwickler, DevOps Engineer und Junior-KI-Entwickler",
     "location": "Deutschland"
   },
   "contactModal": {
@@ -54,36 +54,38 @@
     "hint": "Fehlercode: 404"
   },
   "metadata": {
-    "defaultTitle": "Ghassan — AI Engineer & Backend Engineer",
+    "defaultTitle": "Ghassan — Backend-Entwickler, DevOps Engineer & Junior-KI-Entwickler",
     "titleTemplate": "{title} | Ghassan",
-    "description": "AI Engineer und Backend Engineer mit Fokus auf produktionsreife AI-Systeme, skalierbare Backend-Plattformen, Microservices und cloudnative Anwendungen.",
+    "description": "Backend-Entwickler, DevOps Engineer und Junior-KI-Entwickler mit Fokus auf skalierbare Backend-Plattformen, cloudnative Anwendungen und produktionsreife KI-Systeme.",
     "category": "Technologie",
-    "socialImageAlt": "Ghassan Aldarwish — AI Engineer und Backend Engineer"
+    "socialImageAlt": "Ghassan Aldarwish — Backend-Entwickler, DevOps Engineer und Junior-KI-Entwickler"
   },
   "home": {
     "metadata": {
-      "title": "Ghassan — AI Engineer & Backend Engineer",
-      "description": "Ghassan Aldarwish ist AI Engineer und Backend Engineer und entwickelt produktionsreife AI-Systeme, skalierbare Backend-Plattformen, verteilte Architekturen, Automatisierungs-Workflows und cloudnative Anwendungen.",
+      "title": "Ghassan — Backend-Entwickler, DevOps Engineer & Junior-KI-Entwickler",
+      "description": "Ghassan Aldarwish ist Backend-Entwickler, DevOps Engineer und Junior-KI-Entwickler und entwickelt skalierbare Backend-Plattformen, verteilte Architekturen, cloudnative Anwendungen und produktionsreife KI-Systeme.",
       "headline": "Intelligente Systeme entwickeln, die skalieren.",
       "shortDescription": "Produktionsreife AI-Systeme, skalierbare Backend-Architektur und cloudnative Software.",
       "category": "Technologie",
       "socialImage": {
-        "alt": "Ghassan Aldarwish — AI Engineer und Backend Engineer",
+        "alt": "Ghassan Aldarwish — Backend-Entwickler, DevOps Engineer und Junior-KI-Entwickler",
         "availability": "Verfügbar für neue Möglichkeiten in Deutschland",
-        "expertise": "AI Engineering · Backend-Systeme",
-        "role": "AI Engineer · Backend Engineer · Softwarearchitektur",
-        "twitterRole": "AI Engineer · Backend Engineer",
+        "expertise": "Backend-Entwicklung · DevOps · Junior-KI-Entwicklung",
+        "role": "Backend-Entwickler · DevOps Engineer · Junior-KI-Entwickler",
+        "twitterRole": "Backend-Entwickler · DevOps Engineer · Junior-KI-Entwickler",
         "openGraphAction": "Meine Engineering-Arbeit entdecken →",
         "twitterAction": "Meine Arbeit ansehen →"
       },
       "keywords": [
         "Ghassan Aldarwish",
-        "AI Engineer",
-        "Backend Engineer",
+        "Backend-Entwickler",
+        "DevOps Engineer",
+        "Junior-KI-Entwickler",
         "Senior Software Engineer",
         "Software Engineer Deutschland",
-        "AI Engineer Deutschland",
-        "Backend Engineer Deutschland",
+        "Backend-Entwickler Deutschland",
+        "DevOps Engineer Deutschland",
+        "Junior-KI-Entwickler Deutschland",
         "Produktionsreife AI-Systeme",
         "AI Agents",
         "Large Language Models",
@@ -103,8 +105,12 @@
         "Cloud Engineering"
       ],
       "structuredData": {
-        "personDescription": "AI Engineer und Backend Engineer mit Fokus auf produktionsreife AI-Systeme, verteilte Backend-Architekturen, Cloud-Infrastruktur, DevOps und moderne Webentwicklung.",
-        "jobTitles": ["AI Engineer", "Backend Engineer", "Software Engineer"],
+        "personDescription": "Backend-Entwickler, DevOps Engineer und Junior-KI-Entwickler mit Fokus auf verteilte Backend-Architekturen, Cloud-Infrastruktur, produktionsreife KI-Systeme und moderne Webentwicklung.",
+        "jobTitles": [
+          "Backend-Entwickler",
+          "DevOps Engineer",
+          "Junior-KI-Entwickler"
+        ],
         "knowsAbout": [
           "Künstliche Intelligenz",
           "Large Language Models",
@@ -134,7 +140,11 @@
       }
     },
     "hero": {
-      "badge": ["AI Engineer", "DevOps", "Backend"],
+      "badge": [
+        "Backend-Entwickler",
+        "DevOps Engineer",
+        "Junior-KI-Entwickler"
+      ],
       "title": "AI-Systeme entwickeln",
       "secondaryTitle": "die skalieren",
       "description": "Ich konzipiere und entwickle produktionsreife AI-Systeme, skalierbare Backend-Plattformen und cloudnative Infrastruktur.",
@@ -276,8 +286,9 @@
       "description": "Kontaktieren Sie Ghassan Aldarwish zu AI Engineering, Backend-Entwicklung, Softwarearchitektur, Beratung, Zusammenarbeit oder beruflichen Möglichkeiten in Deutschland.",
       "keywords": [
         "Kontakt Ghassan Aldarwish",
-        "AI Engineer einstellen",
-        "Backend Engineer einstellen",
+        "Backend-Entwickler einstellen",
+        "DevOps Engineer einstellen",
+        "Junior-KI-Entwickler einstellen",
         "Software Engineer Deutschland",
         "AI Engineering Beratung",
         "Backend-Entwicklung",
@@ -288,8 +299,12 @@
       ],
       "structuredData": {
         "pageName": "Kontakt zu Ghassan Aldarwish",
-        "personDescription": "AI Engineer und Backend Engineer mit Fokus auf produktionsreife AI-Systeme, verteilte Backend-Architektur, Cloud-Infrastruktur, DevOps und moderne Webentwicklung.",
-        "jobTitles": ["AI Engineer", "Backend Engineer", "Software Engineer"],
+        "personDescription": "Backend-Entwickler, DevOps Engineer und Junior-KI-Entwickler mit Fokus auf verteilte Backend-Architektur, Cloud-Infrastruktur, produktionsreife KI-Systeme und moderne Webentwicklung.",
+        "jobTitles": [
+          "Backend-Entwickler",
+          "DevOps Engineer",
+          "Junior-KI-Entwickler"
+        ],
         "knowsAbout": [
           "Künstliche Intelligenz",
           "AI Agents",
@@ -306,11 +321,11 @@
         ]
       },
       "socialImage": {
-        "alt": "Kontakt zu Ghassan Aldarwish — AI Engineer und Backend Engineer",
+        "alt": "Kontakt zu Ghassan Aldarwish — Backend-Entwickler, DevOps Engineer und Junior-KI-Entwickler",
         "badge": "Kontakt",
         "headline": "Lassen Sie uns etwas Sinnvolles entwickeln.",
         "description": "Nehmen Sie Kontakt auf zu AI Engineering, Backend-Systemen, Softwarearchitektur oder beruflichen Möglichkeiten in Deutschland.",
-        "role": "AI Engineer · Backend Engineer",
+        "role": "Backend-Entwickler · DevOps Engineer · Junior-KI-Entwickler",
         "action": "Gespräch beginnen →"
       }
     },
@@ -323,29 +338,33 @@
     },
 
     "form": {
+      "honeypotLabel": "Dieses Feld leer lassen",
       "fields": {
-        "name": { "label": "Full Name", "placeholder": "John Doe" },
+        "name": {
+          "label": "Vollständiger Name",
+          "placeholder": "Max Mustermann"
+        },
         "email": {
-          "label": "Email Address",
-          "placeholder": "john@example.com"
+          "label": "E-Mail-Adresse",
+          "placeholder": "max.mustermann@example.com"
         },
         "message": {
-          "label": "Message",
-          "placeholder": "Tell me about your project, idea, or opportunity..."
+          "label": "Nachricht",
+          "placeholder": "Erzählen Sie mir von Ihrem Projekt, Ihrer Idee oder Ihrer Gelegenheit..."
         }
       },
       "toast": {
-        "success": "Message sent successfully!DE",
-        "validationError": "Please check the form fields and try again.",
-        "deliveryError": "Your message could not be sent. Please try again in a few minutes. DE",
+        "success": "Ihre Nachricht wurde erfolgreich gesendet.",
+        "validationError": "Bitte überprüfen Sie die Formularfelder und versuchen Sie es erneut.",
+        "deliveryError": "Ihre Nachricht konnte nicht gesendet werden. Bitte versuchen Sie es in einigen Minuten erneut.",
         "rateLimited": "Ihre Nachricht kann derzeit nicht gesendet werden. Bitte versuchen Sie es in einigen Minuten erneut.",
-        "unexpectedError": "An unexpected error occurred. Please check your connection and try again."
+        "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten. Bitte überprüfen Sie Ihre Verbindung und versuchen Sie es erneut."
       },
       "validation": {
-        "nameMin": "Name must be at least 2 characters.",
-        "emailInvalid": "Please enter a valid email address.",
-        "messageMin": "Message must be at least 10 characters.",
-        "messageMax": "Message must be less than 5000 characters."
+        "nameMin": "Der Name muss mindestens 2 Zeichen lang sein.",
+        "emailInvalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+        "messageMin": "Die Nachricht muss mindestens 10 Zeichen lang sein.",
+        "messageMax": "Die Nachricht darf höchstens 5000 Zeichen lang sein."
       },
       "characterCount": "{current}/{maximum}"
     }
@@ -353,11 +372,12 @@
   "about": {
     "metadata": {
       "title": "Über mich",
-      "description": "Erfahren Sie mehr über Ghassan Aldarwish, einen AI Engineer und Backend Engineer mit Erfahrung in produktionsreifen AI-Systemen, verteilter Backend-Architektur, DevOps, Cloud-Infrastruktur und moderner Webentwicklung.",
+      "description": "Erfahren Sie mehr über Ghassan Aldarwish, einen Backend-Entwickler, DevOps Engineer und Junior-KI-Entwickler mit Erfahrung in verteilter Backend-Architektur, Cloud-Infrastruktur, produktionsreifen KI-Systemen und moderner Webentwicklung.",
       "keywords": [
         "Ghassan Aldarwish",
-        "AI Engineer",
-        "Backend Engineer",
+        "Backend-Entwickler",
+        "DevOps Engineer",
+        "Junior-KI-Entwickler",
         "Software Engineer Deutschland",
         "Node.js Engineer",
         "TypeScript Engineer",
@@ -370,8 +390,12 @@
       ],
       "structuredData": {
         "pageName": "Über Ghassan Aldarwish",
-        "personDescription": "AI Engineer und Backend Engineer mit Fokus auf produktionsreife AI-Systeme, verteilte Backend-Architektur, Cloud-Infrastruktur, DevOps und moderne Webentwicklung.",
-        "jobTitles": ["AI Engineer", "Backend Engineer", "Software Engineer"],
+        "personDescription": "Backend-Entwickler, DevOps Engineer und Junior-KI-Entwickler mit Fokus auf verteilte Backend-Architektur, Cloud-Infrastruktur, produktionsreife KI-Systeme und moderne Webentwicklung.",
+        "jobTitles": [
+          "Backend-Entwickler",
+          "DevOps Engineer",
+          "Junior-KI-Entwickler"
+        ],
         "knowsAbout": [
           "Künstliche Intelligenz",
           "Large Language Models",
@@ -396,10 +420,10 @@
         "educationName": "Physik"
       },
       "socialImage": {
-        "alt": "Ghassan Aldarwish — AI Engineer und Backend Engineer",
+        "alt": "Ghassan Aldarwish — Backend-Entwickler, DevOps Engineer und Junior-KI-Entwickler",
         "badge": "Über mich",
         "headline": "Ghassan Aldarwish",
-        "role": "AI Engineer · Backend Engineer",
+        "role": "Backend-Entwickler · DevOps Engineer · Junior-KI-Entwickler",
         "description": "Entwicklung produktionsreifer AI-Systeme, skalierbarer Backend-Plattformen und cloudnativer Software.",
         "technologies": "Node.js · TypeScript · Python · AI-Systeme",
         "action": "Meinen Werdegang entdecken →"
@@ -480,7 +504,7 @@
         "badge": "Engineering",
         "headline": "Systeme, die über den Code hinausgehen.",
         "description": "AI-Plattformen, Backend-Architekturen, Automatisierungs-Workflows und Cloud-Infrastruktur für den Produktionseinsatz.",
-        "role": "AI Engineer · Backend Engineer",
+        "role": "Backend-Entwickler · DevOps Engineer · Junior-KI-Entwickler",
         "action": "Systeme entdecken →"
       }
     },

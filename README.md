@@ -1,8 +1,9 @@
 # ghassan.de — Marketing Website
 
 Production portfolio and engineering publication platform for **Ghassan
-Aldarwish**, focused on AI engineering, backend systems, DevOps, cloud
-infrastructure, and software architecture.
+Aldarwish**, presented as a Backend Developer, DevOps Engineer, and Junior AI
+Developer with a focus on scalable systems, cloud infrastructure, and software
+architecture.
 
 [Live website](https://ghassan.de) ·
 [GitHub profile](https://github.com/ghassanaldarwish) ·
@@ -61,14 +62,14 @@ islands such as navigation, theme controls, animation, and form handling.
 | ------------------ | ------------------------------------------------------------------- |
 | Framework          | Next.js 16 App Router, React 19, TypeScript                         |
 | Styling            | Tailwind CSS 4, shadcn/ui, Radix UI, CSS custom properties          |
-| Localization       | next-intl, rtl-detect                                               |
+| Localization       | next-intl                                                           |
 | Content            | MDX 3, gray-matter, Zod, remark/rehype plugins                      |
 | Code rendering     | rehype-pretty-code, Shiki                                           |
 | Forms              | React Hook Form, Zod, `@hookform/resolvers`                         |
-| Server integration | Next.js Server Actions, Axios, Telegram Bot API                     |
+| Server integration | Next.js Server Actions, Fetch API, Telegram Bot API                 |
 | UI behavior        | Motion, next-themes, Lucide icons, Sonner                           |
 | SEO                | Next.js Metadata API, `next/og`, JSON-LD, sitemap and robots routes |
-| Tooling            | pnpm, ESLint 9, Prettier 3                                          |
+| Tooling            | pnpm 10, ESLint 9, Prettier 3, Vitest, Playwright, Knip             |
 
 The exact dependency versions are recorded in `package.json` and
 `pnpm-lock.yaml`.
@@ -149,21 +150,17 @@ to English.
 | -------------- | ------------------------- | ---------------------------- | ---------------- |
 | English (`en`) | Yes                       | Yes                          | Yes              |
 | German (`de`)  | Yes                       | Yes                          | Yes              |
-| Arabic (`ar`)  | Yes, including RTL layout | No                           | No               |
-
-Arabic routes can be opened directly. The current language control deliberately
-offers English and German only, and the bundled MDX case studies currently
-exist in those two languages.
+| Arabic (`ar`)  | Yes, including RTL layout | Yes                          | Yes              |
 
 ## Project structure
-
 
 ```text
 .
 ├── content/
 │   ├── articles/
 │   │   ├── en/                  # English MDX case studies
-│   │   └── de/                  # German MDX case studies
+│   │   ├── de/                  # German MDX case studies
+│   │   └── ar/                  # Arabic MDX case studies
 │   └── dictionaries/            # en.json, de.json, ar.json
 ├── public/
 │   ├── articles/                # Article images and diagrams
@@ -199,7 +196,7 @@ exist in those two languages.
 ### Prerequisites
 
 - Node.js `>=20.9.0` (required by the pinned Next.js version).
-- pnpm compatible with lockfile version 9; pnpm 9 or newer is recommended.
+- pnpm `10.12.1`, pinned through the `packageManager` field.
 
 ### Installation
 
@@ -484,21 +481,24 @@ default remote-content cache interval.
 
 ## Scripts and quality checks
 
-| Command          | Purpose                                                 |
-| ---------------- | ------------------------------------------------------- |
-| `pnpm dev`       | Start the Turbopack development server                  |
-| `pnpm build`     | Create a production build                               |
-| `pnpm start`     | Serve an existing production build                      |
-| `pnpm lint`      | Run Next.js core-web-vitals and TypeScript ESLint rules |
-| `pnpm typecheck` | Run TypeScript without emitting files                   |
-| `pnpm format`    | Format all TypeScript and TSX files with Prettier       |
+| Command               | Purpose                                                        |
+| --------------------- | -------------------------------------------------------------- |
+| `pnpm dev`            | Start the Turbopack development server                         |
+| `pnpm build`          | Build and verify traced local article content                  |
+| `pnpm start`          | Serve an existing production build                             |
+| `pnpm lint:ci`        | Run ESLint and fail on warnings                                |
+| `pnpm deadcode:check` | Report unused files, exports, and dependencies with Knip       |
+| `pnpm typecheck`      | Run TypeScript without emitting files                          |
+| `pnpm test:ci`        | Run the Vitest unit and integration suite                      |
+| `pnpm test:e2e`       | Run desktop and mobile Playwright tests                        |
+| `pnpm format:check`   | Check JavaScript and TypeScript formatting with Prettier       |
+| `pnpm check`          | Run formatting, lint, dead code, types, tests, and build gates |
 
 Run the current repository gates before opening a pull request:
 
 ```bash
-pnpm lint
-pnpm typecheck
-pnpm build
+pnpm check
+pnpm test:e2e
 ```
 
 For documentation-only changes, also verify Markdown formatting explicitly:
@@ -507,10 +507,13 @@ For documentation-only changes, also verify Markdown formatting explicitly:
 pnpm exec prettier --check README.md
 ```
 
-The repository does not currently define unit, integration, or end-to-end test
-scripts, and it does not contain a GitHub Actions workflow. Until those are
-added, lint, typecheck, and the production build are the available automated
-quality gates.
+Knip deliberately ignores `content/articles/**/*.{md,mdx}` because the local
+article source discovers those files with `node:fs` at runtime. The production
+build separately verifies that every published local article is present in
+Next.js output traces. Dependency install scripts are denied by default; the
+reviewed allow/ignore lists in `pnpm-workspace.yaml` are the source of truth for
+the pinned pnpm version. CI runs these quality gates on every ready pull
+request, with Playwright covered by the dedicated E2E workflow.
 
 ## Deployment
 

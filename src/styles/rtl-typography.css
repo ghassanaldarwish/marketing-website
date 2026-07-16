@@ -74,6 +74,10 @@ html[data-locale="ar"] :where(img, svg, canvas, video) {
   direction: ltr;
 }
 
+html[data-locale="ar"] .hero-portrait {
+  transform: scaleX(-1);
+}
+
 html[data-locale="ar"] :where(input[type="email"], input[type="url"], input[type="tel"]) {
   direction: ltr;
   unicode-bidi: isolate;

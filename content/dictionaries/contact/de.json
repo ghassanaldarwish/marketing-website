@@ -1,4 +1,5 @@
 {
+  "honeypotLabel": "Dieses Feld leer lassen",
   "fields": {
     "name": {
       "label": "Vollständiger Name",

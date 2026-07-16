@@ -3,12 +3,16 @@
   "version": "0.0.1",
   "private": true,
   "packageManager": "pnpm@10.12.1",
+  "engines": {
+    "node": ">=20.9.0"
+  },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node scripts/build.mjs",
     "start": "next start",
     "lint": "eslint .",
     "lint:ci": "eslint . --max-warnings=0",
+    "deadcode:check": "knip",
     "format": "prettier --write \"**/*.{js,mjs,ts,tsx,mts}\"",
     "format:check": "prettier --check \"**/*.{js,mjs,ts,tsx,mts}\"",
     "test": "vitest run",
@@ -19,14 +23,13 @@
     "test:e2e:debug": "playwright test --debug",
     "test:e2e:report": "playwright show-report",
     "typecheck": "tsc --noEmit",
-    "check": "pnpm format:check && pnpm lint:ci && pnpm typecheck && pnpm test:ci && pnpm build"
+    "check": "pnpm format:check && pnpm lint:ci && pnpm deadcode:check && pnpm typecheck && pnpm test:ci && pnpm build"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
     "@mdx-js/mdx": "^3.1.1",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.38.0",
-    "axios": "^1.18.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "github-slugger": "^2.0.0",
@@ -44,7 +47,6 @@
     "rehype-pretty-code": "^0.14.4",
     "rehype-slug": "^6.0.0",
     "remark-gfm": "^4.0.1",
-    "rtl-detect": "^1.1.2",
     "server-only": "^0.0.1",
     "shadcn": "^4.12.0",
     "shiki": "^4.3.1",
@@ -61,10 +63,9 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@types/rtl-detect": "^1.0.3",
-    "dotenv": "^17.4.2",
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
+    "knip": "^6.27.0",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "tailwindcss": "^4",

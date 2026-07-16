@@ -198,7 +198,7 @@ export function ContactForm({
               className="absolute top-auto -left-[10000px] h-px w-px overflow-hidden"
               aria-hidden="true"
             >
-              <label htmlFor="contact-website">Leave this field empty</label>
+              <label htmlFor="contact-website">{t("honeypotLabel")}</label>
               <input
                 {...form.register("website")}
                 id="contact-website"
@@ -252,6 +252,7 @@ export function ContactForm({
                       {...field}
                       id="contact-email"
                       type="email"
+                      dir="ltr"
                       placeholder={t("fields.email.placeholder")}
                       autoComplete="email"
                       aria-invalid={fieldState.invalid}

@@ -83,4 +83,46 @@ test.describe("Contact dialog", () => {
       page.getByText("Die Nachricht muss mindestens 10 Zeichen lang sein.")
     ).toBeVisible()
   })
+
+  test("keeps every locale placeholder and assistive label localized", async ({
+    page,
+  }) => {
+    const cases = [
+      {
+        locale: "en",
+        emailLabel: "Email Address",
+        emailPlaceholder: "john@example.com",
+        honeypotLabel: "Leave this field empty",
+      },
+      {
+        locale: "de",
+        emailLabel: "E-Mail-Adresse",
+        emailPlaceholder: "max.mustermann@example.com",
+        honeypotLabel: "Dieses Feld leer lassen",
+      },
+      {
+        locale: "ar",
+        emailLabel: "البريد الإلكتروني",
+        emailPlaceholder: "john@example.com",
+        honeypotLabel: "اترك هذا الحقل فارغًا",
+      },
+    ] as const
+
+    for (const {
+      locale,
+      emailLabel,
+      emailPlaceholder,
+      honeypotLabel,
+    } of cases) {
+      await page.goto(`/${locale}/contact`)
+
+      const email = page.getByLabel(emailLabel)
+
+      await expect(email).toHaveAttribute("placeholder", emailPlaceholder)
+      await expect(email).toHaveAttribute("dir", "ltr")
+      await expect(page.locator('label[for="contact-website"]')).toHaveText(
+        honeypotLabel
+      )
+    }
+  })
 })

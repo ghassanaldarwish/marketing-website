@@ -6,9 +6,3 @@ export type NavigationItem = {
   href: NavigationHref
   disabled: boolean
 }
-
-export type LinkType = {
-  title: string
-  url: string
-  disabled?: boolean
-}

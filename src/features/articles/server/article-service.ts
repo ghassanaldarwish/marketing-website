@@ -8,7 +8,7 @@ import {
 import type { ArticleRepository } from "@/features/articles/server/article-repository"
 import { createHybridArticleSource } from "@/features/articles/server/hybrid-article-source"
 
-export type ArticleContentSource = "local" | "remote" | "hybrid"
+type ArticleContentSource = "local" | "remote" | "hybrid"
 
 export type ArticleServiceConfiguration = {
   contentSource: ArticleContentSource

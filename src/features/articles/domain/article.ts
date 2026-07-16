@@ -2,7 +2,7 @@ import { z } from "zod"
 
 const datePattern = /^\d{4}-\d{2}-\d{2}$/
 
-export const articleIconSchema = z.enum([
+const articleIconSchema = z.enum([
   "brain",
   "server",
   "workflow",
@@ -37,7 +37,6 @@ export const articleMetadataSchema = z.object({
   translationKey: z.string().optional(),
 })
 
-export type ArticleIcon = z.infer<typeof articleIconSchema>
 export type ArticleMetadata = z.infer<typeof articleMetadataSchema>
 export type ArticleSource = "local" | "remote"
 

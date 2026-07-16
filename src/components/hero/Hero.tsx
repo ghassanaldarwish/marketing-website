@@ -35,18 +35,36 @@ export default function Hero() {
           <p className="text-lg leading-relaxed sm:text-xl">{description}</p>
 
           <div
-            className="flex items-center justify-start gap-8"
+            className="flex min-w-0 flex-wrap items-center justify-start gap-x-8 gap-y-4"
             data-testid="hero-actions"
           >
             <ContactDialog />
 
-            <div className="flex items-center gap-4">
-              <Link href={siteConfig.socialLinks.github} target="_blank">
-                <Icons.gitHub className="h-10 w-10 text-foreground/60 transition-colors hover:text-foreground/80" />
+            <div className="flex shrink-0 items-center gap-4">
+              <Link
+                href={siteConfig.socialLinks.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub"
+                className="rounded-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
+              >
+                <Icons.gitHub
+                  aria-hidden="true"
+                  className="h-10 w-10 text-foreground/60 transition-colors hover:text-foreground/80"
+                />
               </Link>
 
-              <Link href={siteConfig.socialLinks.linkedin} target="_blank">
-                <Icons.linkedin className="h-10 w-10 text-foreground/60 transition-colors hover:text-foreground/80" />
+              <Link
+                href={siteConfig.socialLinks.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                className="rounded-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
+              >
+                <Icons.linkedin
+                  aria-hidden="true"
+                  className="h-10 w-10 text-foreground/60 transition-colors hover:text-foreground/80"
+                />
               </Link>
             </div>
           </div>
@@ -57,7 +75,7 @@ export default function Hero() {
             src="/hero.png"
             width={794}
             height={930}
-            className="h-80 w-full object-contain object-bottom pt-4 sm:h-[30rem] sm:pt-6 lg:h-auto lg:w-auto lg:pt-14"
+            className="hero-portrait h-80 w-full object-contain object-bottom pt-4 sm:h-[30rem] sm:pt-6 lg:h-auto lg:w-auto lg:pt-14"
             data-testid="hero-portrait"
             alt="Ghassan Hero"
             loading="eager"
