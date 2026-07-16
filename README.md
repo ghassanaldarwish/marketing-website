@@ -55,7 +55,6 @@ islands such as navigation, theme controls, animation, and form handling.
 - Responsive shadcn/Radix UI components, Motion animations, keyboard focus
   treatment, and reduced-motion support.
 
-
 ## Technology stack
 
 | Area               | Technology                                                          |
@@ -122,9 +121,10 @@ The repository intentionally uses React Server Components by default.
 - Toast notifications and dialogs.
 - Scroll-aware navigation and decorative animations.
 
-The explicit server boundaries live in `src/lib/mdx/get-article.ts` and
+The article server boundaries live in `src/features/articles/server` and
 `src/components/mdx/mdx-renderer.tsx` through `server-only`. The contact
-mutation is defined as a Server Action in `src/actions/contact.ts`.
+mutation is defined as a Server Action in
+`src/features/contact/server/submit-contact-form.ts`.
 
 ## Routes and locales
 
@@ -260,9 +260,9 @@ silently changing content behavior.
 
 ## Article and MDX system
 
-The primary content pipeline is implemented by
-`src/lib/mdx/get-article.ts`. It exposes cached `getArticles(locale)` and
-`getArticle(locale, slug)` functions and supports three source modes.
+The article facade in `src/features/articles/server/index.ts` exposes cached
+`getArticles(locale)` and `getArticle(locale, slug)` functions and supports
+three source modes.
 
 | Mode     | Behavior                                                                |
 | -------- | ----------------------------------------------------------------------- |
@@ -395,14 +395,18 @@ export async function runWorker() {
 ```
 ````
 
-`@next/mdx` is also configured in `next.config.ts` for directly imported MDX,
-but the current article routes use the server-side content repository and
-runtime renderer described above.
+This runtime renderer is the only MDX compilation path. Local, remote, and
+hybrid repositories all return the same validated article shape, and the
+localized article route passes its body to this renderer with the shared
+component map from `src/mdx-components.tsx`. Article files are content data;
+they are not imported as Next.js route modules.
 
 > [!IMPORTANT]
-> MDX can contain executable expressions. Treat a remote MDX origin as trusted
-> application code, restrict who can publish to it, and never point production
-> at an untrusted content source.
+> MDX can contain executable expressions and is evaluated as trusted,
+> author-controlled application code. Restrict who can modify local articles
+> and publish to the configured remote origin. Never point production at an
+> untrusted content source. If untrusted publishing is required later, make a
+> separate security decision and render sanitized Markdown instead of MDX.
 
 ## Contact form
 

@@ -53,20 +53,29 @@ export const mdxComponents = {
   a: MdxLink,
   img: MdxImage,
   Callout,
-  h1: ({ children }) => (
-    <h1 className="mt-10 text-start text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
+  h1: ({ children, ...props }: ComponentPropsWithoutRef<"h1">) => (
+    <h1
+      {...props}
+      className="mt-10 text-start text-4xl font-semibold tracking-tight text-foreground sm:text-5xl"
+    >
       {children}
     </h1>
   ),
 
-  h2: ({ children }) => (
-    <h2 className="mt-16 pt-10 text-start text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+  h2: ({ children, ...props }: ComponentPropsWithoutRef<"h2">) => (
+    <h2
+      {...props}
+      className="mt-16 pt-10 text-start text-3xl font-semibold tracking-tight text-foreground sm:text-4xl"
+    >
       {children}
     </h2>
   ),
 
-  h3: ({ children }) => (
-    <h3 className="mt-10 text-start text-2xl font-semibold tracking-tight text-foreground">
+  h3: ({ children, ...props }: ComponentPropsWithoutRef<"h3">) => (
+    <h3
+      {...props}
+      className="mt-10 text-start text-2xl font-semibold tracking-tight text-foreground"
+    >
       {children}
     </h3>
   ),
@@ -115,11 +124,3 @@ export const mdxComponents = {
 
   li: ({ children }) => <li className="ps-2 leading-8">{children}</li>,
 } satisfies MDXComponents
-
-/**
- * This also makes the file compatible with @next/mdx if you decide
- * to use direct local MDX imports later.
- */
-export function useMDXComponents(): MDXComponents {
-  return mdxComponents
-}

@@ -1,8 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
+import type { ReactElement } from "react"
+import type { MDXComponents } from "mdx/types"
 
 vi.mock("server-only", () => ({}))
 
-const evaluateMock = vi.fn()
+const { evaluateMock } = vi.hoisted(() => ({
+  evaluateMock: vi.fn(),
+}))
 
 vi.mock("@mdx-js/mdx", () => ({
   evaluate: evaluateMock,
@@ -15,6 +19,7 @@ vi.mock("react/jsx-runtime", () => ({
 }))
 
 import { MdxRenderer } from "@/components/mdx/mdx-renderer"
+import { mdxComponents } from "@/mdx-components"
 
 const originalVercelEnvironment = process.env.VERCEL
 
@@ -58,6 +63,26 @@ describe("MdxRenderer", () => {
 
     expect(evaluateMock).toHaveBeenCalledTimes(1)
     expect(evaluateMock.mock.calls[0]?.[1].rehypePlugins).toHaveLength(2)
+  })
+
+  it("uses the shared component map for every dynamically loaded article", async () => {
+    const MdxContent = () => null
+    const CustomCallout = () => null
+    evaluateMock.mockResolvedValueOnce({ default: MdxContent })
+
+    const rendered = (await MdxRenderer({
+      source: "# Remote or hybrid fixture\n\n| A | B |\n| - | - |\n| 1 | 2 |",
+      components: { Callout: CustomCallout },
+    })) as ReactElement<{ components: MDXComponents }>
+
+    expect(evaluateMock).toHaveBeenCalledWith(
+      expect.stringContaining("Remote or hybrid fixture"),
+      expect.objectContaining({ format: "mdx" })
+    )
+    expect(rendered.props.components).toEqual({
+      ...mdxComponents,
+      Callout: CustomCallout,
+    })
   })
 
   it("reports both highlighting and MDX failures when the fallback fails", async () => {
