@@ -11,9 +11,9 @@ const contentDirectory = path.join(process.cwd(), "content", "articles")
 const publicDirectory = path.join(process.cwd(), "public")
 
 const expectedPublishedSlugs = {
-  en: ["scalable-backend-platform"],
-  de: ["ai-agent-platform", "scalable-backend-platform"],
-  ar: ["ai-agent-platform", "scalable-backend-platform"],
+  en: ["ai-agent-platform"],
+  de: ["ai-agent-platform"],
+  ar: ["ai-agent-platform"],
 } as const
 
 describe("bundled published article content", () => {
@@ -60,9 +60,5 @@ describe("bundled published article content", () => {
         ).resolves.toBeUndefined()
       }
     }
-  })
-
-  it("keeps the English AI Agent draft out of production", async () => {
-    await expect(source.get("en", "ai-agent-platform")).resolves.toBeNull()
   })
 })

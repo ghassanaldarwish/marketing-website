@@ -46,7 +46,7 @@ for (const locale of publishedLocales) {
 test("the canonical article renderer supports MDX features", async ({
   page,
 }) => {
-  const response = await page.goto("/en/articles/scalable-backend-platform")
+  const response = await page.goto("/en/articles/ai-agent-platform")
 
   expect(response?.status()).toBeLessThan(400)
   await expect(page.locator("h2#the-problem")).toBeVisible()

@@ -4,7 +4,7 @@ test("article prose stays readable while wide content remains contained", async 
   page,
   isMobile,
 }) => {
-  const response = await page.goto("/en/articles/scalable-backend-platform")
+  const response = await page.goto("/en/articles/ai-agent-platform")
 
   expect(response?.status()).toBeLessThan(400)
 
@@ -50,7 +50,7 @@ test("article prose stays readable while wide content remains contained", async 
 test("article metadata and heading anchors use the active locale", async ({
   page,
 }) => {
-  await page.goto("/de/articles/scalable-backend-platform")
+  await page.goto("/de/articles/ai-agent-platform")
 
   await expect(page.getByText(/Min\. Lesezeit/)).toBeVisible()
   await expect(

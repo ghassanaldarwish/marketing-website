@@ -12,7 +12,7 @@ export const navigationConfig = [
   {
     id: "articles",
     href: "/articles",
-    disabled: true,
+    disabled: false,
   },
   {
     id: "contact",
