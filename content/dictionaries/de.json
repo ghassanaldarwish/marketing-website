@@ -140,11 +140,7 @@
       }
     },
     "hero": {
-      "badge": [
-        "Backend-Entwickler",
-        "DevOps Engineer",
-        "Junior-KI-Entwickler"
-      ],
+      "badge": ["Backend-Entwickler", "DevOps Engineer", "KI-Entwickler"],
       "title": "AI-Systeme entwickeln",
       "secondaryTitle": "die skalieren",
       "description": "Ich konzipiere und entwickle produktionsreife AI-Systeme, skalierbare Backend-Plattformen und cloudnative Infrastruktur.",

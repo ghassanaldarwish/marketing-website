@@ -144,7 +144,7 @@
       }
     },
     "hero": {
-      "badge": ["Backend Developer", "DevOps Engineer", "Junior AI Developer"],
+      "badge": ["Backend Developer", "DevOps Engineer", "AI Developer"],
       "title": "Building AI Systems",
       "secondaryTitle": "That Scale",
       "description": "I design and build production-ready AI systems, scalable backend platforms, and cloud-native infrastructure.",
