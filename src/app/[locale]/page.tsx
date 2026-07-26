@@ -57,7 +57,7 @@ export async function generateMetadata({
     /**
      * Prevent the parent layout template from producing:
      *
-     * Ghassan — Backend Developer, DevOps Engineer & Junior AI Developer | Ghassan
+     * Ghassan — Senior Backend & Platform Engineer | Ghassan
      */
     title: {
       absolute: title,

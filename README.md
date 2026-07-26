@@ -1,9 +1,8 @@
 # ghassan.de — Marketing Website
 
 Production portfolio and engineering publication platform for **Ghassan
-Aldarwish**, presented as a Backend Developer, DevOps Engineer, and Junior AI
-Developer with a focus on scalable systems, cloud infrastructure, and software
-architecture.
+Aldarwish**, presented as a Senior Backend & Platform Engineer building
+reliable backend platforms, DevOps systems, and production AI workflows.
 
 [Live website](https://ghassan.de) ·
 [GitHub profile](https://github.com/ghassanaldarwish) ·
