@@ -2,7 +2,7 @@
   "brand": {
     "name": "Ghassan Aldarwish",
     "shortName": "Ghassan",
-    "role": "Backend-Entwickler, DevOps Engineer und Junior-KI-Entwickler",
+    "role": "Senior Backend & Platform Engineer",
     "location": "Deutschland"
   },
   "contactModal": {
@@ -54,25 +54,25 @@
     "hint": "Fehlercode: 404"
   },
   "metadata": {
-    "defaultTitle": "Ghassan — Backend-Entwickler, DevOps Engineer & Junior-KI-Entwickler",
+    "defaultTitle": "Ghassan — Senior Backend & Platform Engineer",
     "titleTemplate": "{title} | Ghassan",
-    "description": "Backend-Entwickler, DevOps Engineer und Junior-KI-Entwickler mit Fokus auf skalierbare Backend-Plattformen, cloudnative Anwendungen und produktionsreife KI-Systeme.",
+    "description": "Senior Backend & Platform Engineer mit Fokus auf skalierbare Backend-Plattformen, cloudnative Anwendungen und produktionsreife KI-Systeme.",
     "category": "Technologie",
-    "socialImageAlt": "Ghassan Aldarwish — Backend-Entwickler, DevOps Engineer und Junior-KI-Entwickler"
+    "socialImageAlt": "Ghassan Aldarwish — Senior Backend & Platform Engineer"
   },
   "home": {
     "metadata": {
-      "title": "Ghassan — Backend-Entwickler, DevOps Engineer & Junior-KI-Entwickler",
-      "description": "Ghassan Aldarwish ist Backend-Entwickler, DevOps Engineer und Junior-KI-Entwickler und entwickelt skalierbare Backend-Plattformen, verteilte Architekturen, cloudnative Anwendungen und produktionsreife KI-Systeme.",
+      "title": "Ghassan — Senior Backend & Platform Engineer",
+      "description": "Ghassan Aldarwish ist Senior Backend & Platform Engineer und entwickelt zuverlässige Backend-Plattformen, DevOps-Systeme und produktionsreife KI-Workflows.",
       "headline": "Intelligente Systeme entwickeln, die skalieren.",
       "shortDescription": "Produktionsreife AI-Systeme, skalierbare Backend-Architektur und cloudnative Software.",
       "category": "Technologie",
       "socialImage": {
-        "alt": "Ghassan Aldarwish — Backend-Entwickler, DevOps Engineer und Junior-KI-Entwickler",
+        "alt": "Ghassan Aldarwish — Senior Backend & Platform Engineer",
         "availability": "Verfügbar für neue Möglichkeiten in Deutschland",
-        "expertise": "Backend-Entwicklung · DevOps · Junior-KI-Entwicklung",
-        "role": "Backend-Entwickler · DevOps Engineer · Junior-KI-Entwickler",
-        "twitterRole": "Backend-Entwickler · DevOps Engineer · Junior-KI-Entwickler",
+        "expertise": "Backend-Plattformen · DevOps-Systeme · Produktions-KI",
+        "role": "Senior Backend & Platform Engineer",
+        "twitterRole": "Senior Backend & Platform Engineer",
         "openGraphAction": "Meine Engineering-Arbeit entdecken →",
         "twitterAction": "Meine Arbeit ansehen →"
       },
@@ -80,12 +80,12 @@
         "Ghassan Aldarwish",
         "Backend-Entwickler",
         "DevOps Engineer",
-        "Junior-KI-Entwickler",
+        "Senior Backend & Platform Engineer",
         "Senior Software Engineer",
         "Software Engineer Deutschland",
         "Backend-Entwickler Deutschland",
         "DevOps Engineer Deutschland",
-        "Junior-KI-Entwickler Deutschland",
+        "Senior Backend & Platform Engineer Deutschland",
         "Produktionsreife AI-Systeme",
         "AI Agents",
         "Large Language Models",
@@ -105,12 +105,8 @@
         "Cloud Engineering"
       ],
       "structuredData": {
-        "personDescription": "Backend-Entwickler, DevOps Engineer und Junior-KI-Entwickler mit Fokus auf verteilte Backend-Architekturen, Cloud-Infrastruktur, produktionsreife KI-Systeme und moderne Webentwicklung.",
-        "jobTitles": [
-          "Backend-Entwickler",
-          "DevOps Engineer",
-          "Junior-KI-Entwickler"
-        ],
+        "personDescription": "Senior Backend & Platform Engineer mit Fokus auf verteilte Backend-Architekturen, Cloud-Infrastruktur, produktionsreife KI-Systeme und moderne Webentwicklung.",
+        "jobTitles": ["Senior Backend & Platform Engineer"],
         "knowsAbout": [
           "Künstliche Intelligenz",
           "Large Language Models",
@@ -140,10 +136,10 @@
       }
     },
     "hero": {
-      "badge": ["Backend-Entwickler", "DevOps Engineer", "KI-Entwickler"],
+      "badge": ["Backend-Plattformen", "DevOps-Systeme", "Produktions-KI"],
       "title": "AI-Systeme entwickeln",
       "secondaryTitle": "die skalieren",
-      "description": "Ich konzipiere und entwickle produktionsreife AI-Systeme, skalierbare Backend-Plattformen und cloudnative Infrastruktur.",
+      "description": "Ich entwickle zuverlässige Backend-Plattformen, DevOps-Systeme und produktionsreife KI-Workflows.",
       "contact": "Kontakt aufnehmen",
       "viewEngineering": "Engineering ansehen",
       "infiniteMovingCards": [
@@ -285,7 +281,7 @@
         "Kontakt Ghassan Aldarwish",
         "Backend-Entwickler einstellen",
         "DevOps Engineer einstellen",
-        "Junior-KI-Entwickler einstellen",
+        "Senior Backend Engineer einstellen",
         "Software Engineer Deutschland",
         "AI Engineering Beratung",
         "Backend-Entwicklung",
@@ -296,12 +292,8 @@
       ],
       "structuredData": {
         "pageName": "Kontakt zu Ghassan Aldarwish",
-        "personDescription": "Backend-Entwickler, DevOps Engineer und Junior-KI-Entwickler mit Fokus auf verteilte Backend-Architektur, Cloud-Infrastruktur, produktionsreife KI-Systeme und moderne Webentwicklung.",
-        "jobTitles": [
-          "Backend-Entwickler",
-          "DevOps Engineer",
-          "Junior-KI-Entwickler"
-        ],
+        "personDescription": "Senior Backend & Platform Engineer mit Fokus auf verteilte Backend-Architektur, Cloud-Infrastruktur, produktionsreife KI-Systeme und moderne Webentwicklung.",
+        "jobTitles": ["Senior Backend & Platform Engineer"],
         "knowsAbout": [
           "Künstliche Intelligenz",
           "AI Agents",
@@ -318,11 +310,11 @@
         ]
       },
       "socialImage": {
-        "alt": "Kontakt zu Ghassan Aldarwish — Backend-Entwickler, DevOps Engineer und Junior-KI-Entwickler",
+        "alt": "Kontakt zu Ghassan Aldarwish — Senior Backend & Platform Engineer",
         "badge": "Kontakt",
         "headline": "Lassen Sie uns etwas Sinnvolles entwickeln.",
         "description": "Nehmen Sie Kontakt auf zu AI Engineering, Backend-Systemen, Softwarearchitektur oder beruflichen Möglichkeiten in Deutschland.",
-        "role": "Backend-Entwickler · DevOps Engineer · Junior-KI-Entwickler",
+        "role": "Senior Backend & Platform Engineer",
         "action": "Gespräch beginnen →"
       }
     },
@@ -369,12 +361,12 @@
   "about": {
     "metadata": {
       "title": "Über mich",
-      "description": "Erfahren Sie mehr über Ghassan Aldarwish, einen Backend-Entwickler, DevOps Engineer und Junior-KI-Entwickler mit Erfahrung in verteilter Backend-Architektur, Cloud-Infrastruktur, produktionsreifen KI-Systemen und moderner Webentwicklung.",
+      "description": "Erfahren Sie mehr über Ghassan Aldarwish, einen Senior Backend & Platform Engineer mit Erfahrung in verteilter Backend-Architektur, Cloud-Infrastruktur, produktionsreifen KI-Systemen und moderner Webentwicklung.",
       "keywords": [
         "Ghassan Aldarwish",
         "Backend-Entwickler",
         "DevOps Engineer",
-        "Junior-KI-Entwickler",
+        "Senior Backend & Platform Engineer",
         "Software Engineer Deutschland",
         "Node.js Engineer",
         "TypeScript Engineer",
@@ -387,12 +379,8 @@
       ],
       "structuredData": {
         "pageName": "Über Ghassan Aldarwish",
-        "personDescription": "Backend-Entwickler, DevOps Engineer und Junior-KI-Entwickler mit Fokus auf verteilte Backend-Architektur, Cloud-Infrastruktur, produktionsreife KI-Systeme und moderne Webentwicklung.",
-        "jobTitles": [
-          "Backend-Entwickler",
-          "DevOps Engineer",
-          "Junior-KI-Entwickler"
-        ],
+        "personDescription": "Senior Backend & Platform Engineer mit Fokus auf verteilte Backend-Architektur, Cloud-Infrastruktur, produktionsreife KI-Systeme und moderne Webentwicklung.",
+        "jobTitles": ["Senior Backend & Platform Engineer"],
         "knowsAbout": [
           "Künstliche Intelligenz",
           "Large Language Models",
@@ -417,11 +405,11 @@
         "educationName": "Physik"
       },
       "socialImage": {
-        "alt": "Ghassan Aldarwish — Backend-Entwickler, DevOps Engineer und Junior-KI-Entwickler",
+        "alt": "Ghassan Aldarwish — Senior Backend & Platform Engineer",
         "badge": "Über mich",
         "headline": "Ghassan Aldarwish",
-        "role": "Backend-Entwickler · DevOps Engineer · Junior-KI-Entwickler",
-        "description": "Entwicklung produktionsreifer AI-Systeme, skalierbarer Backend-Plattformen und cloudnativer Software.",
+        "role": "Senior Backend & Platform Engineer",
+        "description": "Ich entwickle zuverlässige Backend-Plattformen, DevOps-Systeme und produktionsreife KI-Workflows.",
         "technologies": "Node.js · TypeScript · Python · AI-Systeme",
         "action": "Meinen Werdegang entdecken →"
       }
@@ -501,7 +489,7 @@
         "badge": "Engineering",
         "headline": "Systeme, die über den Code hinausgehen.",
         "description": "AI-Plattformen, Backend-Architekturen, Automatisierungs-Workflows und Cloud-Infrastruktur für den Produktionseinsatz.",
-        "role": "Backend-Entwickler · DevOps Engineer · Junior-KI-Entwickler",
+        "role": "Senior Backend & Platform Engineer",
         "action": "Systeme entdecken →"
       }
     },

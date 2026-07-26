@@ -4,8 +4,7 @@ import { getTranslations } from "next-intl/server"
 import { SocialImage } from "@/components/seo/socialImage"
 import { routing } from "@/i18n/routing"
 
-export const alt =
-  "Ghassan Aldarwish — Backend Developer, DevOps Engineer, and Junior AI Developer"
+export const alt = "Ghassan Aldarwish — Senior Backend & Platform Engineer"
 
 export const size = {
   width: 1200,
