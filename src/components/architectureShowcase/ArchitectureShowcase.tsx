@@ -45,7 +45,10 @@ export default function ArchitectureShowcase() {
 
   return (
     <section className="border-y bg-foreground/2 py-12 lg:py-24">
-      <div className="mx-auto grid max-w-6xl gap-12 px-2 lg:grid-cols-2 lg:items-center lg:px-0">
+      <div
+        className="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:items-center"
+        data-layout-container="architecture-showcase"
+      >
         <div>
           <p className="mb-3 text-sm font-medium tracking-widest text-accent-foreground uppercase">
             {t("eyebrow")}

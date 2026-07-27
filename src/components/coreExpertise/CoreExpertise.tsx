@@ -29,7 +29,10 @@ export default function CoreExpertise() {
 
   return (
     <section className="border-y bg-foreground/2 py-12 lg:py-24">
-      <div className="mx-auto max-w-6xl px-2 lg:px-0">
+      <div
+        className="mx-auto max-w-6xl px-4 sm:px-6"
+        data-layout-container="core-expertise"
+      >
         <div className="max-w-3xl">
           <p className="mb-3 text-sm font-medium tracking-widest text-accent-foreground uppercase">
             {t("eyebrow")}

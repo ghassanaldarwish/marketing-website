@@ -28,10 +28,13 @@ export default function Footer() {
   }))
 
   return (
-    <footer className="relative border-t bg-background px-2 py-8">
+    <footer className="relative border-t bg-background py-8">
       <GridBackground />
 
-      <div className="relative mx-auto flex max-w-6xl flex-col-reverse items-center justify-between gap-8 lg:flex-row">
+      <div
+        className="relative mx-auto flex max-w-6xl flex-col-reverse items-center justify-between gap-8 px-4 sm:px-6 lg:flex-row"
+        data-layout-container="footer"
+      >
         <div>
           <div className="flex justify-center md:justify-start">
             <Link

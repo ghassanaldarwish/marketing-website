@@ -32,7 +32,10 @@ export default async function SelectedProjects() {
       aria-labelledby="selected-projects-heading"
       className="relative border-y py-12 lg:py-24"
     >
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+      <div
+        className="mx-auto max-w-6xl px-4 sm:px-6"
+        data-layout-container="selected-projects"
+      >
         <header className="max-w-3xl">
           <p className="mb-3 text-sm font-medium tracking-widest text-accent-foreground uppercase">
             {t("eyebrow")}
