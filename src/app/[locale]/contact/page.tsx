@@ -147,7 +147,10 @@ export default async function ContactPage({ params }: ContactPageProps) {
         }}
       />
 
-      <main className="relative min-h-screen overflow-x-clip px-4 sm:px-6 lg:px-0">
+      <main
+        className="relative min-h-screen overflow-x-clip px-4 sm:px-6"
+        data-layout-container="contact"
+      >
         <div className="mx-auto flex min-h-[calc(100vh-5rem)] w-full max-w-3xl min-w-0 flex-col justify-center gap-10 py-16 md:gap-14 lg:py-24">
           <header className="w-full min-w-0">
             <p className="mb-3 text-sm font-medium tracking-widest text-accent-foreground uppercase">

@@ -20,11 +20,11 @@ export default function Hero() {
   const infiniteMovingCards = t.raw("hero.infiniteMovingCards") as string[]
 
   return (
-    <div
-      className="relative overflow-x-clip px-2 lg:mb-24 lg:px-0"
-      data-testid="hero"
-    >
-      <div className="relative m-auto flex h-full max-w-6xl flex-col pt-12 md:mt-0 lg:flex-row">
+    <div className="relative overflow-x-clip lg:mb-24" data-testid="hero">
+      <div
+        className="relative m-auto flex h-full max-w-6xl flex-col px-4 pt-12 sm:px-6 md:mt-0 lg:flex-row"
+        data-layout-container="hero-primary"
+      >
         <div className="flex w-full flex-col justify-end gap-4 sm:gap-6 lg:gap-10 lg:pt-0">
           <TechBadge />
 
@@ -105,7 +105,10 @@ export default function Hero() {
         </div>
       </div>
 
-      <div className="relative m-auto max-w-6xl items-end justify-between lg:flex">
+      <div
+        className="relative m-auto max-w-6xl items-end justify-between px-4 sm:px-6 lg:flex"
+        data-layout-container="hero-metrics"
+      >
         <div className="min-w-0 lg:w-[59%]">
           <ul
             className="grid w-full grid-cols-2 gap-x-4 gap-y-2 bg-background/10 py-4 text-center text-sm leading-6 text-muted-foreground backdrop-blur-xs sm:grid-cols-4 sm:text-base lg:flex lg:flex-wrap lg:text-lg lg:leading-8"

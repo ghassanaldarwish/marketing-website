@@ -250,7 +250,10 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
           aria-labelledby="engineering-heading"
           className="py-16 lg:py-24"
         >
-          <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div
+            className="mx-auto max-w-6xl px-4 sm:px-6"
+            data-layout-container="articles"
+          >
             <header className="max-w-3xl">
               <p className="mb-3 text-sm font-medium tracking-widest text-accent-foreground uppercase">
                 {content("eyebrow")}

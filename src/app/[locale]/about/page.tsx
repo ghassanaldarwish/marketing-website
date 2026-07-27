@@ -196,7 +196,10 @@ export default async function AboutPage({ params }: AboutPageProps) {
 
       <main className="min-h-screen">
         <section className="py-12 lg:py-24">
-          <div className="mx-auto grid max-w-6xl gap-12 px-6 lg:grid-cols-[0.8fr_1.2fr]">
+          <div
+            className="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-[0.8fr_1.2fr]"
+            data-layout-container="about-intro"
+          >
             <div>
               <p className="mb-3 text-sm font-medium tracking-widest text-accent-foreground uppercase">
                 {intro("eyebrow")}
@@ -216,7 +219,10 @@ export default async function AboutPage({ params }: AboutPageProps) {
         </section>
 
         <section className="border-y border-border bg-foreground/2 py-12 lg:py-24">
-          <div className="mx-auto max-w-7xl px-6">
+          <div
+            className="mx-auto max-w-6xl px-4 sm:px-6"
+            data-layout-container="about-journey"
+          >
             <div className="max-w-3xl">
               <p className="mb-3 text-sm font-medium tracking-widest text-accent-foreground uppercase">
                 {journey("eyebrow")}

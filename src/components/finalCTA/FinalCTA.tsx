@@ -7,11 +7,14 @@ export default function FinalCTA() {
 
   return (
     <section
-      className="min-w-0 px-2 py-12 sm:px-0 lg:py-24"
+      className="min-w-0 px-4 py-12 sm:px-6 lg:py-24"
       data-testid="final-cta"
       aria-labelledby="final-cta-heading"
     >
-      <div className="mx-auto max-w-5xl min-w-0 rounded-lg border border-border bg-muted px-2 py-8 text-center text-foreground sm:p-12 lg:px-0">
+      <div
+        className="mx-auto max-w-6xl min-w-0 rounded-lg border border-border bg-muted p-6 text-center text-foreground sm:p-12"
+        data-layout-container="final-cta"
+      >
         <h2
           id="final-cta-heading"
           className="min-w-0 text-4xl font-semibold tracking-tight [overflow-wrap:anywhere] break-words sm:text-5xl"

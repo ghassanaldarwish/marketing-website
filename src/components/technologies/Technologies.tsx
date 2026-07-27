@@ -29,8 +29,11 @@ export default function Technologies() {
   const t = useTranslations("home.technologies")
 
   return (
-    <section className="relative lg:px-0">
-      <div className="relative m-auto flex h-full max-w-6xl flex-col gap-8 px-2 py-8 lg:gap-16 lg:px-0 lg:py-24">
+    <section className="relative">
+      <div
+        className="relative m-auto flex h-full max-w-6xl flex-col gap-8 px-4 py-8 sm:px-6 lg:gap-16 lg:py-24"
+        data-layout-container="technologies"
+      >
         <div className="flex flex-col gap-2 lg:gap-4">
           <h2 className="text-4xl font-semibold tracking-tight sm:text-5xl">
             {t("title")}
