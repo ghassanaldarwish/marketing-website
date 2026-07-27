@@ -2,8 +2,6 @@ import { useTranslations } from "next-intl"
 
 import { ContactDialog } from "@/features/contact/contact-dialog"
 
-import { Alert } from "../ui/alert"
-
 export default function FinalCTA() {
   const t = useTranslations("home.finalCTA")
 
@@ -11,9 +9,11 @@ export default function FinalCTA() {
     <section
       className="min-w-0 px-2 py-12 sm:px-0 lg:py-24"
       data-testid="final-cta"
+      aria-labelledby="final-cta-heading"
     >
-      <Alert className="mx-auto max-w-5xl min-w-0 bg-muted-foreground/1 px-2 py-8 text-center sm:p-12 lg:px-0">
+      <div className="mx-auto max-w-5xl min-w-0 rounded-lg border border-border bg-muted px-2 py-8 text-center text-foreground sm:p-12 lg:px-0">
         <h2
+          id="final-cta-heading"
           className="min-w-0 text-4xl font-semibold tracking-tight [overflow-wrap:anywhere] break-words sm:text-5xl"
           data-testid="final-cta-heading"
         >
@@ -31,7 +31,7 @@ export default function FinalCTA() {
         >
           <ContactDialog />
         </div>
-      </Alert>
+      </div>
     </section>
   )
 }
