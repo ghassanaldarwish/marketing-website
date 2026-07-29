@@ -1,15 +1,15 @@
 ---
-title: "Building a Production AI Agent Platform"
-description: "How I designed an agent platform using Node.js, Python, Redis, PostgreSQL, Docker and Kubernetes."
+title: "Designing a Reliable AI Agent Platform: A Reference Architecture"
+description: "A reference architecture for reliable agent workflows using TypeScript, Python, Redis, PostgreSQL, Docker and Kubernetes."
 
 category: "AI Engineering / Backend"
-status: "Case Study"
+status: "Reference Architecture"
 
 publishedAt: "2026-07-11"
-updatedAt: "2026-07-11"
+updatedAt: "2026-07-29"
 
 coverImage: "/articles/ai-agent-platform/cover.png"
-coverImageAlt: "Architecture of a production AI agent platform"
+coverImageAlt: "Reference architecture for a reliable AI agent platform"
 
 tags:
   - "AI Engineering"
@@ -33,9 +33,15 @@ Building an AI agent that answers a prompt is relatively easy.
 
 Building an AI agent platform that can execute real workloads reliably, recover from failure, call tools safely, preserve state, and scale across multiple workers is a different engineering problem.
 
-This case study describes the architecture of a production-oriented AI agent platform built with **TypeScript**, **Python**, **Redis**, **PostgreSQL**, **Docker**, and **Kubernetes**.
+This reference architecture explores how **TypeScript**, **Python**, **Redis**, **PostgreSQL**, **Docker**, and **Kubernetes** can support reliable agent workflows.
 
-The goal was not to build another chatbot. The goal was to create a reusable platform for running intelligent, tool-using workflows inside a reliable backend system.
+The design target is not another chatbot. It is a reusable platform for running intelligent, tool-using workflows inside a reliable backend system.
+
+<Callout title="Scope and evidence">
+
+This is a design reference. It is not a production case study. The code is illustrative and has not been presented here as a deployed or measured implementation.
+
+</Callout>
 
 <Callout title="Core engineering principle">
 
@@ -56,7 +62,7 @@ const response = await openai.responses.create({
 
 This approach works for demonstrations, but production systems quickly introduce more demanding requirements.
 
-The platform needed to support:
+A robust agent platform may need to support:
 
 - Multiple specialized agents.
 - Long-running workflows.
@@ -74,11 +80,11 @@ The central challenge was connecting probabilistic AI reasoning with determinist
 
 > Language models are non-deterministic, but production systems cannot be unpredictable about security, state transitions, billing, retries, or data integrity.
 
-The architecture therefore had to isolate AI reasoning from the parts of the system that required strict guarantees.
+The reference architecture therefore isolates AI reasoning from the parts of the system that require strict guarantees.
 
 ## Design goals
 
-Before selecting technologies, I defined the primary design goals.
+The reference design starts with the following goals.
 
 ### Reliability
 
@@ -113,7 +119,7 @@ The application should support cloud providers and local models through a common
 
 ## High-level architecture
 
-The platform is divided into several clearly defined layers.
+The reference architecture is divided into several clearly defined layers.
 
 | Layer               | Responsibility                                                  | Main technologies            |
 | ------------------- | --------------------------------------------------------------- | ---------------------------- |
@@ -148,7 +154,7 @@ A typical request moves through the system in the following order:
 
 This model makes the API request short-lived while the actual agent workflow can continue for seconds or minutes.
 
-## Why I separated the API from agent execution
+## Why separate the API from agent execution
 
 Running agent workflows directly inside an HTTP request creates several problems:
 
@@ -158,7 +164,7 @@ Running agent workflows directly inside an HTTP request creates several problems
 - Retrying the HTTP request may repeat side effects.
 - Scaling the API also scales expensive agent resources unnecessarily.
 
-Instead, the API creates a durable run and schedules asynchronous work.
+In this design, the API creates a durable run and schedules asynchronous work.
 
 ```ts title="create-agent-run.ts" showLineNumbers
 type CreateAgentRunInput = {
@@ -199,7 +205,7 @@ export async function createAgentRun(
 }
 ```
 
-The API does not immediately publish directly to Redis inside the transaction. Instead, it stores an outbox event.
+In this example, the API does not publish directly to Redis inside the transaction. Instead, it stores an outbox event.
 
 That distinction matters.
 
@@ -212,9 +218,9 @@ A common failure scenario looks like this:
 3. Redis is temporarily unavailable.
 4. The database contains a queued workflow, but no worker knows about it.
 
-The transactional outbox solves this by writing the workflow and the event in the same PostgreSQL transaction.
+In this design, a transactional outbox addresses the gap by writing the workflow and the event in the same PostgreSQL transaction.
 
-A separate publisher reads unprocessed outbox events and publishes them to Redis.
+A separate publisher would read unprocessed outbox events and publish them to Redis.
 
 ```ts title="outbox-publisher.ts" showLineNumbers
 export async function publishOutboxBatch() {
@@ -245,7 +251,7 @@ export async function publishOutboxBatch() {
 
 <Callout title="Why this matters">
 
-The outbox pattern ensures that a committed workflow cannot silently disappear between the database and the queue.
+The outbox pattern reduces the risk that a committed workflow disappears between the database and the queue. A production implementation still needs duplicate-delivery handling, publisher coordination, and failure tests.
 
 </Callout>
 
@@ -255,7 +261,7 @@ Redis is useful for queues, locks, short-lived caches, and coordination.
 
 It is not the primary source of truth for agent execution.
 
-PostgreSQL stores the durable state of every run.
+In this reference design, PostgreSQL stores the durable state of every run.
 
 ```sql title="agent_runs.sql" showLineNumbers
 CREATE TABLE agent_runs (
@@ -296,13 +302,13 @@ CREATE TABLE agent_run_steps (
 );
 ```
 
-This gives the platform an auditable execution history.
+This schema provides the basis for an auditable execution history.
 
-It also means a worker can restart and continue from the last completed step instead of starting the entire workflow again.
+With corresponding recovery logic and tests, a worker could restart and continue from the last completed step instead of starting the entire workflow again.
 
 ## Agent worker design
 
-The Python worker is responsible for model interaction, structured output, and reasoning-related operations.
+The illustrative Python worker is responsible for model interaction, structured output, and reasoning-related operations.
 
 It is not responsible for unrestricted infrastructure access.
 
@@ -342,7 +348,7 @@ async def process_agent_job(job: AgentJob) -> None:
         raise
 ```
 
-The worker receives a job identifier and reloads the current state from PostgreSQL.
+In this design, the worker receives a job identifier and reloads the current state from PostgreSQL.
 
 This avoids passing large or stale workflow state through the queue.
 
@@ -386,7 +392,7 @@ export type AgentDecision = z.infer<
 
 This does not make the model deterministic, but it gives the backend a controlled contract.
 
-The system rejects malformed output rather than guessing what the model intended.
+The intended boundary rejects malformed output rather than guessing what the model intended.
 
 ## Tool execution boundaries
 
@@ -402,7 +408,7 @@ A tool can:
 - Read a document.
 - Call an external API.
 
-The model never receives direct credentials.
+The model should never receive direct credentials.
 
 Instead, it requests a named tool with structured arguments.
 
@@ -418,7 +424,7 @@ Instead, it requests a named tool with structured arguments.
 }
 ```
 
-The backend then performs several checks:
+A production backend should then perform several checks:
 
 1. Is the tool registered?
 2. Is this agent allowed to use it?
@@ -453,7 +459,7 @@ export const toolRegistry = {
 
 <Callout title="Security boundary">
 
-The model proposes an action. The application authorizes, validates, executes, and records it.
+The model proposes an action. The application should authorize, validate, execute, and record it.
 
 </Callout>
 
@@ -465,7 +471,7 @@ A worker may complete a tool call and crash before acknowledging the queue messa
 
 Without idempotency, the platform might send the same email twice or create duplicate tickets.
 
-Each side-effecting operation receives an idempotency key:
+Each side-effecting operation should receive an idempotency key:
 
 ```ts title="execute-tool.ts" showLineNumbers
 type ExecuteToolInput = {
@@ -499,11 +505,11 @@ export async function executeTool(
 }
 ```
 
-This allows the worker to retry safely.
+With a uniqueness constraint and a transactional execution record, this pattern can support safe retries. The illustrative lookup alone is not sufficient proof of that guarantee.
 
 ## Redis responsibilities
 
-Redis is used for short-lived operational concerns:
+In this reference design, Redis is used for short-lived operational concerns:
 
 | Responsibility    | Example                                             |
 | ----------------- | --------------------------------------------------- |
@@ -514,4 +520,4 @@ Redis is used for short-lived operational concerns:
 | Event delivery    | Progress notifications                              |
 | Retry scheduling  | Delayed jobs with exponential backoff               |
 
-Redis is not used as the only storage location for business-critical workflow state.
+Redis should not be used as the only storage location for business-critical workflow state.

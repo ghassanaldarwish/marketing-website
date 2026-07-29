@@ -61,4 +61,48 @@ describe("bundled published article content", () => {
       }
     }
   })
+
+  it("presents the AI agent platform as an illustrative reference architecture", async () => {
+    const expectedByLocale = {
+      en: {
+        title:
+          "Designing a Reliable AI Agent Platform: A Reference Architecture",
+        status: "Reference Architecture",
+        disclaimer: "This is a design reference",
+        prohibited: [
+          "This case study",
+          "Before selecting technologies, I defined",
+          "Why I separated",
+        ],
+      },
+      de: {
+        title: "AI-Agent-Plattform: Ein robuster Entwurf",
+        status: "Referenzarchitektur",
+        disclaimer: "Dies ist eine Designreferenz",
+        prohibited: ["Diese Fallstudie", "definierte ich", "Warum ich"],
+      },
+      ar: {
+        title: "تصميم منصة موثوقة لوكلاء الذكاء الاصطناعي: معمارية مرجعية",
+        status: "معمارية مرجعية",
+        disclaimer: "هذه معمارية مرجعية",
+        prohibited: ["دراسة الحالة", "حددت أهداف", "لماذا فصلت"],
+      },
+    } as const
+
+    for (const [locale, expected] of Object.entries(expectedByLocale)) {
+      const article = (await source.list(locale)).find(
+        ({ slug }) => slug === "ai-agent-platform"
+      )
+
+      expect(article).toBeDefined()
+      expect(article?.metadata.title).toBe(expected.title)
+      expect(article?.metadata.status).toBe(expected.status)
+      expect(article?.metadata.updatedAt).toBe("2026-07-29")
+      expect(article?.body).toContain(expected.disclaimer)
+
+      for (const phrase of expected.prohibited) {
+        expect(article?.body).not.toContain(phrase)
+      }
+    }
+  })
 })
