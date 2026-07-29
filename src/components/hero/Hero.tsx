@@ -29,7 +29,7 @@ export default function Hero() {
           <TechBadge />
 
           <h1
-            className="text-4xl sm:text-5xl lg:text-6xl"
+            className="text-4xl font-semibold tracking-tight text-balance sm:text-5xl lg:text-6xl"
             data-testid="hero-heading"
           >
             {title} <br /> {secondaryTitle}

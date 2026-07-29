@@ -323,7 +323,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               </div>
             )}
 
-            <h1 className="text-4xl font-bold tracking-tight text-balance sm:text-5xl">
+            <h1 className="text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
               {metadata.title}
             </h1>
 

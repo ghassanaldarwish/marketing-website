@@ -1,5 +1,39 @@
 import { expect, test } from "@playwright/test"
 
+for (const locale of ["en", "de", "ar"] as const) {
+  test(`${locale} article heading uses primary typography without overflow`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 320, height: 800 })
+
+    const response = await page.goto(`/${locale}/articles/ai-agent-platform`)
+
+    expect(response?.status()).toBeLessThan(400)
+
+    const heading = page.locator("main article header h1")
+
+    await expect(heading).toBeVisible()
+    await expect(heading).toHaveClass(/font-semibold/)
+    await expect(heading).toHaveClass(/tracking-tight/)
+    await expect(heading).toHaveClass(/text-balance/)
+
+    const layout = await heading.evaluate((element) => {
+      const root = document.documentElement
+      const box = element.getBoundingClientRect()
+
+      return {
+        headingInsideViewport: box.left >= 0 && box.right <= root.clientWidth,
+        pageOverflows: root.scrollWidth > root.clientWidth,
+      }
+    })
+
+    expect(layout).toEqual({
+      headingInsideViewport: true,
+      pageOverflows: false,
+    })
+  })
+}
+
 test("article prose stays readable while wide content remains contained", async ({
   page,
   isMobile,
