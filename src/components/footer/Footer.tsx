@@ -1,4 +1,5 @@
 import { Link } from "@/i18n/routing"
+import { Mail } from "lucide-react"
 import { useTranslations } from "next-intl"
 
 import Logo from "@/components/navbar/Logo"
@@ -9,7 +10,6 @@ import GridBackground from "@/components/ui/GridBackground"
 import { navigationConfig } from "@/lib/config/navigation"
 import { siteConfig } from "@/lib/config/site"
 import { cn } from "@/lib/utils"
-import { Mail } from "lucide-react"
 
 export default function Footer() {
   const t = useTranslations()
@@ -48,12 +48,17 @@ export default function Footer() {
           </div>
 
           <div className="mt-2 text-center text-sm text-muted-foreground md:text-start">
-            <p>{copyright}</p>
-
-            <p className="flex items-center justify-center gap-2 md:justify-start">
-              <Mail />
-              info@ghassan.de
+            <p>
+              <a
+                href="mailto:info@ghassan.de"
+                className="inline-flex items-center justify-center gap-2 rounded-sm focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:outline-none md:justify-start"
+              >
+                <Mail aria-hidden="true" className="size-4 shrink-0" />
+                <span>info@ghassan.de</span>
+              </a>
             </p>
+
+            <p>{copyright}</p>
           </div>
         </div>
 
