@@ -69,18 +69,20 @@ describe("bundled published article content", () => {
           "Designing a Reliable AI Agent Platform: A Reference Architecture",
         status: "Reference Architecture",
         disclaimer: "This is a design reference",
+        conditional: "A separate publisher could read",
         prohibited: [
           "This case study",
           "Before selecting technologies, I defined",
           "Why I separated",
           "The central challenge was",
-          "A separate publisher reads",
+          "A separate publisher would read",
         ],
       },
       de: {
         title: "AI-Agent-Plattform: Ein robuster Entwurf",
         status: "Referenzarchitektur",
         disclaimer: "Dies ist eine Designreferenz",
+        conditional: "Ein separater Publisher könnte",
         prohibited: [
           "Diese Fallstudie",
           "definierte ich",
@@ -93,6 +95,7 @@ describe("bundled published article content", () => {
         title: "تصميم منصة موثوقة لوكلاء الذكاء الاصطناعي: معمارية مرجعية",
         status: "معمارية مرجعية",
         disclaimer: "هذه معمارية مرجعية",
+        conditional: "يمكن لعملية نشر منفصلة قراءة",
         prohibited: [
           "دراسة الحالة هذه",
           "حددت أهداف",
@@ -113,6 +116,7 @@ describe("bundled published article content", () => {
       expect(article?.metadata.status).toBe(expected.status)
       expect(article?.metadata.updatedAt).toBe("2026-07-29")
       expect(article?.body).toContain(expected.disclaimer)
+      expect(article?.body).toContain(expected.conditional)
 
       for (const phrase of expected.prohibited) {
         expect(article?.body).not.toContain(phrase)
