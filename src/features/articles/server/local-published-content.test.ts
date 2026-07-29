@@ -61,4 +61,66 @@ describe("bundled published article content", () => {
       }
     }
   })
+
+  it("presents the AI agent platform as an illustrative reference architecture", async () => {
+    const expectedByLocale = {
+      en: {
+        title:
+          "Designing a Reliable AI Agent Platform: A Reference Architecture",
+        status: "Reference Architecture",
+        disclaimer: "This is a design reference",
+        conditional: "A separate publisher could read",
+        prohibited: [
+          "This case study",
+          "Before selecting technologies, I defined",
+          "Why I separated",
+          "The central challenge was",
+          "A separate publisher would read",
+        ],
+      },
+      de: {
+        title: "AI-Agent-Plattform: Ein robuster Entwurf",
+        status: "Referenzarchitektur",
+        disclaimer: "Dies ist eine Designreferenz",
+        conditional: "Ein separater Publisher könnte",
+        prohibited: [
+          "Diese Fallstudie",
+          "definierte ich",
+          "Warum ich",
+          "Die zentrale Herausforderung bestand",
+          "Ein separater Publisher liest",
+        ],
+      },
+      ar: {
+        title: "تصميم منصة موثوقة لوكلاء الذكاء الاصطناعي: معمارية مرجعية",
+        status: "معمارية مرجعية",
+        disclaimer: "هذه معمارية مرجعية",
+        conditional: "يمكن لعملية نشر منفصلة قراءة",
+        prohibited: [
+          "دراسة الحالة هذه",
+          "حددت أهداف",
+          "لماذا فصلت",
+          "\nتمثل التحدي الأساسي",
+          "تقرأ عملية نشر منفصلة",
+        ],
+      },
+    } as const
+
+    for (const [locale, expected] of Object.entries(expectedByLocale)) {
+      const article = (await source.list(locale)).find(
+        ({ slug }) => slug === "ai-agent-platform"
+      )
+
+      expect(article).toBeDefined()
+      expect(article?.metadata.title).toBe(expected.title)
+      expect(article?.metadata.status).toBe(expected.status)
+      expect(article?.metadata.updatedAt).toBe("2026-07-29")
+      expect(article?.body).toContain(expected.disclaimer)
+      expect(article?.body).toContain(expected.conditional)
+
+      for (const phrase of expected.prohibited) {
+        expect(article?.body).not.toContain(phrase)
+      }
+    }
+  })
 })

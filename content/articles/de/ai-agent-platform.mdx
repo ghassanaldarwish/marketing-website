@@ -1,15 +1,15 @@
 ---
-title: "Aufbau einer produktionsreifen AI-Agent-Plattform"
-description: "Wie ich eine Agentenplattform mit Node.js, Python, Redis, PostgreSQL, Docker und Kubernetes entworfen habe."
+title: "AI-Agent-Plattform: Ein robuster Entwurf"
+description: "Eine Referenzarchitektur für zuverlässige Agent-Workflows mit TypeScript, Python, Redis, PostgreSQL, Docker und Kubernetes."
 
 category: "AI Engineering / Backend"
-status: "Fallstudie"
+status: "Referenzarchitektur"
 
 publishedAt: "2026-07-11"
-updatedAt: "2026-07-11"
+updatedAt: "2026-07-29"
 
 coverImage: "/articles/ai-agent-platform/cover.png"
-coverImageAlt: "Architektur einer produktionsreifen AI-Agent-Plattform"
+coverImageAlt: "Referenzarchitektur für eine zuverlässige AI-Agent-Plattform"
 
 tags:
   - "AI Engineering"
@@ -33,9 +33,15 @@ Einen AI-Agenten zu entwickeln, der auf einen Prompt antwortet, ist vergleichswe
 
 Eine AI-Agent-Plattform zu entwickeln, die reale Workloads zuverlässig ausführt, sich nach Fehlern wiederherstellt, Tools sicher aufruft, Zustände beibehält und über mehrere Worker skaliert, ist eine andere Engineering-Herausforderung.
 
-Diese Fallstudie beschreibt die Architektur einer produktionsorientierten AI-Agent-Plattform, die mit **TypeScript**, **Python**, **Redis**, **PostgreSQL**, **Docker** und **Kubernetes** entwickelt wurde.
+Diese Referenzarchitektur zeigt, wie **TypeScript**, **Python**, **Redis**, **PostgreSQL**, **Docker** und **Kubernetes** zuverlässige Agent-Workflows unterstützen können.
 
-Das Ziel war nicht, einen weiteren Chatbot zu entwickeln. Stattdessen sollte eine wiederverwendbare Plattform entstehen, auf der intelligente, toolgestützte Workflows innerhalb eines zuverlässigen Backend-Systems ausgeführt werden können.
+Das Ziel dieses Entwurfs ist nicht ein weiterer Chatbot, sondern eine wiederverwendbare Plattform für intelligente, toolgestützte Workflows innerhalb eines zuverlässigen Backend-Systems.
+
+<Callout title="Umfang und Evidenz">
+
+Dies ist eine Designreferenz und keine Produktionsfallstudie. Der Code ist illustrativ und wird hier nicht als bereitgestellte oder gemessene Implementierung dargestellt.
+
+</Callout>
 
 <Callout title="Zentrales Engineering-Prinzip">
 
@@ -56,7 +62,7 @@ const response = await openai.responses.create({
 
 Dieser Ansatz eignet sich für Demonstrationen, doch produktive Systeme stellen schnell deutlich höhere Anforderungen.
 
-Die Plattform musste Folgendes unterstützen:
+Eine robuste Agent-Plattform könnte Folgendes unterstützen müssen:
 
 - Mehrere spezialisierte Agenten.
 - Lang laufende Workflows.
@@ -70,15 +76,15 @@ Die Plattform musste Folgendes unterstützen:
 - Detaillierte Ausführungsprotokolle.
 - Zuverlässige Wiederherstellung nach Prozess- oder Serverausfällen.
 
-Die zentrale Herausforderung bestand darin, probabilistisches AI-Reasoning mit deterministischer Backend-Infrastruktur zu verbinden.
+Die zentrale Herausforderung besteht darin, probabilistisches AI-Reasoning mit deterministischer Backend-Infrastruktur zu verbinden.
 
 > Sprachmodelle sind nicht deterministisch. Produktive Systeme dürfen bei Sicherheit, Zustandsübergängen, Abrechnung, Wiederholungsversuchen oder Datenintegrität jedoch nicht unvorhersehbar sein.
 
-Die Architektur musste das AI-Reasoning daher von den Systemteilen isolieren, für die strikte Garantien erforderlich waren.
+Die Referenzarchitektur trennt das AI-Reasoning daher von den Systemteilen, für die strikte Garantien erforderlich sind.
 
 ## Designziele
 
-Vor der Auswahl der Technologien definierte ich die wichtigsten Designziele.
+Der Referenzentwurf beginnt mit den folgenden Designzielen.
 
 ### Zuverlässigkeit
 
@@ -113,7 +119,7 @@ Die Anwendung muss Cloud-Anbieter und lokale Modelle über eine gemeinsame inter
 
 ## Architektur auf hoher Ebene
 
-Die Plattform ist in mehrere klar definierte Ebenen unterteilt.
+Die Referenzarchitektur ist in mehrere klar definierte Ebenen unterteilt.
 
 | Ebene                | Verantwortung                                                      | Haupttechnologien            |
 | -------------------- | ------------------------------------------------------------------ | ---------------------------- |
@@ -148,7 +154,7 @@ Eine typische Anfrage durchläuft das System in folgender Reihenfolge:
 
 Dadurch bleibt die API-Anfrage kurzlebig, während der eigentliche Agent-Workflow über Sekunden oder Minuten weiterlaufen kann.
 
-## Warum ich API und Agent-Ausführung getrennt habe
+## Warum API und Agent-Ausführung getrennt werden sollten
 
 Die direkte Ausführung von Agent-Workflows innerhalb einer HTTP-Anfrage verursacht mehrere Probleme:
 
@@ -158,7 +164,7 @@ Die direkte Ausführung von Agent-Workflows innerhalb einer HTTP-Anfrage verursa
 - Eine Wiederholung der HTTP-Anfrage kann Seiteneffekte erneut ausführen.
 - Die Skalierung der API skaliert unnötig auch die ressourcenintensiven Agent-Komponenten.
 
-Stattdessen erstellt die API einen dauerhaften Run und plant die asynchrone Verarbeitung.
+In diesem Entwurf erstellt die API einen dauerhaften Run und plant die asynchrone Verarbeitung.
 
 ```ts title="create-agent-run.ts" showLineNumbers
 type CreateAgentRunInput = {
@@ -199,7 +205,7 @@ export async function createAgentRun(
 }
 ```
 
-Die API veröffentlicht innerhalb der Transaktion nicht unmittelbar eine Nachricht in Redis. Stattdessen speichert sie ein Outbox-Ereignis.
+In diesem Beispiel veröffentlicht die API innerhalb der Transaktion nicht unmittelbar eine Nachricht in Redis. Stattdessen speichert sie ein Outbox-Ereignis.
 
 Dieser Unterschied ist entscheidend.
 
@@ -212,9 +218,9 @@ Ein typisches Fehlerszenario sieht folgendermaßen aus:
 3. Redis ist vorübergehend nicht verfügbar.
 4. Die Datenbank enthält einen eingereihten Workflow, aber kein Worker weiß davon.
 
-Die transaktionale Outbox löst dieses Problem, indem Workflow und Ereignis innerhalb derselben PostgreSQL-Transaktion gespeichert werden.
+In diesem Entwurf adressiert eine transaktionale Outbox das Problem, indem Workflow und Ereignis innerhalb derselben PostgreSQL-Transaktion gespeichert werden.
 
-Ein separater Publisher liest unverarbeitete Outbox-Ereignisse und veröffentlicht sie in Redis.
+Ein separater Publisher könnte unverarbeitete Outbox-Events lesen und in Redis veröffentlichen.
 
 ```ts title="outbox-publisher.ts" showLineNumbers
 export async function publishOutboxBatch() {
@@ -245,7 +251,7 @@ export async function publishOutboxBatch() {
 
 <Callout title="Warum das wichtig ist">
 
-Das Outbox-Pattern stellt sicher, dass ein bestätigter Workflow zwischen Datenbank und Queue nicht unbemerkt verloren gehen kann.
+Das Outbox-Pattern reduziert das Risiko, dass ein bestätigter Workflow zwischen Datenbank und Queue verloren geht. Eine Produktionsimplementierung benötigt weiterhin Schutz vor doppelter Zustellung, koordinierte Publisher und Fehlertests.
 
 </Callout>
 
@@ -255,7 +261,7 @@ Redis eignet sich für Queues, Locks, kurzlebige Caches und Koordination.
 
 Es ist jedoch nicht die primäre Source of Truth für die Agent-Ausführung.
 
-PostgreSQL speichert den dauerhaften Zustand jedes Runs.
+In diesem Referenzentwurf speichert PostgreSQL den dauerhaften Zustand jedes Runs.
 
 ```sql title="agent_runs.sql" showLineNumbers
 CREATE TABLE agent_runs (
@@ -296,13 +302,13 @@ CREATE TABLE agent_run_steps (
 );
 ```
 
-Dadurch erhält die Plattform einen auditierbaren Ausführungsverlauf.
+Dieses Schema bildet die Grundlage für einen auditierbaren Ausführungsverlauf.
 
-Außerdem kann ein Worker nach einem Neustart ab dem letzten abgeschlossenen Schritt fortfahren, statt den gesamten Workflow erneut zu starten.
+Mit entsprechender Recovery-Logik und Tests könnte ein Worker nach einem Neustart ab dem letzten abgeschlossenen Schritt fortfahren, statt den gesamten Workflow erneut zu starten.
 
 ## Design des Agent-Workers
 
-Der Python-Worker ist für die Modellinteraktion, strukturierte Ausgaben und Reasoning-bezogene Operationen verantwortlich.
+Der illustrative Python-Worker ist für die Modellinteraktion, strukturierte Ausgaben und Reasoning-bezogene Operationen verantwortlich.
 
 Er ist nicht für einen uneingeschränkten Zugriff auf die Infrastruktur zuständig.
 
@@ -342,7 +348,7 @@ async def process_agent_job(job: AgentJob) -> None:
         raise
 ```
 
-Der Worker erhält eine Job-ID und lädt den aktuellen Zustand erneut aus PostgreSQL.
+In diesem Entwurf erhält der Worker eine Job-ID und lädt den aktuellen Zustand erneut aus PostgreSQL.
 
 Dadurch muss kein großer oder veralteter Workflow-Zustand über die Queue transportiert werden.
 
@@ -386,7 +392,7 @@ export type AgentDecision = z.infer<
 
 Dadurch wird das Modell nicht deterministisch, das Backend erhält jedoch einen kontrollierten Vertrag.
 
-Fehlerhaft formatierte Ausgaben werden vom System abgelehnt, anstatt die Absicht des Modells zu erraten.
+Die vorgesehene Grenze lehnt fehlerhaft formatierte Ausgaben ab, anstatt die Absicht des Modells zu erraten.
 
 ## Grenzen der Tool-Ausführung
 
@@ -402,7 +408,7 @@ Ein Tool kann:
 - Ein Dokument lesen.
 - Eine externe API aufrufen.
 
-Das Modell erhält niemals direkte Zugangsdaten.
+Das Modell sollte niemals direkte Zugangsdaten erhalten.
 
 Stattdessen fordert es ein benanntes Tool mit strukturierten Argumenten an.
 
@@ -418,7 +424,7 @@ Stattdessen fordert es ein benanntes Tool mit strukturierten Argumenten an.
 }
 ```
 
-Anschließend führt das Backend mehrere Prüfungen durch:
+Ein produktives Backend sollte anschließend mehrere Prüfungen durchführen:
 
 1. Ist das Tool registriert?
 2. Darf dieser Agent das Tool verwenden?
@@ -453,7 +459,7 @@ export const toolRegistry = {
 
 <Callout title="Sicherheitsgrenze">
 
-Das Modell schlägt eine Aktion vor. Die Anwendung autorisiert, validiert, führt sie aus und protokolliert sie.
+Das Modell schlägt eine Aktion vor. Die Anwendung sollte sie autorisieren, validieren, ausführen und protokollieren.
 
 </Callout>
 
@@ -465,7 +471,7 @@ Ein Worker kann einen Tool-Aufruf abschließen und abstürzen, bevor er die Queu
 
 Ohne Idempotenz könnte die Plattform dieselbe E-Mail zweimal senden oder doppelte Tickets erstellen.
 
-Jede Operation mit Seiteneffekten erhält einen Idempotenzschlüssel:
+Jede Operation mit Seiteneffekten sollte einen Idempotenzschlüssel erhalten:
 
 ```ts title="execute-tool.ts" showLineNumbers
 type ExecuteToolInput = {
@@ -499,11 +505,11 @@ export async function executeTool(
 }
 ```
 
-Dadurch kann der Worker die Ausführung sicher wiederholen.
+Mit einer Eindeutigkeitsbedingung und einem transaktionalen Ausführungsdatensatz kann dieses Muster sichere Wiederholungen unterstützen. Die illustrative Abfrage allein belegt diese Garantie nicht.
 
 ## Aufgaben von Redis
 
-Redis wird für kurzlebige operative Aufgaben eingesetzt:
+In diesem Referenzentwurf wird Redis für kurzlebige operative Aufgaben eingesetzt:
 
 | Verantwortung      | Beispiel                                               |
 | ------------------ | ------------------------------------------------------ |
@@ -514,4 +520,4 @@ Redis wird für kurzlebige operative Aufgaben eingesetzt:
 | Ereigniszustellung | Fortschrittsmeldungen                                  |
 | Retry-Planung      | Verzögerte Jobs mit exponentiellem Backoff             |
 
-Redis wird nicht als einziger Speicherort für geschäftskritische Workflow-Zustände verwendet.
+Redis sollte nicht als einziger Speicherort für geschäftskritische Workflow-Zustände verwendet werden.
