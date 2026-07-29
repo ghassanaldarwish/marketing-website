@@ -35,10 +35,14 @@ test.describe("responsive Hero", () => {
       await page.goto(`/${locale}`)
 
       const action = page.getByTestId("hero-engineering-action")
+      const heading = page.getByTestId("hero-heading")
 
       await expect(action).toBeVisible()
       await expect(action).toHaveAccessibleName(label)
       await expect(action).toHaveAttribute("href", `/${locale}/articles`)
+      await expect(heading).toHaveClass(/font-semibold/)
+      await expect(heading).toHaveClass(/tracking-tight/)
+      await expect(heading).toHaveClass(/text-balance/)
 
       await action.focus()
       await expect(action).toBeFocused()
