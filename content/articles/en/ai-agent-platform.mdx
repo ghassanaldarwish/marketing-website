@@ -76,7 +76,7 @@ A robust agent platform may need to support:
 - Detailed execution logs.
 - Reliable recovery after process or server failures.
 
-The central challenge was connecting probabilistic AI reasoning with deterministic backend infrastructure.
+The central challenge is connecting probabilistic AI reasoning with deterministic backend infrastructure.
 
 > Language models are non-deterministic, but production systems cannot be unpredictable about security, state transitions, billing, retries, or data integrity.
 
@@ -220,7 +220,7 @@ A common failure scenario looks like this:
 
 In this design, a transactional outbox addresses the gap by writing the workflow and the event in the same PostgreSQL transaction.
 
-A separate publisher would read unprocessed outbox events and publish them to Redis.
+A separate publisher could read unprocessed outbox events and publish them to Redis.
 
 ```ts title="outbox-publisher.ts" showLineNumbers
 export async function publishOutboxBatch() {

@@ -76,7 +76,7 @@ Eine robuste Agent-Plattform könnte Folgendes unterstützen müssen:
 - Detaillierte Ausführungsprotokolle.
 - Zuverlässige Wiederherstellung nach Prozess- oder Serverausfällen.
 
-Die zentrale Herausforderung bestand darin, probabilistisches AI-Reasoning mit deterministischer Backend-Infrastruktur zu verbinden.
+Die zentrale Herausforderung besteht darin, probabilistisches AI-Reasoning mit deterministischer Backend-Infrastruktur zu verbinden.
 
 > Sprachmodelle sind nicht deterministisch. Produktive Systeme dürfen bei Sicherheit, Zustandsübergängen, Abrechnung, Wiederholungsversuchen oder Datenintegrität jedoch nicht unvorhersehbar sein.
 
@@ -220,7 +220,7 @@ Ein typisches Fehlerszenario sieht folgendermaßen aus:
 
 In diesem Entwurf adressiert eine transaktionale Outbox das Problem, indem Workflow und Ereignis innerhalb derselben PostgreSQL-Transaktion gespeichert werden.
 
-Ein separater Publisher liest unverarbeitete Outbox-Ereignisse und veröffentlicht sie in Redis.
+Ein separater Publisher könnte unverarbeitete Outbox-Events lesen und in Redis veröffentlichen.
 
 ```ts title="outbox-publisher.ts" showLineNumbers
 export async function publishOutboxBatch() {

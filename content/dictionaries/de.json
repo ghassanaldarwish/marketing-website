@@ -229,12 +229,12 @@
       ]
     },
     "selectedProjects": {
-      "eyebrow": "Ausgewählte Projekte",
-      "title": "Fallstudien mit Fokus auf Engineering-Entscheidungen.",
-      "description": "Statt nur Screenshots zu zeigen, präsentiere ich Projekte anhand ihrer Architektur, Abwägungen, Implementierungsentscheidungen und gewonnenen Erkenntnisse.",
-      "challengeTitle": "Engineering-Herausforderung",
-      "readCaseStudy": "Fallstudie lesen",
-      "technologiesLabel": "In {title} verwendete Technologien"
+      "eyebrow": "Ausgewählte Artikel",
+      "title": "Engineering-Artikel über Architektur und Entscheidungen.",
+      "description": "Ich erkläre Systeme anhand von Architektur, Abwägungen, Implementierungsmustern und klaren Evidenzgrenzen.",
+      "challengeTitle": "Engineering-Fokus",
+      "readCaseStudy": "Artikel lesen",
+      "technologiesLabel": "Technologien und Muster in {title}"
     },
     "architectureShowcase": {
       "eyebrow": "Architektur-Showcase",
@@ -465,11 +465,11 @@
   "articles": {
     "metadata": {
       "title": "Engineering",
-      "description": "Entdecken Sie Softwaresysteme, AI-Plattformen, Backend-Architekturen, Automatisierungs-Workflows und Cloud-Infrastruktur von Ghassan Aldarwish.",
+      "description": "Entdecken Sie Engineering-Artikel von Ghassan Aldarwish über Softwaresysteme, AI-Plattformen, Backend-Architekturen, Automatisierungs-Workflows und Cloud-Infrastruktur.",
       "keywords": [
-        "Projekte Ghassan Aldarwish",
-        "Software-Engineering-Projekte",
-        "AI-Engineering-Projekte",
+        "Artikel von Ghassan Aldarwish",
+        "Software-Engineering-Artikel",
+        "AI-Engineering-Artikel",
         "Backend-Architektur",
         "Verteilte Systeme",
         "AI Agents",
@@ -482,26 +482,26 @@
         "System Design"
       ],
       "structuredData": {
-        "pageName": "Engineering-Systeme und Projekte von Ghassan Aldarwish"
+        "pageName": "Engineering-Artikel von Ghassan Aldarwish"
       },
       "socialImage": {
-        "alt": "Engineering-Systeme und Projekte von Ghassan Aldarwish",
+        "alt": "Engineering-Artikel von Ghassan Aldarwish",
         "badge": "Engineering",
-        "headline": "Systeme, die über den Code hinausgehen.",
-        "description": "AI-Plattformen, Backend-Architekturen, Automatisierungs-Workflows und Cloud-Infrastruktur für den Produktionseinsatz.",
+        "headline": "Systeme, Entwürfe und Referenzarchitekturen.",
+        "description": "Engineering-Artikel über AI-Plattformen, Backend-Architekturen, Automatisierungs-Workflows und Cloud-Infrastruktur.",
         "role": "Senior Backend & Platform Engineer",
-        "action": "Systeme entdecken →"
+        "action": "Artikel entdecken →"
       }
     },
     "content": {
       "eyebrow": "Engineering",
-      "title": "Systeme, Produkte und Architekturen für den realen Einsatz.",
-      "description": "Entdecken Sie eine Auswahl an AI-Plattformen, Backend-Systemen, Automatisierungs-Workflows, Cloud-Infrastruktur und Produkterlebnissen, die ich mit Blick auf Wartbarkeit, Skalierbarkeit und Produktionsreife entwickelt habe.",
+      "title": "Engineering-Systeme, Entwürfe und Architekturen.",
+      "description": "Entdecken Sie AI-Plattformen, Backend-Systeme, Automatisierungs-Workflows, Cloud-Infrastruktur und Product Engineering. Jeder Artikel kennzeichnet, ob er eine Fallstudie oder ein Referenzentwurf ist.",
       "readArticleLabel": "{title} lesen",
-      "technologiesLabel": "In {title} verwendete Technologien",
-      "viewCaseStudy": "Fallstudie ansehen",
+      "technologiesLabel": "Technologien und Muster in {title}",
+      "viewCaseStudy": "Artikel ansehen",
       "emptyTitle": "Noch keine veröffentlichten Artikel",
-      "emptyDescription": "Veröffentlichte Engineering-Fallstudien erscheinen hier."
+      "emptyDescription": "Veröffentlichte Engineering-Artikel erscheinen hier."
     }
   },
   "article": {

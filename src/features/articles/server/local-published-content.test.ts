@@ -73,19 +73,33 @@ describe("bundled published article content", () => {
           "This case study",
           "Before selecting technologies, I defined",
           "Why I separated",
+          "The central challenge was",
+          "A separate publisher reads",
         ],
       },
       de: {
         title: "AI-Agent-Plattform: Ein robuster Entwurf",
         status: "Referenzarchitektur",
         disclaimer: "Dies ist eine Designreferenz",
-        prohibited: ["Diese Fallstudie", "definierte ich", "Warum ich"],
+        prohibited: [
+          "Diese Fallstudie",
+          "definierte ich",
+          "Warum ich",
+          "Die zentrale Herausforderung bestand",
+          "Ein separater Publisher liest",
+        ],
       },
       ar: {
         title: "تصميم منصة موثوقة لوكلاء الذكاء الاصطناعي: معمارية مرجعية",
         status: "معمارية مرجعية",
         disclaimer: "هذه معمارية مرجعية",
-        prohibited: ["دراسة الحالة", "حددت أهداف", "لماذا فصلت"],
+        prohibited: [
+          "دراسة الحالة هذه",
+          "حددت أهداف",
+          "لماذا فصلت",
+          "\nتمثل التحدي الأساسي",
+          "تقرأ عملية نشر منفصلة",
+        ],
       },
     } as const
 

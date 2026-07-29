@@ -5,7 +5,7 @@ import { SocialImage } from "@/components/seo/socialImage"
 
 import { routing } from "@/i18n/routing"
 
-export const alt = "Engineering systems and projects by Ghassan Aldarwish"
+export const alt = "Engineering articles by Ghassan Aldarwish"
 
 export const size = {
   width: 1200,

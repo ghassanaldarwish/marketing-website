@@ -233,12 +233,12 @@
       ]
     },
     "selectedProjects": {
-      "eyebrow": "Selected Projects",
-      "title": "Case studies focused on engineering decisions.",
-      "description": "Instead of showing only screenshots, I present projects through architecture, trade-offs, implementation decisions, and lessons learned.",
-      "challengeTitle": "Engineering Challenge",
-      "readCaseStudy": "Read Case Study",
-      "technologiesLabel": "Technologies used in {title}"
+      "eyebrow": "Featured Articles",
+      "title": "Engineering articles focused on architecture and decisions.",
+      "description": "I explain systems through architecture, tradeoffs, implementation patterns, and clear evidence boundaries.",
+      "challengeTitle": "Engineering Focus",
+      "readCaseStudy": "Read Article",
+      "technologiesLabel": "Technologies and patterns in {title}"
     },
     "architectureShowcase": {
       "eyebrow": "Architecture Showcase",
@@ -469,11 +469,11 @@
   "articles": {
     "metadata": {
       "title": "Engineering",
-      "description": "Explore software systems, AI platforms, backend architectures, automation workflows, and cloud infrastructure designed by Ghassan Aldarwish.",
+      "description": "Explore Ghassan Aldarwish's engineering articles about software systems, AI platforms, backend architectures, automation workflows, and cloud infrastructure.",
       "keywords": [
-        "Ghassan Aldarwish Projects",
-        "Software Engineering Projects",
-        "AI Engineering Projects",
+        "Ghassan Aldarwish Articles",
+        "Software Engineering Articles",
+        "AI Engineering Articles",
         "Backend Architecture",
         "Distributed Systems",
         "AI Agents",
@@ -486,26 +486,26 @@
         "System Design"
       ],
       "structuredData": {
-        "pageName": "Engineering systems and projects by Ghassan Aldarwish"
+        "pageName": "Engineering articles by Ghassan Aldarwish"
       },
       "socialImage": {
-        "alt": "Engineering systems and projects by Ghassan Aldarwish",
+        "alt": "Engineering articles by Ghassan Aldarwish",
         "badge": "Engineering",
-        "headline": "Systems built beyond the code.",
-        "description": "AI platforms, backend architectures, automation workflows, and cloud infrastructure designed for production.",
+        "headline": "Systems, designs, and reference architectures.",
+        "description": "Engineering articles on AI platforms, backend architectures, automation workflows, and cloud infrastructure.",
         "role": "Senior Backend & Platform Engineer",
-        "action": "Explore the systems →"
+        "action": "Explore the articles →"
       }
     },
     "content": {
       "eyebrow": "Engineering",
-      "title": "Systems, products, and architectures built for real-world use.",
-      "description": "Explore a selection of AI platforms, backend systems, automation workflows, cloud infrastructure, and product experiences I designed with maintainability, scalability, and production readiness in mind.",
+      "title": "Engineering systems, designs, and reference architectures.",
+      "description": "Explore AI platforms, backend systems, automation workflows, cloud infrastructure, and product engineering. Each article states whether it is a case study or a reference design.",
       "readArticleLabel": "Read {title}",
-      "technologiesLabel": "Technologies used in {title}",
-      "viewCaseStudy": "View case study",
+      "technologiesLabel": "Technologies and patterns in {title}",
+      "viewCaseStudy": "View article",
       "emptyTitle": "No published articles yet",
-      "emptyDescription": "Published engineering case studies will appear here."
+      "emptyDescription": "Published engineering articles will appear here."
     }
   },
 
