@@ -366,7 +366,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                   height={630}
                   sizes="(max-width: 768px) 100vw, 896px"
                   priority
-                  className="aspect-1200/630 h-auto w-full object-contain"
+                  className="aspect-1200/630 h-auto w-full object-cover"
                 />
               </figure>
             )}

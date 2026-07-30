@@ -34,6 +34,65 @@ for (const locale of ["en", "de", "ar"] as const) {
   })
 }
 
+for (const colorScheme of ["light", "dark"] as const) {
+  test(`article detail cover fills its frame across locales in ${colorScheme} mode`, async ({
+    page,
+  }) => {
+    await page.emulateMedia({ colorScheme })
+    await page.addInitScript(
+      (theme) => localStorage.setItem("theme", theme),
+      colorScheme
+    )
+
+    for (const locale of ["en", "de", "ar"] as const) {
+      const response = await page.goto(`/${locale}/articles/ai-agent-platform`)
+
+      expect(response?.status()).toBeLessThan(400)
+      await expect(page.locator("html")).toHaveAttribute(
+        "dir",
+        locale === "ar" ? "rtl" : "ltr"
+      )
+      await expect(page.locator("html")).toHaveClass(
+        colorScheme === "dark" ? /dark/ : /light/
+      )
+
+      const layout = await page.evaluate(() => {
+        const root = document.documentElement
+        const figure = document.querySelector("main article header figure")
+        const image = figure?.querySelector("img")
+
+        if (!figure || !image) {
+          throw new Error("Expected article detail cover")
+        }
+
+        const figureBox = figure.getBoundingClientRect()
+        const imageBox = image.getBoundingClientRect()
+
+        return {
+          objectFit: getComputedStyle(image).objectFit,
+          pageOverflows: root.scrollWidth > root.clientWidth,
+          figureInsideViewport:
+            figureBox.left >= 0 && figureBox.right <= root.clientWidth,
+          imageInsideFigure:
+            imageBox.left >= figureBox.left &&
+            imageBox.right <= figureBox.right &&
+            imageBox.top >= figureBox.top &&
+            imageBox.bottom <= figureBox.bottom,
+          horizontalInset: figureBox.width - imageBox.width,
+          verticalInset: figureBox.height - imageBox.height,
+        }
+      })
+
+      expect(layout.objectFit).toBe("cover")
+      expect(layout.pageOverflows).toBe(false)
+      expect(layout.figureInsideViewport).toBe(true)
+      expect(layout.imageInsideFigure).toBe(true)
+      expect(layout.horizontalInset).toBeLessThanOrEqual(2)
+      expect(layout.verticalInset).toBeLessThanOrEqual(2)
+    }
+  })
+}
+
 test("article prose stays readable while wide content remains contained", async ({
   page,
   isMobile,
