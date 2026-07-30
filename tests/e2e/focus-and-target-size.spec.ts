@@ -1,4 +1,10 @@
-import { expect, test } from "@playwright/test"
+import { expect, type Locator, test } from "@playwright/test"
+
+async function expectMinimumTargetHeight(locator: Locator) {
+  await expect
+    .poll(async () => (await locator.boundingBox())?.height ?? 0)
+    .toBeGreaterThanOrEqual(44)
+}
 
 test.describe("Shared Button/Input focus indicator and target size", () => {
   test("homepage contact dialog trigger, Input, and submit all reach at least 44px", async ({
@@ -7,21 +13,18 @@ test.describe("Shared Button/Input focus indicator and target size", () => {
     await page.goto("/en")
 
     const trigger = page.locator('button[aria-haspopup="dialog"]').last()
-    const triggerBox = await trigger.boundingBox()
-    expect(triggerBox?.height ?? 0).toBeGreaterThanOrEqual(44)
+    await expectMinimumTargetHeight(trigger)
 
     await trigger.click()
 
     const nameInput = page.locator("#contact-name")
     await expect(nameInput).toBeVisible()
-    const inputBox = await nameInput.boundingBox()
-    expect(inputBox?.height ?? 0).toBeGreaterThanOrEqual(44)
+    await expectMinimumTargetHeight(nameInput)
 
     const submit = page
       .locator("#contact-form")
       .locator('button[type="submit"]')
-    const submitBox = await submit.boundingBox()
-    expect(submitBox?.height ?? 0).toBeGreaterThanOrEqual(44)
+    await expectMinimumTargetHeight(submit)
   })
 
   test("Input and submit show exactly one focus indicator, not an outline stacked on the ring", async ({
